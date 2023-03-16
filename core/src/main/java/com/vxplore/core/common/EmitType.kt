@@ -2,6 +2,7 @@ package com.vxplore.core.common
 
 enum class EmitType {
     AppVersion,
+    Otp,
     BackendError,
     Navigate,
     Loading,

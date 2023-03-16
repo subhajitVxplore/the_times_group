@@ -1,6 +1,5 @@
 package com.vxplore.thetimesgroup.repository_impls
 
-import com.vxplore.core.common.ApiRoutes
 import com.vxplore.core.common.Resource
 import com.vxplore.core.domain.model.AppVersionResponse
 import com.vxplore.core.domain.repositoriess.SplashRepository

@@ -16,10 +16,36 @@ sealed class Destination(protected val route: String, vararg arguments: Any) {
     }
 
     object Splash : NoArgumentsDestination(AppRoutes.SPLASH)
-    object MobileNo : NoArgumentsDestination(AppRoutes.MOBILE_NO)
-    object Otp : NoArgumentsDestination(AppRoutes.OTP)
+    object MobileNo : Destination(AppRoutes.MOBILE_NO, "mobileNo_id"){
+        const val MOBILE_N = "mobileNo_id"
+        operator fun invoke(number: String): String = route.appendParams(
+            MobileNo.MOBILE_N to number
+        )
+    }
+    object Otp : Destination(route = AppRoutes.OTP, "mobileNo_id") {
+        const val MOBILE_NO = "mobileNo_id"
+        operator fun invoke(number: String): String = route.appendParams(
+            MOBILE_NO to number
+        )
+    }
+
+    // object Otp : NoArgumentsDestination(AppRoutes.OTP )
     object Dashboard : NoArgumentsDestination(AppRoutes.DASHBOARD)
+    object Register : NoArgumentsDestination(AppRoutes.REGISTER)
 
 
 
+}
+
+
+private fun String.appendParams(vararg params: Pair<String, Any?>): String {
+    val builder = StringBuilder(this)
+
+    params.forEach {
+        it.second?.toString()?.let { arg ->
+            builder.append("/$arg")
+        }
+    }
+
+    return builder.toString()
 }

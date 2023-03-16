@@ -55,6 +55,16 @@ class AppStoreImpl @Inject constructor(
         return false
     }
 
+    override suspend fun isRegistered(): Boolean {
+        val otp = prefs.data.map {
+            it[stringPreferencesKey(PrefConstants.OTP)]
+        }.first()
+
+        if (otp != null && otp.isNotEmpty()) return true
+
+        return false
+    }
+
     override suspend fun storeFCMToken(token: String) {
         prefs.edit {
             it[stringPreferencesKey(PrefConstants.FCM_TOKEN)] = token

@@ -6,7 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.example.core.utils.NavigationIntent
-import com.vxplore.core.common.AppRoutes
 import com.vxplore.core.common.Destination
 import com.vxplore.thetimesgroup.screens.*
 import kotlinx.coroutines.channels.Channel
@@ -34,13 +33,16 @@ fun MainNavGraph(
         }
         composable(destination = Destination.MobileNo) {
             // MobileNoScreen(onContinueClick = {navHostController.navigate(AppRoutes.OTP)})
-            MobileNoScreen(navHostController)//
+            MobileNoScreen()//
         }
         composable(destination=Destination.Otp){
-            OtpScreen(navHostController)
+            OtpScreen()
         }
         composable(destination=Destination.Dashboard){
             DashboardScreen()
+        }
+        composable(destination=Destination.Register){
+            RegistrationScreen()
         }
 
 

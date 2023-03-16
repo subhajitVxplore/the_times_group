@@ -1,42 +1,38 @@
+@file:Suppress("DEPRECATION")
+
 package com.vxplore.thetimesgroup.screens
 
+import android.app.Activity
 import android.widget.Toast
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import com.vxplore.core.common.AppRoutes
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.vxplore.thetimesgroup.R
 import com.vxplore.thetimesgroup.custom_views.OtpTextField
 import com.vxplore.thetimesgroup.ui.theme.GreenDark
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import com.vxplore.thetimesgroup.viewModels.OtpViewModel
 
 @Composable
-fun OtpScreen(navController: NavController) {
+fun OtpScreen( viewModel: OtpViewModel  = hiltViewModel()) {
+
+    val mContext = LocalContext.current
+
+    var otpValue by remember {
+        mutableStateOf("")
+    }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -46,9 +42,10 @@ fun OtpScreen(navController: NavController) {
         // verticalArrangement = Arrangement.Center,
         //horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        val activity = LocalContext.current as Activity
         Image(painter = painterResource(id = R.drawable.ic_baseline_keyboard_backspace_24),
             contentDescription = "countryImage",
-
+            modifier = Modifier.clickable { activity.onBackPressed() }
             )
 
         Text(
@@ -65,21 +62,13 @@ fun OtpScreen(navController: NavController) {
 
 
         Surface(
-          //  border = BorderStroke(1.dp, Color.Gray),
-           // shape = RoundedCornerShape(8.dp),
-           // elevation = 8.dp,
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
-//            modifier = Modifier.fillMaxWidth().height(50.dp)
-
         ) {
             Row(
-                // modifier = Modifier.fillMaxWidth().wrapContentHeight().padding(5.dp)
                 modifier = Modifier.padding(25.dp,0.dp,0.dp,0.dp)
-
             ) {
-
 
                 Text(
                     text = "+91",
@@ -89,9 +78,11 @@ fun OtpScreen(navController: NavController) {
                     )
 
                 Text(
-                    text = "7012345678",
+                    text = "${viewModel.number}",
                     style = MaterialTheme.typography.h5,
-                    modifier = Modifier.padding(10.dp).align(Alignment.CenterVertically),
+                    modifier = Modifier
+                        .padding(10.dp)
+                        .align(Alignment.CenterVertically)
                 )
 
                 Image(painter = painterResource(id = R.drawable.ic_edit_icon),
@@ -99,7 +90,15 @@ fun OtpScreen(navController: NavController) {
                     modifier = Modifier
                         .width(40.dp)
                         .height(40.dp)
-                        .padding(0.dp, 10.dp, 10.dp, 10.dp).align(Alignment.CenterVertically),
+                        .padding(0.dp, 10.dp, 10.dp, 10.dp)
+                        .align(Alignment.CenterVertically)
+                        .clickable {
+                            // navController.navigateUp()
+                            //navController.navigate(AppRoutes.MOBILE_NO +"$mobileNoText")
+                            //navController.navigate(AppRoutes.MOBILE_NO)
+                            viewModel.onOtpToMob("${viewModel.number}")
+                        },
+
                 )
 
             }
@@ -117,9 +116,6 @@ fun OtpScreen(navController: NavController) {
                 //.padding(20.dp),
             color = Color.White
         ) {
-            var otpValue by remember {
-                mutableStateOf("")
-            }
 
             OtpTextField(
                 otpText = otpValue,
@@ -135,7 +131,7 @@ fun OtpScreen(navController: NavController) {
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
-                .padding(25.dp,0.dp,0.dp,0.dp)
+                .padding(25.dp, 0.dp, 0.dp, 0.dp)
 
         ) {
 
@@ -168,7 +164,16 @@ fun OtpScreen(navController: NavController) {
                 val context= LocalContext.current
                 Button(
                     onClick = {
-                        navController.navigate(AppRoutes.DASHBOARD)
+//                        navController.navigate(AppRoutes.REGISTER)
+                             // viewModel.onOtpToRegister("${viewModel.number}")
+                      //  Toast.makeText(context, "$otpValue", Toast.LENGTH_SHORT).show()
+                        if (otpValue.length<4){
+                            Toast.makeText(mContext, "Enter 4 digit OTP", Toast.LENGTH_SHORT).show()
+                        }else{
+                            viewModel.verifyOtp("$otpValue",mContext)
+                        }
+
+
 
                     }, shape = RoundedCornerShape(5.dp), modifier = Modifier
                         .fillMaxWidth()

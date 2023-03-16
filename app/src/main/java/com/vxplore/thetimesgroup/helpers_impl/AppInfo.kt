@@ -9,4 +9,6 @@ class AppInfo @Inject constructor() : Info {
     override fun getCurrentVersion(): Int {
         return BuildConfig.VERSION_CODE
     }
+
+
 }

@@ -63,9 +63,9 @@ class SplashViewModel @Inject constructor(
             }
     }
 
-    fun onSplashRun(destination: Destination.NoArgumentsDestination = Destination.MobileNo) {
+    fun onSplashRun(destination: Destination.MobileNo = Destination.MobileNo) {
         appNavigator.tryNavigateTo(
-            destination(),
+            destination("0"),
             popUpToRoute = Destination.Splash(),
             isSingleTop = true,
             inclusive = true
