@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.vxplore.core.domain.repositoriess.OtpRepository
 import com.vxplore.core.domain.repositoriess.SplashRepository
+import com.vxplore.core.domain.repositoriess.VendorDetailsRepository
 import com.vxplore.core.helpers.AppStore
 import com.vxplore.core.helpers.Info
 import com.vxplore.thetimesgroup.data.online.AppVersionApi
@@ -13,6 +14,7 @@ import com.vxplore.thetimesgroup.helpers_impl.AppInfo
 import com.vxplore.thetimesgroup.helpers_impl.AppStoreImpl
 import com.vxplore.thetimesgroup.repository_impls.OtpRepositoryImpl
 import com.vxplore.thetimesgroup.repository_impls.SplashRepositoryImpl
+import com.vxplore.thetimesgroup.repository_impls.VendorDetailsRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -28,8 +30,6 @@ import javax.inject.Singleton
 interface AppModule {
 
 
-
-
     companion object {
         private val Context.dataStore by preferencesDataStore("timesGroup")
         private fun <T> provideApi(klass: Class<T>): T {
@@ -38,7 +38,6 @@ interface AppModule {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(klass)
-
 
 
         }
@@ -56,7 +55,7 @@ interface AppModule {
 //        @Singleton
 //        fun provideMovies(): MovieApi = provideApi(MovieApi::class.java)
     }
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Binds
     fun bindAppStore(appStoreImpl: AppStoreImpl): AppStore
@@ -66,10 +65,12 @@ interface AppModule {
 
     @Binds
     fun bindSplashRepo(impl: SplashRepositoryImpl): SplashRepository
-     @Binds
+
+    @Binds
     fun bindOtpRepo(impl: OtpRepositoryImpl): OtpRepository
 
-
+    @Binds
+    fun bindVendorDetailsRepo(impl: VendorDetailsRepositoryImpl): VendorDetailsRepository
 
 
 }

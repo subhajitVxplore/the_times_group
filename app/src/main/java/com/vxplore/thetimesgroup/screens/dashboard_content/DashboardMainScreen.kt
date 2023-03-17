@@ -1,27 +1,33 @@
 package com.vxplore.thetimesgroup.screens.dashboard_content
 
-import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.vxplore.thetimesgroup.ui.theme.*
+import com.vxplore.core.domain.model.Vendor
+import com.vxplore.thetimesgroup.custom_views.MyDoughnutChart
+import com.vxplore.thetimesgroup.ui.theme.GreenLight
+import com.vxplore.thetimesgroup.ui.theme.GreyLight
+import com.vxplore.thetimesgroup.ui.theme.PinkLight
+import com.vxplore.thetimesgroup.viewModels.DashboardViewModel
 
 @Composable
-fun DashboardMainScreen(openDrawer: () -> Unit) {
+fun DashboardMainScreen(openDrawer: () -> Unit, viewModel: DashboardViewModel) {
     Column(modifier = Modifier.fillMaxSize()) {
 
         Surface(
@@ -37,7 +43,7 @@ fun DashboardMainScreen(openDrawer: () -> Unit) {
                             .wrapContentHeight()
                             .fillMaxWidth(),
 
-                    ) {
+                        ) {
                         Row(
                             // modifier = Modifier.fillMaxWidth().wrapContentHeight().padding(5.dp)
                             modifier = Modifier
@@ -87,8 +93,7 @@ fun DashboardMainScreen(openDrawer: () -> Unit) {
                                         color = Color.White,
                                         fontSize = 12.sp,
                                         modifier = Modifier.padding(
-                                            horizontal = 10.dp,
-                                            vertical = 5.dp
+                                            horizontal = 10.dp, vertical = 5.dp
                                         )
                                     )
                                 }
@@ -137,8 +142,7 @@ fun DashboardMainScreen(openDrawer: () -> Unit) {
                                         color = Color.White,
                                         fontSize = 12.sp,
                                         modifier = Modifier.padding(
-                                            horizontal = 10.dp,
-                                            vertical = 5.dp
+                                            horizontal = 10.dp, vertical = 5.dp
                                         )
                                     )
                                 }
@@ -146,75 +150,90 @@ fun DashboardMainScreen(openDrawer: () -> Unit) {
                         }
 
                     }
-                    DoughnutChart1()
-                }
-            )
+                    MyDoughnutChart()
+                    Text(
+                        text = "Total Paper Circulations",
+                        modifier = Modifier
+                            .padding(0.dp, 0.dp, 28.dp, 0.dp)
+                            .align(Alignment.End),
+                        color = Color.Gray,
+                        textDecoration = TextDecoration.Underline,
+                        fontSize = 12.sp
+                    )
+                    Spacer(modifier = Modifier.height(20.dp))
+                    Surface(
+                        border = BorderStroke(0.7.dp, Color.LightGray),
+                        color = GreyLight,
+                        shape = RoundedCornerShape(3.dp),
+                        //elevation = 5.dp,
+                        modifier = Modifier.fillMaxWidth().wrapContentSize().padding(5.dp)) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentHeight()
+                                .padding(10.dp, 10.dp, 0.dp, 10.dp)
+                        ) {
+
+                            Text(
+                                text = "Top Vendors",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 12.sp,
+                                modifier = Modifier.weight(1f, true)
+                            )
+                            Text(
+                                text = "Daily Avg.",
+                                fontSize = 12.sp,
+                                modifier = Modifier.weight(1f, true).padding(15.dp, 0.dp, 0.dp, 0.dp)
+                            )
+                            Text(
+                                text = "Return Avg.",
+                                fontSize = 12.sp,
+                                modifier = Modifier.weight(1f, true)
+                            )
+                            Text(
+                                text = "Payment Due",
+                                fontSize = 12.sp,
+                                modifier = Modifier.weight(1f, true)
+                            )
+                        }
+                    }
+                    showVendorsList(vendorList = viewModel.vendors.collectAsState().value)
+                })
         }
     }
 }
 
 @Composable
-fun DoughnutChart1(
-    values: List<Float> = listOf(15f, 40f, 25f),
-    colors: List<Color> = listOf(
-        DonutGreenLight,
-        DonutGreenDark,
-        DonutGreenMidium
-    ),
-    legend: List<String> = listOf("ES", "TOI", "E.T"),
-    size: Dp = 150.dp,
-    thickness: Dp = 40.dp
-) {
-    // Sum of all the values
-    val sumOfValues = values.sum()
-    // Calculate each proportion
-    val proportions = values.map { it * 100 / sumOfValues }
-    // Convert each proportion to angle
-    val sweepAngles = proportions.map { 360 * it / 100 }
-    Row(modifier = Modifier.fillMaxWidth().wrapContentHeight().padding(25.dp)) {
-        Box(modifier = Modifier.fillMaxWidth().wrapContentHeight()
-//            contentAlignment = Alignment.CenterVertically
-        ) {
-            Column(modifier = Modifier.wrapContentSize(),
-                  //  verticalArrangement = Arrangement.Center,
-            ) {
-                for (i in values.indices) {
-                    DisplayLegend(color = colors[i], legend = legend[i])
-                }
-            }
+fun showVendorsList(vendorList: List<Vendor>) {
+    LazyColumn() {
+        itemsIndexed(items = vendorList) { index, vendorr ->
+            Row(modifier = Modifier.fillMaxWidth().wrapContentHeight().padding(10.dp, 10.dp, 0.dp, 10.dp)) {
 
-            Spacer(modifier = Modifier.width(32.dp))
+                Text(
+                    text = vendorr.top_vendors,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 12.sp,
+                    modifier = Modifier.weight(1f, true).padding(5.dp, 0.dp, 0.dp, 0.dp)
+                )
+                Text(
+                    text = vendorr.daily_avg,
+                    fontSize = 12.sp,
+                    modifier = Modifier.weight(1f, true).padding(25.dp, 0.dp, 0.dp, 0.dp)
+                )
+                Text(
+                    text = vendorr.return_avg,
+                    fontSize = 12.sp,
+                    modifier = Modifier.weight(1f, true).padding(20.dp, 0.dp, 0.dp, 0.dp)
+                )
+                Text(
+                    text = vendorr.payment_due,
+                    fontSize = 12.sp,
+                    modifier = Modifier.weight(1f, true).padding(20.dp, 0.dp, 0.dp, 0.dp)
+                )
 
-            Canvas(
-                modifier = Modifier.size(size = size).align(Alignment.TopEnd)) {
-                var startAngle = -90f
-                for (i in values.indices) {
-                    drawArc( color = colors[i],startAngle = startAngle, sweepAngle = sweepAngles[i],useCenter = false,style = Stroke(width = thickness.toPx(), cap = StrokeCap.Butt))
-                    startAngle += sweepAngles[i]
-                }
             }
+            Divider(color = GreyLight, thickness = 0.8.dp, modifier = Modifier.padding(10.dp, 0.dp, 10.dp, 0.dp))
         }
     }
-}
 
-@Composable
-fun DisplayLegend(color: Color, legend: String) {
-
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(
-            modifier = Modifier
-                .size(10.dp)
-                .background(color = color, shape = RectangleShape)
-        )
-
-        Spacer(modifier = Modifier.width(4.dp))
-
-        Text(
-            text = legend,
-            color = Color.Black
-        )
-    }
 }

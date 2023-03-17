@@ -133,7 +133,7 @@ fun BodyContentComponent(
     viewModel: DashboardViewModel
 ) {
     when (currentScreen) {
-        DrawerAppScreen.DashboardMain -> DashboardMainScreen(openDrawer)
+        DrawerAppScreen.DashboardMain -> DashboardMainScreen(openDrawer,viewModel)
         DrawerAppScreen.Screen2 -> Screen2Component(openDrawer)
         DrawerAppScreen.Screen3 -> Screen3Component(openDrawer)
         DrawerAppScreen.Screen4 -> Screen4Component(openDrawer)
