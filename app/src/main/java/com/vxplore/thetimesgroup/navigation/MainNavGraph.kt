@@ -8,6 +8,7 @@ import androidx.navigation.NavHostController
 import com.example.core.utils.NavigationIntent
 import com.vxplore.core.common.Destination
 import com.vxplore.thetimesgroup.screens.*
+import com.vxplore.thetimesgroup.screens.BillingScreen
 import kotlinx.coroutines.channels.Channel
 
 @Composable
@@ -43,6 +44,9 @@ fun MainNavGraph(
         }
         composable(destination=Destination.Register){
             RegistrationScreen()
+        }
+        composable(destination = Destination.Billing) {
+            BillingScreen()
         }
 
 

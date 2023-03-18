@@ -6,4 +6,6 @@ object AppRoutes {
     const val OTP = "otp"
     const val DASHBOARD = "dashboard"
     const val REGISTER = "register"
+
+    const val BILLING = "billing"
 }

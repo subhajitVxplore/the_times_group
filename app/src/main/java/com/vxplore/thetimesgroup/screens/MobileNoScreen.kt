@@ -31,7 +31,6 @@ import com.vxplore.thetimesgroup.viewModels.MobileNoScreenViewModel
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-//fun MobileNoScreen(onContinueClick: () -> Unit) {
 fun MobileNoScreen(
      viewModel: MobileNoScreenViewModel = hiltViewModel()
 ) {
@@ -182,12 +181,9 @@ fun MobileNoScreen(
                             Toast.makeText(context, "10 digits required", Toast.LENGTH_SHORT).show()
                         } else {
                            // navController.navigate(AppRoutes.OTP+ "/${MobileNoText.text}",)
-
                             viewModel.onMobToOtp("${viewModel.MobileNoText.value}")
                         }
-
                       //  navController.navigate(Routes.Settings.route + "/$counter")
-
                     },
                     shape = RoundedCornerShape(5.dp),
                     modifier = Modifier

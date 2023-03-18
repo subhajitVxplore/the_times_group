@@ -1,9 +1,9 @@
 package com.vxplore.core.domain.useCasess
 
-import android.content.Context
-import android.widget.Toast
-import com.vxplore.core.common.*
-import com.vxplore.core.domain.repositoriess.OtpRepository
+import com.vxplore.core.common.Data
+import com.vxplore.core.common.EmitType
+import com.vxplore.core.common.Resource
+import com.vxplore.core.common.handleFailedResponse
 import com.vxplore.core.domain.repositoriess.VendorDetailsRepository
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -37,5 +37,37 @@ class VendorDetailsUseCases @Inject constructor(private val vendorDetailsReposit
             }
         }
     }
+
+
+//    fun searchVendors(updatedVendor: String) = flow{
+//        when (val response = vendorDetailsRepository.vendorDetailsRepo()) {
+//            is Resource.Success -> {
+//                response.data?.apply {
+//                    when (status) {
+//                        true -> {
+//                            if (updatedVendor.equals(vendor_list)){
+//                                emit(Data(type = EmitType.VENDORS, value = vendor_list))
+//                            }
+//
+//                        }
+//                        else -> {
+//                            emit(Data(type = EmitType.BackendError, value = message))
+//                        }
+//                    }
+//                }
+//            }
+//            is Resource.Error -> {
+//                handleFailedResponse(
+//                    response = response,
+//                    message = response.message,
+//                    emitType = EmitType.NetworkError
+//                )
+//            }
+//            else -> {
+//
+//            }
+//        }
+//    }
+
 
 }
