@@ -66,7 +66,8 @@ fun MobileNoScreen(
             elevation = 8.dp,
             modifier = Modifier
                 .fillMaxWidth()
-                .wrapContentSize()
+                .wrapContentSize(),
+
             //  .padding(5.dp)
 //            modifier = Modifier.fillMaxWidth().height(50.dp)
 
