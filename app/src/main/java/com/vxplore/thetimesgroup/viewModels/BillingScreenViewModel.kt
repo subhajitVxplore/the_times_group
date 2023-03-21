@@ -19,4 +19,15 @@ class BillingScreenViewModel @Inject constructor():ViewModel() {
     var showClearButton = mutableStateOf(false)
     var expand =mutableStateOf(false)  // Expand State
     var stroke = mutableStateOf(1)
+
+    var coupon50Text = mutableStateOf("")
+    var cashPaymentText = mutableStateOf("")
+    var toiTaken = mutableStateOf("")
+    var etTaken = mutableStateOf("")
+    var esTaken = mutableStateOf("")
+    var toiReturn = mutableStateOf("")
+    var etReturn = mutableStateOf("")
+    var esReturn = mutableStateOf("")
+
+
 }

@@ -158,9 +158,7 @@ fun MobileNoScreen(
 
             Text(
                 text = "you will receive important updates and informations from us over the whatsapp",
-                // style = MaterialTheme.typography.h3,
-                modifier = Modifier
-                    .align(Alignment.CenterVertically),
+                modifier = Modifier.align(Alignment.CenterVertically),
                 color = Color.Gray
             )
 

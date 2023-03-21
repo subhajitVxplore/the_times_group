@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package com.vxplore.thetimesgroup.custom_views
 
 import androidx.compose.animation.animateContentSize
@@ -6,9 +8,13 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material.ExposedDropdownMenuDefaults.textFieldColors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.runtime.Composable
@@ -17,7 +23,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.PlatformTextStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -56,9 +67,7 @@ viewModel: BillingScreenViewModel
                 .background(GreyLight)
         ) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 10.dp),
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween // Control the header Alignment over here.
             ) {
@@ -93,79 +102,114 @@ viewModel: BillingScreenViewModel
                 Spacer(modifier = Modifier.height(7.dp))
 
                 Row(Modifier.wrapContentHeight()) {
-                        Column(modifier = Modifier.wrapContentSize().align(Alignment.CenterVertically).padding(13.dp,0.dp,0.dp,0.dp)) {
+                        Column(modifier = Modifier
+                            .wrapContentSize()
+                            .align(Alignment.CenterVertically)
+                            .padding(13.dp, 0.dp, 0.dp, 0.dp)) {
                             Text(text = "Times of India", color = Color.DarkGray)
                             Text(text = "Yesterday Total Paper 500 (Subscription 300)", color = Color.Gray, fontSize = 10.sp)
                         }
                         Box(modifier = Modifier
                             .wrapContentHeight()
                             .fillMaxWidth(), contentAlignment = Alignment.TopEnd){
-                        OutlinedTextField(
-                            value = "",
-                            onValueChange = {},
-                            colors = TextFieldDefaults.outlinedTextFieldColors(
-                                focusedBorderColor = Color.Gray,
-                                unfocusedBorderColor = Color.Gray,
-                                backgroundColor = Color.White,
-                            ),
-                            modifier = Modifier
-                                .width(120.dp).height(45.dp)
-                                .padding(horizontal = 15.dp)
-
-                        )
+                            Surface(modifier = Modifier.wrapContentSize() .padding(horizontal = 15.dp), color = Color.White) {
+                                BasicTextField(
+                                    value = viewModel.toiReturn.value,
+                                    onValueChange = {viewModel.toiReturn.value=it},
+                                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Number),
+                                    maxLines = 1,
+                                    modifier = Modifier.width(80.dp).height(37.dp),
+                                    textStyle = TextStyle.Default.copy(fontSize = 17.sp)
+                                ) {
+                                    TextFieldDefaults.OutlinedTextFieldDecorationBox(
+                                        value = viewModel.toiReturn.value,
+                                        innerTextField = it,
+                                        enabled = true,
+                                        singleLine = true,
+                                        visualTransformation = VisualTransformation.None,
+                                        interactionSource = MutableInteractionSource(),
+                                        contentPadding = PaddingValues(all = 4.dp),
+                                        colors = textFieldColors(backgroundColor = Color.White)
+                                    )
+                                }
+                            }
                     }
                 }
                 Spacer(modifier = Modifier.height(7.dp))
                 Row(Modifier.wrapContentHeight()) {
-                    Column(modifier = Modifier.wrapContentSize().align(Alignment.CenterVertically).padding(13.dp,0.dp,0.dp,0.dp)) {
+                    Column(modifier = Modifier
+                        .wrapContentSize()
+                        .align(Alignment.CenterVertically)
+                        .padding(13.dp, 0.dp, 0.dp, 0.dp)) {
                         Text(text = "Economics Times", color = Color.DarkGray)
                         Text(text = "Yesterday Total Paper 400 (Subscription 200)", color = Color.Gray, fontSize = 10.sp)
                     }
                     Box(modifier = Modifier
                         .wrapContentHeight()
                         .fillMaxWidth(), contentAlignment = Alignment.TopEnd){
-                        OutlinedTextField(
-                            value = "",
-                            onValueChange = {},
-                            colors = TextFieldDefaults.outlinedTextFieldColors(
-                                focusedBorderColor = Color.Gray,
-                                unfocusedBorderColor = Color.Gray,
-                                backgroundColor = Color.White,
-                            ),
-                            modifier = Modifier
-                                .width(120.dp).height(45.dp)
-                                .padding(horizontal = 15.dp)
 
-                        )
+                        Surface(modifier = Modifier.wrapContentSize() .padding(horizontal = 15.dp), color = Color.White) {
+                            BasicTextField(
+                                value = viewModel.etReturn.value,
+                                onValueChange = {viewModel.etReturn.value=it},
+                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Number),
+                                maxLines = 1,
+                                modifier = Modifier.width(80.dp).height(37.dp),
+                                textStyle = TextStyle.Default.copy(fontSize = 17.sp)
+                            ) {
+                                TextFieldDefaults.OutlinedTextFieldDecorationBox(
+                                    value = viewModel.etReturn.value,
+                                    innerTextField = it,
+                                    enabled = true,
+                                    singleLine = true,
+                                    visualTransformation = VisualTransformation.None,
+                                    interactionSource = MutableInteractionSource(),
+                                    contentPadding = PaddingValues(all = 4.dp),
+                                    colors = textFieldColors(backgroundColor = Color.White)
+                                )
+                            }
+                        }
+
                     }
                 }
                 Spacer(modifier = Modifier.height(7.dp))
                 Row(Modifier.wrapContentHeight()) {
-                    Column(modifier = Modifier.wrapContentSize().align(Alignment.CenterVertically).padding(13.dp,0.dp,0.dp,0.dp)) {
+                    Column(modifier = Modifier
+                        .wrapContentSize()
+                        .align(Alignment.CenterVertically)
+                        .padding(13.dp, 0.dp, 0.dp, 0.dp)) {
                         Text(text = "Ei Samay", color = Color.DarkGray)
                         Text(text = "Yesterday Total Paper 400 (Subscription 200)", color = Color.Gray, fontSize = 10.sp)
                     }
                     Box(modifier = Modifier
                         .wrapContentHeight()
                         .fillMaxWidth(), contentAlignment = Alignment.TopEnd){
-                        OutlinedTextField(
-                            value = "",
-                            onValueChange = {},
-                            colors = TextFieldDefaults.outlinedTextFieldColors(
-                                focusedBorderColor = Color.Gray,
-                                unfocusedBorderColor = Color.Gray,
-                                backgroundColor = Color.White,
-                            ),
-                            modifier = Modifier
-                                .width(120.dp).height(45.dp)
-                                .padding(horizontal = 15.dp)
 
-                        )
+                        Surface(modifier = Modifier.wrapContentSize() .padding(horizontal = 15.dp), color = Color.White) {
+                            BasicTextField(
+                                value = viewModel.esReturn.value,
+                                onValueChange = {viewModel.esReturn.value=it},
+                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Number),
+                                maxLines = 1,
+                                modifier = Modifier.width(80.dp).height(37.dp),
+                                textStyle = TextStyle.Default.copy(fontSize = 17.sp)
+                            ) {
+                                TextFieldDefaults.OutlinedTextFieldDecorationBox(
+                                    value = viewModel.esReturn.value,
+                                    innerTextField = it,
+                                    enabled = true,
+                                    singleLine = true,
+                                    visualTransformation = VisualTransformation.None,
+                                    interactionSource = MutableInteractionSource(),
+                                    contentPadding = PaddingValues(all = 4.dp),
+                                    colors = textFieldColors(backgroundColor = Color.White)
+                                )
+                            }
+                        }
+
                     }
                 }
                 Spacer(modifier = Modifier.height(10.dp))
-
-
             }
         }
     }
