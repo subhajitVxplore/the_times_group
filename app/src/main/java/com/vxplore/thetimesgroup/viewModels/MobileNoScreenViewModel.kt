@@ -17,9 +17,7 @@ class MobileNoScreenViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-
     var MobileNoText = mutableStateOf("")
-
 
     init {
         val number = savedStateHandle.get<String>(Destination.Otp.MOBILE_NO)

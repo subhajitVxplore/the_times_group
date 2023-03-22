@@ -8,4 +8,5 @@ object AppRoutes {
     const val REGISTER = "register"
 
     const val BILLING = "billing"
+    const val ADD_VENDOR = "add_vendor"
 }

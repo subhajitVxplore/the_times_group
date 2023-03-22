@@ -3,6 +3,7 @@
 package com.vxplore.thetimesgroup.screens
 
 import android.app.Activity
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -25,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -43,6 +45,7 @@ import com.vxplore.thetimesgroup.viewModels.BillingScreenViewModel
 fun VendorBillingScreen(
     viewModel: BillingScreenViewModel = hiltViewModel(),
 ) {
+//    var coupon_total = 0
 
     Column(modifier = Modifier.fillMaxSize()) {
         Row(
@@ -72,17 +75,15 @@ fun VendorBillingScreen(
             )
 
             Box(
-                modifier = Modifier
-                    .wrapContentHeight()
-                    .fillMaxWidth()
-                    .align(Alignment.CenterVertically),
+                modifier = Modifier.wrapContentHeight().fillMaxWidth().align(Alignment.CenterVertically),
                 contentAlignment = Alignment.TopEnd
             ) {
 
                 val context = LocalContext.current
                 Button(
                     onClick = {
-                        Toast.makeText(context, "Add Vendor", Toast.LENGTH_SHORT).show()
+                        viewModel.onBillingToAddVendor()
+                        //Toast.makeText(context, "Add Vendor", Toast.LENGTH_SHORT).show()
                     },
                     shape = RoundedCornerShape(25.dp),
                     modifier = Modifier.wrapContentSize(),
@@ -98,9 +99,9 @@ fun VendorBillingScreen(
                 }
             }
         }
-       // Spacer(modifier = Modifier.height(7.dp))
+        // Spacer(modifier = Modifier.height(7.dp))
         TextFieldWithDropdownUsage()
-       // Spacer(modifier = Modifier.height(7.dp))
+        // Spacer(modifier = Modifier.height(7.dp))
         Box(
             modifier = Modifier
                 .wrapContentHeight()
@@ -114,10 +115,16 @@ fun VendorBillingScreen(
                 )
                 BasicTextField(
                     value = viewModel.toiTaken.value,
-                    onValueChange = {viewModel.toiTaken.value=it},
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Number),
+                    onValueChange = { viewModel.toiTaken.value = it },
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done,
+                        keyboardType = KeyboardType.Number
+                    ),
                     maxLines = 1,
-                    modifier = Modifier.width(125.dp).height(40.dp).padding(horizontal = 15.dp),
+                    modifier = Modifier
+                        .width(125.dp)
+                        .height(40.dp)
+                        .padding(horizontal = 15.dp),
                     textStyle = TextStyle.Default.copy(fontSize = 20.sp)
                 ) {
                     TextFieldDefaults.OutlinedTextFieldDecorationBox(
@@ -147,10 +154,16 @@ fun VendorBillingScreen(
                 )
                 BasicTextField(
                     value = viewModel.etTaken.value,
-                    onValueChange = {viewModel.etTaken.value=it},
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Number),
+                    onValueChange = { viewModel.etTaken.value = it },
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done,
+                        keyboardType = KeyboardType.Number
+                    ),
                     maxLines = 1,
-                    modifier = Modifier.width(125.dp).height(40.dp).padding(horizontal = 15.dp),
+                    modifier = Modifier
+                        .width(125.dp)
+                        .height(40.dp)
+                        .padding(horizontal = 15.dp),
                     textStyle = TextStyle.Default.copy(fontSize = 20.sp)
                 ) {
                     TextFieldDefaults.OutlinedTextFieldDecorationBox(
@@ -181,10 +194,16 @@ fun VendorBillingScreen(
 
                 BasicTextField(
                     value = viewModel.esTaken.value,
-                    onValueChange = {viewModel.esTaken.value=it},
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Number),
+                    onValueChange = { viewModel.esTaken.value = it },
+                    keyboardOptions = KeyboardOptions(
+                        imeAction = ImeAction.Done,
+                        keyboardType = KeyboardType.Number
+                    ),
                     maxLines = 1,
-                    modifier = Modifier.width(125.dp).height(40.dp).padding(horizontal = 15.dp),
+                    modifier = Modifier
+                        .width(125.dp)
+                        .height(40.dp)
+                        .padding(horizontal = 15.dp),
                     textStyle = TextStyle.Default.copy(fontSize = 20.sp)
                 ) {
                     TextFieldDefaults.OutlinedTextFieldDecorationBox(
@@ -253,14 +272,23 @@ fun VendorBillingScreen(
                             )
                             BasicTextField(
                                 value = viewModel.cashPaymentText.value,
-                                onValueChange = {viewModel.cashPaymentText.value=it},
-                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Number),
+                                onValueChange = { viewModel.cashPaymentText.value = it },
+                                keyboardOptions = KeyboardOptions(
+                                    imeAction = ImeAction.Done,
+                                    keyboardType = KeyboardType.Number
+                                ),
                                 maxLines = 1,
-                                modifier = Modifier.width(100.dp).height(37.dp).padding(start = 5.dp, end = 15.dp),
-                               // textStyle = TextStyle.Default.copy(fontSize = 20.sp),
-                                textStyle = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold),
+                                modifier = Modifier
+                                    .width(100.dp)
+                                    .height(37.dp)
+                                    .padding(start = 5.dp, end = 15.dp),
+                                // textStyle = TextStyle.Default.copy(fontSize = 20.sp),
+                                textStyle = TextStyle(
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.Bold
+                                ),
 
-                            ) {
+                                ) {
                                 TextFieldDefaults.OutlinedTextFieldDecorationBox(
                                     value = viewModel.cashPaymentText.value,
                                     innerTextField = it,
@@ -269,43 +297,119 @@ fun VendorBillingScreen(
                                     visualTransformation = VisualTransformation.None,
                                     interactionSource = MutableInteractionSource(),
                                     contentPadding = PaddingValues(all = 4.dp),
-                                    colors = ExposedDropdownMenuDefaults.textFieldColors(backgroundColor = Color.White)
+                                    colors = ExposedDropdownMenuDefaults.textFieldColors(
+                                        backgroundColor = Color.White
+                                    )
                                 )
                             }
                         }
                     }
                 }
                 Spacer(modifier = Modifier.height(5.dp))
-                HorizontalScrollableCoupon(getPersonAge())
+                // HorizontalScrollableCoupon(getPersonAge())
+                Column(
+                    modifier = Modifier
+                        .wrapContentHeight()
+                        .fillMaxWidth()
+                ) {
+                    Row(Modifier.wrapContentSize()) {
+                        Text(
+                            text = "Coupons",
+                            color = Color.DarkGray,
+                            modifier = Modifier
+                                .wrapContentSize()
+                                .padding(horizontal = 15.dp)
+                                .align(Alignment.CenterVertically),
+
+                            )
+                       // val cntxt = LocalContext.current
+
+                        TextButton(modifier = Modifier
+                            .wrapContentSize()
+                            .align(Alignment.CenterVertically),
+                            enabled = viewModel.couponTotal.value <= 0,
+                            onClick = {
+                                viewModel.calculateCoupon()
+                                //Toast.makeText(cntxt, "Coupon=₹${viewModel.couponTotal.value}", Toast.LENGTH_SHORT).show()
+                            }) {
+                            Text(
+                                text = "Apply Coupon",
+                                color = GreenLight,
+                                fontWeight = FontWeight.Bold,
+                                // textDecoration = TextDecoration.Underline
+                            )
+                        }
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .wrapContentHeight()
+                            .fillMaxWidth()
+                    ) {
+                        Column(Modifier.weight(1f, true)) {
+                            HorizontalScrollableCoupon(getPersonAge(), viewModel,
+                                onPriceChange = { value, index, multi ->
+                                   // viewModel.coupons[index] = value.toInt()
+                                    viewModel.coupons[index] = Pair(first = multi, second = value.toInt())
+                                }
+                            )
+                        }
+
+                        Text(
+                            text = "₹${viewModel.couponTotal.value}",
+                            color = Color.Black,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier
+                                .wrapContentSize()
+                                .padding(horizontal = 10.dp)
+                                .align(Alignment.CenterVertically),
+                            fontSize = 20.sp
+                        )
+                    }
+                }
                 Spacer(modifier = Modifier.height(5.dp))
                 Surface(
                     shape = RoundedCornerShape(5.dp),
-                    modifier = Modifier.fillMaxWidth().height(50.dp).padding(horizontal = 15.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp)
+                        .padding(horizontal = 15.dp),
                     color = PinkLight,
                     contentColor = Color.White
                 ) {
-                    Row(Modifier.wrapContentHeight().fillMaxWidth()) {
-                        Column(modifier = Modifier.wrapContentSize().weight(3f,true).align(Alignment.CenterVertically)
-                                 ) {
-                            Text(text = "Due Payment", color = Color.DarkGray)
-                            Text(text = "With previous ₹ 2000 Due", color = Color.Gray, fontSize = 10.sp)
-                        }
+                    Row(
+                        Modifier
+                            .wrapContentHeight()
+                            .fillMaxWidth()
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .wrapContentSize()
+                                .weight(3f, true)
+                                .align(Alignment.CenterVertically)
+                        ) {
+                            Text(text = "Due Payment", color = Color.White)
                             Text(
-                                text = "₹ 2500/-",
-                                //style = MaterialTheme.typography.h6,
-                                color = Color.Black,
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier.wrapContentSize().padding(horizontal = 10.dp).align(Alignment.CenterVertically),
-                                fontSize = 20.sp
-
+                                text = "With previous ₹ 2000 Due",
+                                color = Color.White,
+                                fontSize = 10.sp
                             )
+                        }
+                        Text(
+                            text = "₹2500/-",
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier
+                                .wrapContentSize()
+                                .padding(horizontal = 10.dp)
+                                .align(Alignment.CenterVertically),
+                            fontSize = 20.sp
+                        )
                     }
                 }//surface\
-
                 Spacer(modifier = Modifier.height(7.dp))
                 val context = LocalContext.current
                 Button(
-
                     onClick = {
                         Toast.makeText(context, "Generate Bill", Toast.LENGTH_SHORT).show()
                     },

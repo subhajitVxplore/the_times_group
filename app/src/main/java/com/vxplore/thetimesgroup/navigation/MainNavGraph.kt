@@ -47,6 +47,9 @@ fun MainNavGraph(
         composable(destination = Destination.Billing) {
             VendorBillingScreen()
         }
+        composable(destination = Destination.AddVendor) {
+            AddVendorScreen()
+        }
 
 
     }

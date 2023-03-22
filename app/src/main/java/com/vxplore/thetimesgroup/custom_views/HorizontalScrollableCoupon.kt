@@ -20,60 +20,56 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.vxplore.thetimesgroup.screens.Person
+import com.vxplore.thetimesgroup.viewModels.BillingScreenViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun HorizontalScrollableCoupon(personList: List<Person>) {
+fun HorizontalScrollableCoupon(
+    personList: List<Person>,
+    viewModel: BillingScreenViewModel,
+    price: String = "",
+    onPriceChange: (String, Int, Int) -> Unit
+) {
     val scrollState = rememberScrollState()
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(40.dp)
-            //.padding(10.dp)
-            .horizontalScroll(
-                state = scrollState,
-            ),
+            .horizontalScroll(state = scrollState),
         content = {
             for ((index, person) in personList.withIndex()) {
                 Card(
                     shape = RoundedCornerShape(4.dp),
                     backgroundColor = Color.Gray,
-                    modifier = Modifier.fillMaxHeight().wrapContentWidth().padding(horizontal = 10.dp)
-
-
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .wrapContentWidth()
+                        .padding(horizontal = 10.dp)
                 ) {
-                    Row(modifier = Modifier.fillMaxHeight().wrapContentWidth()) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .wrapContentWidth()
+                    ) {
                         Text(
-                            person.age.toString(),
-                            modifier = Modifier.wrapContentSize().align(Alignment.CenterVertically),
-                            //modifier = Modifier.padding(16.dp),
-                            style = TextStyle(
-                                color = Color.Black,
-                                fontSize = 15.sp
-                            )
+                            "₹" + person.age.toString(),
+                            modifier = Modifier
+                                .wrapContentHeight()
+                                .width(50.dp)
+                                .align(Alignment.CenterVertically)
+                                .padding(start = 10.dp),
+                            style = TextStyle(color = Color.Black, fontSize = 15.sp)
                         )
-                        Surface(modifier = Modifier.fillMaxHeight(), color = Color.White) {
-                            BasicTextField(
-                                value = "",
-                                onValueChange = {},
-                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Number),
-                                maxLines = 1,
-                               // modifier = Modifier.width(80.dp).height(37.dp),
-                                textStyle = TextStyle.Default.copy(fontSize = 15.sp)
-                            ) {
-                                TextFieldDefaults.OutlinedTextFieldDecorationBox(
-                                    value = "",
-                                    innerTextField = it,
-                                    enabled = true,
-                                    singleLine = true,
-                                    visualTransformation = VisualTransformation.None,
-                                    interactionSource = MutableInteractionSource(),
-                                    contentPadding = PaddingValues(all = 4.dp),
-                                    colors = ExposedDropdownMenuDefaults.textFieldColors(
-                                        backgroundColor = Color.White
-                                    )
-                                )
-                            }
+                        Surface(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .width(50.dp),
+                            shape = RoundedCornerShape(5.dp, 5.dp, 5.dp, 5.dp),
+                            color = Color.White
+                        ) {
+                            MyBasicTextField(text = price, onValueChange = {
+                                onPriceChange(it, index, person.age)
+                            })
                         }
 
                     }

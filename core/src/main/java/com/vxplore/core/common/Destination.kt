@@ -33,6 +33,7 @@ sealed class Destination(protected val route: String, vararg arguments: Any) {
     object Dashboard : NoArgumentsDestination(AppRoutes.DASHBOARD)
     object Register : NoArgumentsDestination(AppRoutes.REGISTER)
     object Billing : NoArgumentsDestination(AppRoutes.BILLING)
+    object AddVendor : NoArgumentsDestination(AppRoutes.ADD_VENDOR)
 }
 
 private fun String.appendParams(vararg params: Pair<String, Any?>): String {
