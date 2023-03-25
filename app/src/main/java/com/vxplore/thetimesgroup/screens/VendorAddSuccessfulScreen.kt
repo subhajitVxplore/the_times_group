@@ -1,13 +1,13 @@
+@file:Suppress("DEPRECATION")
+
 package com.vxplore.thetimesgroup.screens
 
 import android.app.Activity
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -15,17 +15,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.vxplore.thetimesgroup.R
 import com.vxplore.thetimesgroup.ui.theme.GreenLight
 import com.vxplore.thetimesgroup.ui.theme.GreyLight
+import com.vxplore.thetimesgroup.viewModels.VendorAddSuccessViewModel
 
 @Composable
-fun VendorAddSuccessScreen() {
+fun VendorAddSuccessfulScreen(viewModel: VendorAddSuccessViewModel = hiltViewModel()) {
     Column(modifier = Modifier.fillMaxSize()) {
+        val activity = LocalContext.current as Activity
         Row(modifier = Modifier
             .fillMaxWidth()
             .height(50.dp)
@@ -42,13 +43,8 @@ fun VendorAddSuccessScreen() {
                     .align(Alignment.CenterVertically)
                     .padding(horizontal = 10.dp)
             )
-            Text(
-                text = "Add Vendor",
-                color = Color.DarkGray,
-                fontSize = 17.sp,
-                modifier = Modifier.align(Alignment.CenterVertically)
-            )
         }
+
         Spacer(modifier = Modifier.height(100.dp))
         Text(
             text = "Thank you",
@@ -70,24 +66,62 @@ fun VendorAddSuccessScreen() {
 
         Spacer(modifier = Modifier.height(30.dp))
         val context = LocalContext.current
-        Button(
-            onClick = {
-                Toast.makeText(context, "Generate Bill", Toast.LENGTH_SHORT).show()
-            },
-            shape = RoundedCornerShape(5.dp),
+
+
+
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 15.dp)
-                .height(53.dp),
-            colors = ButtonDefaults.buttonColors(backgroundColor = GreenLight)
+                .wrapContentHeight()
+                .padding(5.dp)
         ) {
-            Text(
-                text = "Add Vendors",
-                color = Color.White,
-                style = MaterialTheme.typography.h6,
-            )
+
+
+            Button(
+                onClick = {
+                    viewModel.onAddVendorSuccessToAddVendor()
+                   // Toast.makeText(context, "To AddVendor", Toast.LENGTH_SHORT).show()
+                },
+                shape = RoundedCornerShape(5.dp),
+                modifier = Modifier
+                    .weight(1f, true)
+                    .padding(horizontal = 15.dp)
+                    .height(50.dp),
+                colors = ButtonDefaults.buttonColors(backgroundColor = GreenLight)
+            ) {
+                Text(
+                    text = "Add Vendor",
+                    color = Color.White,
+                   fontSize = 17.sp,
+                    maxLines = 1
+                )
+            }
+
+            Button(
+                onClick = {
+                    viewModel.onAddVendorSuccessToDashboard()
+                },
+                shape = RoundedCornerShape(5.dp),
+                modifier = Modifier
+                    .weight(1f, true)
+                    .padding(horizontal = 15.dp)
+                    .height(50.dp),
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color.DarkGray)
+            ) {
+                Text(
+                    text = "Dashboard",
+                    color = Color.White,
+                    fontSize = 17.sp,
+                    maxLines = 1
+                )
+            }
+
+
         }
+
     }
 
-
 }
+
+
+//}

@@ -10,6 +10,8 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
@@ -32,6 +34,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.vxplore.thetimesgroup.screens.Paper
 import com.vxplore.thetimesgroup.ui.theme.GreyLight
 import com.vxplore.thetimesgroup.viewModels.BillingScreenViewModel
 
@@ -41,6 +44,7 @@ fun ExpandableCard(
     header: String, // Header
     //description: String, // Description
    // color: Color, // Color
+    paperList: List<Paper>,
 viewModel: BillingScreenViewModel
 ) {
     val rotationState by animateFloatAsState(if (viewModel.expand.value) 180f else 0f) // Rotation State
@@ -77,9 +81,7 @@ viewModel: BillingScreenViewModel
                     fontSize = 15.sp,
                     textAlign = TextAlign.Start,
                     fontWeight = FontWeight.Normal,
-                    modifier = Modifier
-                        .weight(.9f)
-                        .padding(start = 8.dp)
+                    modifier = Modifier.weight(.9f).padding(start = 8.dp)
                 )
                 IconButton(
                     modifier = Modifier
@@ -98,116 +100,48 @@ viewModel: BillingScreenViewModel
                 }
             }
             Divider(color = Color.LightGray, thickness = 0.8.dp)
+
             if (viewModel.expand.value) {
                 Spacer(modifier = Modifier.height(7.dp))
-
-                Row(Modifier.wrapContentHeight()) {
-                        Column(modifier = Modifier
-                            .wrapContentSize()
-                            .align(Alignment.CenterVertically)
-                            .padding(13.dp, 0.dp, 0.dp, 0.dp)) {
-                            Text(text = "Times of India", color = Color.DarkGray)
-                            Text(text = "Yesterday Total Paper 500 (Subscription 300)", color = Color.Gray, fontSize = 10.sp)
-                        }
-                        Box(modifier = Modifier
-                            .wrapContentHeight()
-                            .fillMaxWidth(), contentAlignment = Alignment.TopEnd){
-                            Surface(modifier = Modifier.wrapContentSize() .padding(horizontal = 15.dp), color = Color.White) {
-                                BasicTextField(
-                                    value = viewModel.toiReturn.value,
-                                    onValueChange = {viewModel.toiReturn.value=it},
-                                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Number),
-                                    maxLines = 1,
-                                    modifier = Modifier.width(80.dp).height(37.dp),
-                                    textStyle = TextStyle.Default.copy(fontSize = 17.sp)
-                                ) {
-                                    TextFieldDefaults.OutlinedTextFieldDecorationBox(
+                LazyColumn(modifier = Modifier.height(100.dp).fillMaxWidth()) {
+                    itemsIndexed(items = paperList) { index, paperr ->
+                        Row(Modifier.wrapContentHeight()) {
+                            Column(modifier = Modifier
+                                .wrapContentSize()
+                                .align(Alignment.CenterVertically)
+                                .padding(13.dp, 0.dp, 0.dp, 0.dp)) {
+                                Text(text = paperr.name, color = Color.DarkGray)
+                                Text(text = "Yesterday Total Paper 500 (Subscription 300)", color = Color.Gray, fontSize = 10.sp)
+                            }
+                            Box(modifier = Modifier
+                                .wrapContentHeight()
+                                .fillMaxWidth(), contentAlignment = Alignment.TopEnd){
+                                Surface(modifier = Modifier.wrapContentSize() .padding(horizontal = 15.dp), color = Color.White) {
+                                    BasicTextField(
                                         value = viewModel.toiReturn.value,
-                                        innerTextField = it,
-                                        enabled = true,
-                                        singleLine = true,
-                                        visualTransformation = VisualTransformation.None,
-                                        interactionSource = MutableInteractionSource(),
-                                        contentPadding = PaddingValues(all = 4.dp),
-                                        colors = textFieldColors(backgroundColor = Color.White)
-                                    )
+                                        onValueChange = {viewModel.toiReturn.value=it},
+                                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Number),
+                                        maxLines = 1,
+                                        modifier = Modifier.width(80.dp).height(37.dp),
+                                        textStyle = TextStyle.Default.copy(fontSize = 17.sp)
+                                    ) {
+                                        TextFieldDefaults.OutlinedTextFieldDecorationBox(
+                                            value = viewModel.toiReturn.value,
+                                            innerTextField = it,
+                                            enabled = true,
+                                            singleLine = true,
+                                            visualTransformation = VisualTransformation.None,
+                                            interactionSource = MutableInteractionSource(),
+                                            contentPadding = PaddingValues(all = 4.dp),
+                                            colors = textFieldColors(backgroundColor = Color.White)
+                                        )
+                                    }
                                 }
                             }
-                    }
-                }
-                Spacer(modifier = Modifier.height(7.dp))
-                Row(Modifier.wrapContentHeight()) {
-                    Column(modifier = Modifier
-                        .wrapContentSize()
-                        .align(Alignment.CenterVertically)
-                        .padding(13.dp, 0.dp, 0.dp, 0.dp)) {
-                        Text(text = "Economics Times", color = Color.DarkGray)
-                        Text(text = "Yesterday Total Paper 400 (Subscription 200)", color = Color.Gray, fontSize = 10.sp)
-                    }
-                    Box(modifier = Modifier
-                        .wrapContentHeight()
-                        .fillMaxWidth(), contentAlignment = Alignment.TopEnd){
-
-                        Surface(modifier = Modifier.wrapContentSize() .padding(horizontal = 15.dp), color = Color.White) {
-                            BasicTextField(
-                                value = viewModel.etReturn.value,
-                                onValueChange = {viewModel.etReturn.value=it},
-                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Number),
-                                maxLines = 1,
-                                modifier = Modifier.width(80.dp).height(37.dp),
-                                textStyle = TextStyle.Default.copy(fontSize = 17.sp)
-                            ) {
-                                TextFieldDefaults.OutlinedTextFieldDecorationBox(
-                                    value = viewModel.etReturn.value,
-                                    innerTextField = it,
-                                    enabled = true,
-                                    singleLine = true,
-                                    visualTransformation = VisualTransformation.None,
-                                    interactionSource = MutableInteractionSource(),
-                                    contentPadding = PaddingValues(all = 4.dp),
-                                    colors = textFieldColors(backgroundColor = Color.White)
-                                )
-                            }
                         }
-
+                        Spacer(modifier = Modifier.height(7.dp))
                     }
-                }
-                Spacer(modifier = Modifier.height(7.dp))
-                Row(Modifier.wrapContentHeight()) {
-                    Column(modifier = Modifier
-                        .wrapContentSize()
-                        .align(Alignment.CenterVertically)
-                        .padding(13.dp, 0.dp, 0.dp, 0.dp)) {
-                        Text(text = "Ei Samay", color = Color.DarkGray)
-                        Text(text = "Yesterday Total Paper 400 (Subscription 200)", color = Color.Gray, fontSize = 10.sp)
-                    }
-                    Box(modifier = Modifier
-                        .wrapContentHeight()
-                        .fillMaxWidth(), contentAlignment = Alignment.TopEnd){
 
-                        Surface(modifier = Modifier.wrapContentSize() .padding(horizontal = 15.dp), color = Color.White) {
-                            BasicTextField(
-                                value = viewModel.esReturn.value,
-                                onValueChange = {viewModel.esReturn.value=it},
-                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Number),
-                                maxLines = 1,
-                                modifier = Modifier.width(80.dp).height(37.dp),
-                                textStyle = TextStyle.Default.copy(fontSize = 17.sp)
-                            ) {
-                                TextFieldDefaults.OutlinedTextFieldDecorationBox(
-                                    value = viewModel.esReturn.value,
-                                    innerTextField = it,
-                                    enabled = true,
-                                    singleLine = true,
-                                    visualTransformation = VisualTransformation.None,
-                                    interactionSource = MutableInteractionSource(),
-                                    contentPadding = PaddingValues(all = 4.dp),
-                                    colors = textFieldColors(backgroundColor = Color.White)
-                                )
-                            }
-                        }
-
-                    }
                 }
                 Spacer(modifier = Modifier.height(10.dp))
             }

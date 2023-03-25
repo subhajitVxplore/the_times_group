@@ -46,18 +46,19 @@ class OtpViewModel @Inject constructor(
     }
 
 
-fun verifyOtp(otpp: String, mContext: Context) {
+fun verifyOtp(otpp: String) {
 
-        otpUseCases.verifyOtp(otpp,number,mContext)
+        otpUseCases.verifyOtp(otpp,number)
             .flowOn(Dispatchers.IO)
             .onEach {
                 when (it.type) {
-                    EmitType.Otp -> {
+                    EmitType.Navigate -> {
                         it.value?.apply {
-                            castValueToRequiredTypes<Destination.NoArgumentsDestination>()?.let {
-                                appNavigator.navigateTo(
-                                    it(),
-                                    popUpToRoute = Destination.Otp(number.toString()),
+                            castValueToRequiredTypes<String>()?.let { destination->
+                                appNavigator.tryNavigateTo(
+                                    destination,
+                                    popUpToRoute = Destination.Otp.fullRoute,
+                                    isSingleTop = true,
                                     inclusive = true
                                 )
                             }

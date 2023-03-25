@@ -1,6 +1,8 @@
 package com.vxplore.thetimesgroup.screens.dashboard_content
 
 import android.widget.Toast
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -25,20 +27,20 @@ import com.example.core.utils.AppNavigator
 import com.vxplore.core.common.Destination
 import com.vxplore.core.domain.model.Vendor
 import com.vxplore.thetimesgroup.custom_views.MyDoughnutChart
+import com.vxplore.thetimesgroup.extensions.bottomToUp
+import com.vxplore.thetimesgroup.extensions.screenHeight
+import com.vxplore.thetimesgroup.extensions.screenWidth
+import com.vxplore.thetimesgroup.extensions.upToBottom
 import com.vxplore.thetimesgroup.ui.theme.*
 import com.vxplore.thetimesgroup.viewModels.DashboardViewModel
 
 @Composable
 fun DashboardMainScreen(openDrawer: () -> Unit, viewModel: DashboardViewModel) {
- //val appNavigator: AppNavigator
     val ctx = LocalContext.current
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = {
-               // Toast.makeText(ctx, "Simple Floating Action Button", Toast.LENGTH_SHORT).show()
-                viewModel.onDashboardToBilling()
-                                           },
-                modifier = Modifier.size(70.dp),
+            FloatingActionButton(onClick = {viewModel.onDashboardToBilling()},
+                modifier = Modifier.size(55.dp),
                 backgroundColor = WhiteGray,
                 contentColor = BrownGray) {
                 Icon(Icons.Rounded.Add, contentDescription = "Add",modifier = Modifier.size(40.dp))
@@ -66,13 +68,8 @@ fun DashboardMainScreen(openDrawer: () -> Unit, viewModel: DashboardViewModel) {
                                     modifier = Modifier.padding(10.dp, 0.dp, 0.dp, 5.dp)
                                 )
                                 Box(
-                                    modifier = Modifier
-                                        .wrapContentHeight()
-                                        .fillMaxWidth()
-                                        .background(
-                                            Color.Black,
-                                            shape = RoundedCornerShape(0.dp, 0.dp, 5.dp, 5.dp)
-                                        ),
+                                    modifier = Modifier.wrapContentHeight().fillMaxWidth()
+                                        .background(Color.Black,shape = RoundedCornerShape(0.dp, 0.dp, 5.dp, 5.dp)),
                                     contentAlignment = Alignment.CenterStart,
                                 ) {
                                     Text(
@@ -184,45 +181,75 @@ fun DashboardMainScreen(openDrawer: () -> Unit, viewModel: DashboardViewModel) {
                             )
                         }
                     }
-                   showVendorsList(vendorList = viewModel.vendors.collectAsState().value)
+                   showVendorsList(vendorList = viewModel.vendors.collectAsState().value,viewModel.vendorsLoading.value)
+
+                //CircularProgressIndicator()
                 })
         }
     }
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun showVendorsList(vendorList: List<Vendor>) {
-    LazyColumn() {
-        itemsIndexed(items = vendorList) { index, vendorr ->
-            Row(modifier = Modifier.fillMaxWidth().wrapContentHeight().padding(10.dp, 10.dp, 0.dp, 10.dp)) {
+fun showVendorsList(vendorList: List<Vendor>,loading: Boolean,) {
 
-                Text(
-                    text = vendorr.top_vendors,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 12.sp,
-                    modifier = Modifier.weight(1f, true).padding(5.dp, 0.dp, 0.dp, 0.dp)
-                )
-                Text(
-                    text = vendorr.daily_avg,
-                    fontSize = 12.sp,
-                    modifier = Modifier.weight(1f, true).padding(25.dp, 0.dp, 0.dp, 0.dp)
-                )
-                Text(
-                    text = vendorr.return_avg,
-                    fontSize = 12.sp,
-                    modifier = Modifier.weight(1f, true).padding(20.dp, 0.dp, 0.dp, 0.dp)
-                )
-                Text(
-                    text = vendorr.payment_due,
-                    fontSize = 12.sp,
-                    modifier = Modifier.weight(1f, true).padding(20.dp, 0.dp, 0.dp, 0.dp)
-                )
-
+    AnimatedContent(
+        targetState = loading,
+        transitionSpec = {
+            if(targetState && !initialState) {
+                upToBottom()
+            } else {
+                bottomToUp()
             }
-            Divider(color = GreyLight, thickness = 0.8.dp, modifier = Modifier.padding(10.dp, 0.dp, 10.dp, 0.dp))
+        }
+    ) {
+        if (!it) {
+            LazyColumn() {
+                itemsIndexed(items = vendorList) { index, vendorr ->
+                    Row(modifier = Modifier.fillMaxWidth().wrapContentHeight().padding(10.dp, 10.dp, 0.dp, 10.dp)) {
+
+                        Text(
+                            text = vendorr.top_vendors,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 12.sp,
+                            modifier = Modifier.weight(1f, true).padding(5.dp, 0.dp, 0.dp, 0.dp)
+                        )
+                        Text(
+                            text = vendorr.daily_avg,
+                            fontSize = 12.sp,
+                            modifier = Modifier.weight(1f, true).padding(25.dp, 0.dp, 0.dp, 0.dp)
+                        )
+                        Text(
+                            text = vendorr.return_avg,
+                            fontSize = 12.sp,
+                            modifier = Modifier.weight(1f, true).padding(20.dp, 0.dp, 0.dp, 0.dp)
+                        )
+                        Text(
+                            text = vendorr.payment_due,
+                            fontSize = 12.sp,
+                            modifier = Modifier.weight(1f, true).padding(20.dp, 0.dp, 0.dp, 0.dp)
+                        )
+
+                    }
+                    Divider(color = GreyLight, thickness = 0.8.dp, modifier = Modifier.padding(10.dp, 0.dp, 10.dp, 0.dp))
+                }
+            }
+        } else {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .size(width = screenWidth * 0.15f, height = screenHeight * 0.15f)
+                    .padding(bottom = screenHeight * 0.05f),
+                color = GreenLight,
+                strokeWidth = 5.dp,
+            )
         }
     }
+
+
+
+ ///////////////////////////////////////////////////////////////////
+
 
 }
 

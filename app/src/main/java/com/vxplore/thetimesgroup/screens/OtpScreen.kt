@@ -170,7 +170,8 @@ fun OtpScreen( viewModel: OtpViewModel  = hiltViewModel()) {
                         if (otpValue.length<4){
                             Toast.makeText(mContext, "Enter 4 digit OTP", Toast.LENGTH_SHORT).show()
                         }else{
-                            viewModel.verifyOtp("$otpValue",mContext)
+
+                            viewModel.verifyOtp("$otpValue")
                         }
 
 

@@ -21,12 +21,16 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.vxplore.thetimesgroup.R
 import com.vxplore.thetimesgroup.ui.theme.GreenLight
 import com.vxplore.thetimesgroup.ui.theme.GreyLight
+import com.vxplore.thetimesgroup.viewModels.AddVendorViewModel
+import com.vxplore.thetimesgroup.viewModels.RegisterViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 
 @Composable
-fun AddVendorScreen() {
+fun AddVendorScreen(viewModel: AddVendorViewModel = hiltViewModel()) {
 
     Column(modifier = Modifier.fillMaxSize()) {
         Row(modifier = Modifier.fillMaxWidth().height(50.dp).background(GreyLight).padding(5.dp)) {
@@ -102,7 +106,8 @@ fun AddVendorScreen() {
         val context = LocalContext.current
         Button(
             onClick = {
-                Toast.makeText(context, "Generate Bill", Toast.LENGTH_SHORT).show()
+                viewModel.onAddVendorToAddVendorSuccess()
+                //Toast.makeText(context, "Generate Bill", Toast.LENGTH_SHORT).show()
             },
             shape = RoundedCornerShape(5.dp),
             modifier = Modifier

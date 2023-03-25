@@ -39,7 +39,7 @@ fun MainNavGraph(
             OtpScreen()
         }
         composable(destination=Destination.Dashboard){
-            DashboardScreen()
+            DashboardContainerScreen()
         }
         composable(destination=Destination.Register){
             RegistrationScreen()
@@ -49,6 +49,9 @@ fun MainNavGraph(
         }
         composable(destination = Destination.AddVendor) {
             AddVendorScreen()
+        }
+        composable(destination = Destination.AddVendorSuccess) {
+            VendorAddSuccessfulScreen()
         }
 
 

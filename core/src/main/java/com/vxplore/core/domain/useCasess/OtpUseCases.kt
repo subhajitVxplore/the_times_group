@@ -4,16 +4,18 @@ import android.content.Context
 import com.example.core.utils.AppNavigator
 import com.vxplore.core.common.*
 import com.vxplore.core.domain.repositoriess.OtpRepository
+import com.vxplore.core.helpers.AppStore
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class OtpUseCases @Inject constructor(
     private val otpRepository: OtpRepository,
-    private val appNavigator: AppNavigator,
+    private val pref: AppStore
+    ) {
 
-) {
+    fun verifyOtp(otp: String, number: String?) = flow {
 
-    fun verifyOtp(otp: String, number: String?, mContext: Context) = flow {
+        var tesTuserId= "1234"
 
         when (val response = otpRepository.otpDetailsRepo(otp)) {
 
@@ -21,25 +23,18 @@ class OtpUseCases @Inject constructor(
                 response.data?.apply {
                     when (status) {
                         true -> {
-
                             if (otp == otp_details[0].otp) {
-
-                                if (number==otp_details[0].phone){
-                                    appNavigator.navigateTo(
-                                        route = Destination.Dashboard.fullRoute,
-                                        popUpToRoute = Destination.Otp(number.toString()),
-                                        isSingleTop = true,
-                                        inclusive = true
-                                    )
-                                }else{
-                                    appNavigator.navigateTo(
-                                        route = Destination.Register.fullRoute,
-                                        popUpToRoute = Destination.Otp(number.toString()),
-                                        isSingleTop = true,
-                                        inclusive = true
+                                if (number == otp_details[0].phone) {
+                                    pref.login(tesTuserId)
+                                    emit(Data(EmitType.Navigate, value = Destination.Dashboard()))
+                                } else {
+                                    emit(
+                                        Data(
+                                            EmitType.Navigate,
+                                            value = Destination.MobileNo(number ?: "")
+                                        )
                                     )
                                 }
-
 
 
                             } else {
@@ -66,7 +61,6 @@ class OtpUseCases @Inject constructor(
             }
         }
     }
-
 
 
 }

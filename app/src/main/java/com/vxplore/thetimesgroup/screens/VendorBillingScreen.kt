@@ -3,17 +3,16 @@
 package com.vxplore.thetimesgroup.screens
 
 import android.app.Activity
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,7 +25,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -102,128 +100,9 @@ fun VendorBillingScreen(
         // Spacer(modifier = Modifier.height(7.dp))
         TextFieldWithDropdownUsage()
         // Spacer(modifier = Modifier.height(7.dp))
-        Box(
-            modifier = Modifier
-                .wrapContentHeight()
-                .fillMaxWidth(), contentAlignment = Alignment.TopEnd
-        ) {
-            Row(Modifier.wrapContentHeight()) {
-                Text(
-                    text = "Times of India",
-                    color = Color.DarkGray,
-                    modifier = Modifier.align(Alignment.CenterVertically)
-                )
-                BasicTextField(
-                    value = viewModel.toiTaken.value,
-                    onValueChange = { viewModel.toiTaken.value = it },
-                    keyboardOptions = KeyboardOptions(
-                        imeAction = ImeAction.Done,
-                        keyboardType = KeyboardType.Number
-                    ),
-                    maxLines = 1,
-                    modifier = Modifier
-                        .width(125.dp)
-                        .height(40.dp)
-                        .padding(horizontal = 15.dp),
-                    textStyle = TextStyle.Default.copy(fontSize = 20.sp)
-                ) {
-                    TextFieldDefaults.OutlinedTextFieldDecorationBox(
-                        value = viewModel.toiTaken.value,
-                        innerTextField = it,
-                        enabled = true,
-                        singleLine = true,
-                        visualTransformation = VisualTransformation.None,
-                        interactionSource = MutableInteractionSource(),
-                        contentPadding = PaddingValues(all = 4.dp),
-                        colors = ExposedDropdownMenuDefaults.textFieldColors(backgroundColor = Color.White)
-                    )
-                }
-            }
-        }
+        showPapersTakenList(paperList = getPaperPrice(),viewModel)
         Spacer(modifier = Modifier.height(7.dp))
-        Box(
-            modifier = Modifier
-                .wrapContentHeight()
-                .fillMaxWidth(), contentAlignment = Alignment.TopEnd
-        ) {
-            Row(Modifier.wrapContentHeight()) {
-                Text(
-                    text = "Economics Times",
-                    color = Color.DarkGray,
-                    modifier = Modifier.align(Alignment.CenterVertically)
-                )
-                BasicTextField(
-                    value = viewModel.etTaken.value,
-                    onValueChange = { viewModel.etTaken.value = it },
-                    keyboardOptions = KeyboardOptions(
-                        imeAction = ImeAction.Done,
-                        keyboardType = KeyboardType.Number
-                    ),
-                    maxLines = 1,
-                    modifier = Modifier
-                        .width(125.dp)
-                        .height(40.dp)
-                        .padding(horizontal = 15.dp),
-                    textStyle = TextStyle.Default.copy(fontSize = 20.sp)
-                ) {
-                    TextFieldDefaults.OutlinedTextFieldDecorationBox(
-                        value = viewModel.etTaken.value,
-                        innerTextField = it,
-                        enabled = true,
-                        singleLine = true,
-                        visualTransformation = VisualTransformation.None,
-                        interactionSource = MutableInteractionSource(),
-                        contentPadding = PaddingValues(all = 4.dp),
-                        colors = ExposedDropdownMenuDefaults.textFieldColors(backgroundColor = Color.White)
-                    )
-                }
-            }
-        }
-        Spacer(modifier = Modifier.height(7.dp))
-        Box(
-            modifier = Modifier
-                .wrapContentHeight()
-                .fillMaxWidth(), contentAlignment = Alignment.TopEnd
-        ) {
-            Row(Modifier.wrapContentHeight()) {
-                Text(
-                    text = "Ei Samay",
-                    color = Color.DarkGray,
-                    modifier = Modifier.align(Alignment.CenterVertically)
-                )
-
-                BasicTextField(
-                    value = viewModel.esTaken.value,
-                    onValueChange = { viewModel.esTaken.value = it },
-                    keyboardOptions = KeyboardOptions(
-                        imeAction = ImeAction.Done,
-                        keyboardType = KeyboardType.Number
-                    ),
-                    maxLines = 1,
-                    modifier = Modifier
-                        .width(125.dp)
-                        .height(40.dp)
-                        .padding(horizontal = 15.dp),
-                    textStyle = TextStyle.Default.copy(fontSize = 20.sp)
-                ) {
-                    TextFieldDefaults.OutlinedTextFieldDecorationBox(
-                        value = viewModel.esTaken.value,
-                        innerTextField = it,
-                        enabled = true,
-                        singleLine = true,
-                        visualTransformation = VisualTransformation.None,
-                        interactionSource = MutableInteractionSource(),
-                        contentPadding = PaddingValues(all = 4.dp),
-                        colors = ExposedDropdownMenuDefaults.textFieldColors(backgroundColor = Color.White)
-                    )
-                }
-
-            }
-        }
-        Spacer(modifier = Modifier.height(7.dp))
-        ExpandableCard(header = "Returns", viewModel = viewModel)
-
-
+        ExpandableCard(header = "Returns",paperList = getPaperPrice(),viewModel = viewModel)
         Box(
             modifier = Modifier.fillMaxSize(),
         ) {
@@ -342,9 +221,7 @@ fun VendorBillingScreen(
                     }
 
                     Row(
-                        modifier = Modifier
-                            .wrapContentHeight()
-                            .fillMaxWidth()
+                        modifier = Modifier.wrapContentHeight().fillMaxWidth()
                     ) {
                         Column(Modifier.weight(1f, true)) {
                             HorizontalScrollableCoupon(getPersonAge(), viewModel,
@@ -383,10 +260,7 @@ fun VendorBillingScreen(
                             .fillMaxWidth()
                     ) {
                         Column(
-                            modifier = Modifier
-                                .wrapContentSize()
-                                .weight(3f, true)
-                                .align(Alignment.CenterVertically)
+                            modifier = Modifier.wrapContentSize().weight(3f, true).align(Alignment.CenterVertically)
                         ) {
                             Text(text = "Due Payment", color = Color.White)
                             Text(
@@ -399,10 +273,7 @@ fun VendorBillingScreen(
                             text = "₹2500/-",
                             color = Color.White,
                             fontWeight = FontWeight.Bold,
-                            modifier = Modifier
-                                .wrapContentSize()
-                                .padding(horizontal = 10.dp)
-                                .align(Alignment.CenterVertically),
+                            modifier = Modifier.wrapContentSize().padding(horizontal = 10.dp).align(Alignment.CenterVertically),
                             fontSize = 20.sp
                         )
                     }
@@ -414,8 +285,8 @@ fun VendorBillingScreen(
                         Toast.makeText(context, "Generate Bill", Toast.LENGTH_SHORT).show()
                     },
                     shape = RoundedCornerShape(5.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth()
+
                         .padding(horizontal = 15.dp)
                         .height(50.dp),
                     colors = ButtonDefaults.buttonColors(backgroundColor = GreenLight)
@@ -428,9 +299,61 @@ fun VendorBillingScreen(
                 }
                 Spacer(modifier = Modifier.height(20.dp))
             }
-
-
         }
 
     }
+}
+
+
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun showPapersTakenList(paperList: List<Paper>, viewModel: BillingScreenViewModel) {
+
+            LazyColumn(modifier = Modifier.height(100.dp).fillMaxWidth()) {
+                itemsIndexed(items = paperList) { index, paperr ->
+                    Box(
+                        modifier = Modifier
+                            .wrapContentHeight()
+                            .fillMaxWidth(), contentAlignment = Alignment.TopEnd
+                    ) {
+                        Row(Modifier.wrapContentHeight()) {
+                            Text(
+                                text = paperr.name,
+                                color = Color.DarkGray,
+                                modifier = Modifier.align(Alignment.CenterVertically)
+                            )
+                            BasicTextField(
+                                value = viewModel.toiTaken.value,
+                                onValueChange = { viewModel.toiTaken.value = it },
+                                keyboardOptions = KeyboardOptions(
+                                    imeAction = ImeAction.Done,
+                                    keyboardType = KeyboardType.Number
+                                ),
+                                maxLines = 1,
+                                modifier = Modifier
+                                    .width(125.dp)
+                                    .height(35.dp)
+                                    .padding(horizontal = 15.dp),
+                                textStyle = TextStyle.Default.copy(fontSize = 20.sp)
+                            ) {
+                                TextFieldDefaults.OutlinedTextFieldDecorationBox(
+                                    value = viewModel.toiTaken.value,
+                                    innerTextField = it,
+                                    enabled = true,
+                                    singleLine = true,
+                                    visualTransformation = VisualTransformation.None,
+                                    interactionSource = MutableInteractionSource(),
+                                    contentPadding = PaddingValues(all = 4.dp),
+                                    colors = ExposedDropdownMenuDefaults.textFieldColors(backgroundColor = Color.White)
+                                )
+                            }
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(7.dp))
+                }
+
+            }
+
+
 }

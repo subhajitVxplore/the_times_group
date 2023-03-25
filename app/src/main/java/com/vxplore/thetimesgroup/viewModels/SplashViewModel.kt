@@ -40,10 +40,6 @@ class SplashViewModel @Inject constructor(
         }
     }
 
-
-
-
-
     val versionUpdateDialog = mutableStateOf<MyDialog?>(null)
 
     private suspend fun checkIntroStatus() {
@@ -105,7 +101,7 @@ class SplashViewModel @Inject constructor(
                             castValueToRequiredTypes<Destination.NoArgumentsDestination>()?.let {destination->
                                 appNavigator.tryNavigateTo(
                                     destination(),
-                                    popUpToRoute = Destination.Splash(),
+                                    popUpToRoute = Destination.Splash.fullRoute,
                                     isSingleTop = true,
                                     inclusive = true
                                 )
@@ -129,7 +125,6 @@ class SplashViewModel @Inject constructor(
         savedStateHandle = savedStateHandle,
         initialData = null
     )
-
     private fun handleDialogEvents() {
         versionUpdateDialog.value?.onConfirm = {
             it?.castValueToRequiredTypes<AppVersion>()?.apply {

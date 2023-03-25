@@ -25,6 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType.Companion.Text
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.vxplore.core.common.AppRoutes
@@ -34,6 +35,7 @@ import com.vxplore.thetimesgroup.extensions.MyDialog
 import com.vxplore.thetimesgroup.extensions.OnEffect
 import com.vxplore.thetimesgroup.viewModels.SplashViewModel
 import kotlinx.coroutines.delay
+import java.util.Properties
 
 @Composable
 //fun SplashScreen(navController: NavController) {
@@ -69,6 +71,7 @@ fun SplashScreen(viewModel: SplashViewModel = hiltViewModel()) {
     viewModel.versionUpdateDialog.value?.apply {
         if (currentState()) {
             AlertDialog(
+                properties= DialogProperties(dismissOnClickOutside = false),
                 shape = RoundedCornerShape(10.dp),
                 onDismissRequest = {
                     onDismiss?.invoke(null)
