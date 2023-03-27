@@ -103,7 +103,7 @@ viewModel: BillingScreenViewModel
 
             if (viewModel.expand.value) {
                 Spacer(modifier = Modifier.height(7.dp))
-                LazyColumn(modifier = Modifier.height(100.dp).fillMaxWidth()) {
+                LazyColumn(modifier = Modifier.height(125.dp).fillMaxWidth()) {
                     itemsIndexed(items = paperList) { index, paperr ->
                         Row(Modifier.wrapContentHeight()) {
                             Column(modifier = Modifier

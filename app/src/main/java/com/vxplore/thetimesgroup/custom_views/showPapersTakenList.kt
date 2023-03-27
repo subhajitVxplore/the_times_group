@@ -3,15 +3,13 @@ package com.vxplore.thetimesgroup.custom_views
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ExposedDropdownMenuDefaults
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,28 +28,35 @@ fun showPapersTakenList(paperList: List<Paper>, viewModel: BillingScreenViewMode
                         price: String = "",
                         onPriceChange: (String, Int, Int) -> Unit) {
 
+//    LazyColumn(modifier = Modifier.height(300.dp).fillMaxWidth()) {
+//                itemsIndexed(items = paperList) { index, paperr ->
+    Column(modifier = Modifier.fillMaxSize()) {
 
-            LazyColumn(modifier = Modifier
-                .height(100.dp)
-                .fillMaxWidth()) {
-                itemsIndexed(items = paperList) { index, paperr ->
+                    for ((index, paperr) in paperList.withIndex()) {
                     Box(
                         modifier = Modifier
                             .wrapContentHeight()
-                            .fillMaxWidth(), contentAlignment = Alignment.TopEnd
+                            .fillMaxWidth(),
+                        contentAlignment = Alignment.TopEnd
                     ) {
                         Row(Modifier.wrapContentHeight()) {
                             Text(
-                                text = paperr.name,
+                                text = paperr.name+"(₹${paperr.price})",
                                 color = Color.Gray,
                                 modifier = Modifier.align(Alignment.CenterVertically)
                             )
+
+                            var value by remember(price) {
+                                mutableStateOf(price)
+                            }
+
                             BasicTextField(
-                                value = viewModel.takenPaperTotal.value.toString(),
+                                //value = viewModel.takenPaperTotal.value.toString(),
+                                value = value,
                                 onValueChange = {
-                                    onPriceChange(it, index, paperr.price)
-                                    viewModel.takenPaperTotal.value = it.toInt()
-                                                },
+                                    value = it
+                                    onPriceChange(value, index, paperr.price)
+                                },
                                 keyboardOptions = KeyboardOptions(
                                     imeAction = ImeAction.Done,
                                     keyboardType = KeyboardType.Number
@@ -64,7 +69,7 @@ fun showPapersTakenList(paperList: List<Paper>, viewModel: BillingScreenViewMode
                                 textStyle = TextStyle.Default.copy(fontSize = 20.sp)
                             ) {
                                 TextFieldDefaults.OutlinedTextFieldDecorationBox(
-                                    value = viewModel.takenPaperTotal.value.toString(),
+                                    value = value,
                                     innerTextField = it,
                                     enabled = true,
                                     singleLine = true,
@@ -79,7 +84,7 @@ fun showPapersTakenList(paperList: List<Paper>, viewModel: BillingScreenViewMode
                     Spacer(modifier = Modifier.height(7.dp))
                 }
 
-            }
+     }
+    }
 
 
-}

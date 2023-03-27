@@ -76,13 +76,8 @@ fun VendorBillingScreen(
                     .align(Alignment.CenterVertically),
                 contentAlignment = Alignment.TopEnd
             ) {
-
-                //val context = LocalContext.current
                 Button(
-                    onClick = {
-                        viewModel.onBillingToAddVendor()
-                        //Toast.makeText(context, "Add Vendor", Toast.LENGTH_SHORT).show()
-                    },
+                    onClick = { viewModel.onBillingToAddVendor() },
                     shape = RoundedCornerShape(25.dp),
                     modifier = Modifier.wrapContentSize(),
                     colors = ButtonDefaults.buttonColors(backgroundColor = DonutGreenLight)
@@ -97,253 +92,291 @@ fun VendorBillingScreen(
                 }
             }
         }
-        // Spacer(modifier = Modifier.height(7.dp))
-        TextFieldWithDropdownUsage()
-        // Spacer(modifier = Modifier.height(7.dp))
-        //showPapersTakenList(paperList = getPaperPrice(),viewModel)
-        showPapersTakenList(paperList = getPaperPrice(), viewModel,
-            onPriceChange = { value, index, multi ->
-                // viewModel.coupons[index] = value.toInt()
-                viewModel.takenPapers[index] = Pair(first = multi, second = value.toInt())
-            }
-        )
-        Spacer(modifier = Modifier.height(7.dp))
-        ExpandableCard(header = "Returns",paperList = getPaperPrice(),viewModel = viewModel)
-        Box(
-            modifier = Modifier.fillMaxSize(),
+
+        Column(
+            modifier = Modifier
+                //.fillMaxWidth()
+                .verticalScroll(rememberScrollState())
+                .weight(weight = 1f)
+
         ) {
-            Column(
-                modifier = Modifier
-                    .wrapContentSize()
-                    .align(Alignment.BottomEnd)
-            ) {
-                Divider(
-                    color = Color.LightGray,
-                    thickness = 0.8.dp,
-                    modifier = Modifier.padding(horizontal = 10.dp)
-                )
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()) {
-                    Button(
-                       // enabled = viewModel.takenPaperTotal.value <= 0,
-                        onClick = {
-                                  viewModel.calculatePapersPrice()
-                            //viewModel.onBillingToAddVendor()
-                            //Toast.makeText(context, "Add Vendor", Toast.LENGTH_SHORT).show()
-                        },
-                        shape = RoundedCornerShape(25.dp),
-                        modifier = Modifier
-                            .wrapContentSize()
-                            .align(Alignment.CenterVertically).padding(start = 10.dp),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Gray)
-                    ) {
-                        Text(
-                            text = "Calculate price",
-                            color = Color.White,
-                            fontSize = 13.sp,
-                            modifier = Modifier.align(Alignment.CenterVertically),
-                            fontStyle = FontStyle.Normal
-                        )
-                    }
-                    Box(modifier = Modifier.fillMaxWidth().wrapContentHeight().align(Alignment.CenterVertically)){
-                        Text(
-                            text = "₹${viewModel.takenPaperTotal.value}",
-                            style = MaterialTheme.typography.h5,
-                            color = Color.Black,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier
-                                .wrapContentSize()
-                                .padding(horizontal = 10.dp)
-                                .align(Alignment.CenterEnd)
-                        )
+            TextFieldWithDropdownUsage()
+            showPapersTakenList(paperList = getPaperPrice(), viewModel,
+                onPriceChange = { value, index, multi ->
+                    try {
+                        viewModel.takenPapers[index] = Pair(first = multi, second = value.toInt())
+                    }catch (e:Exception){
+                        println(e)
                     }
 
                 }
+            )
+            Spacer(modifier = Modifier.height(7.dp))
+            ExpandableCard(header = "Returns", paperList = getPaperPrice(), viewModel = viewModel)
+        }
+//        TextFieldWithDropdownUsage()
+//        showPapersTakenList(paperList = getPaperPrice(), viewModel,
+//            onPriceChange = { value, index, multi ->
+//                viewModel.takenPapers[index] = Pair(first = multi, second = value.toInt())
+//            }
+//        )
+//        Spacer(modifier = Modifier.height(7.dp))
+//        ExpandableCard(header = "Returns",paperList = getPaperPrice(),viewModel = viewModel)
 
-                Divider(
-                    color = Color.LightGray,
-                    thickness = 0.8.dp,
-                    modifier = Modifier.padding(horizontal = 10.dp)
-                )
-                Spacer(modifier = Modifier.height(5.dp))
-                Row(Modifier.wrapContentHeight()) {
+Column(modifier = Modifier.weight(1f,true)) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+    ) {
+        Column(
+            modifier = Modifier
+                .wrapContentSize()
+                .align(Alignment.BottomEnd)
+        ) {
+            Divider(
+                color = Color.LightGray,
+                thickness = 0.8.dp,
+                modifier = Modifier.padding(horizontal = 10.dp)
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+            ) {
+                Button(
+                    enabled = viewModel.takenPaperTotal.value <= 0,
+                    onClick = {
+                        viewModel.calculatePapersPrice()
+                        viewModel.calculateCurrentDue()
+                              },
+                    shape = RoundedCornerShape(25.dp),
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .align(Alignment.CenterVertically)
+                        .padding(start = 10.dp),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = DonutGreenLight)
+                ) {
                     Text(
-                        text = "Mode of Payment", color = Color.DarkGray, modifier = Modifier
-                            .padding(horizontal = 15.dp)
-                            .align(Alignment.CenterVertically)
+                        text = "Calculate Price",
+                        color = Color.White,
+                        fontSize = 13.sp,
+                        modifier = Modifier.align(Alignment.CenterVertically),
+                        fontStyle = FontStyle.Normal
                     )
-                    Box(
+                }
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                        .align(Alignment.CenterVertically)
+                ) {
+                    Text(
+                        text = "₹${viewModel.takenPaperTotal.value}",
+                        style = MaterialTheme.typography.h5,
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold,
                         modifier = Modifier
-                            .wrapContentHeight()
-                            .fillMaxWidth(), contentAlignment = Alignment.TopEnd
-                    ) {
-                        Row(modifier = Modifier.wrapContentSize()) {
-                            Text(
-                                text = "Cash ₹",
-                                color = Color.DarkGray,
-                                modifier = Modifier.align(Alignment.CenterVertically)
-                            )
-                            BasicTextField(
-                                value = viewModel.cashPaymentText.value,
-                                onValueChange = { viewModel.cashPaymentText.value = it },
-                                keyboardOptions = KeyboardOptions(
-                                    imeAction = ImeAction.Done,
-                                    keyboardType = KeyboardType.Number
-                                ),
-                                maxLines = 1,
-                                modifier = Modifier
-                                    .width(100.dp)
-                                    .height(37.dp)
-                                    .padding(start = 5.dp, end = 15.dp),
-                                // textStyle = TextStyle.Default.copy(fontSize = 20.sp),
-                                textStyle = TextStyle(
-                                    fontSize = 20.sp,
-                                    fontWeight = FontWeight.Bold
-                                ),
+                            .wrapContentSize()
+                            .padding(horizontal = 10.dp)
+                            .align(Alignment.CenterEnd)
+                    )
+                }
 
-                                ) {
-                                TextFieldDefaults.OutlinedTextFieldDecorationBox(
-                                    value = viewModel.cashPaymentText.value,
-                                    innerTextField = it,
-                                    enabled = true,
-                                    singleLine = true,
-                                    visualTransformation = VisualTransformation.None,
-                                    interactionSource = MutableInteractionSource(),
-                                    contentPadding = PaddingValues(all = 4.dp),
-                                    colors = ExposedDropdownMenuDefaults.textFieldColors(
-                                        backgroundColor = Color.White
-                                    )
-                                )
-                            }
+            }
+
+            Divider(
+                color = Color.LightGray,
+                thickness = 0.8.dp,
+                modifier = Modifier.padding(horizontal = 10.dp)
+            )
+            Spacer(modifier = Modifier.height(5.dp))
+            Row(Modifier.wrapContentHeight()) {
+                Text(
+                    text = "Mode of Payment", color = Color.DarkGray, modifier = Modifier
+                        .padding(horizontal = 15.dp)
+                        .align(Alignment.CenterVertically)
+                )
+                Box(
+                    modifier = Modifier
+                        .wrapContentHeight()
+                        .fillMaxWidth(), contentAlignment = Alignment.TopEnd
+                ) {
+                    Row(modifier = Modifier.wrapContentSize()) {
+                        Text(
+                            text = "Cash ₹",
+                            color = Color.DarkGray,
+                            modifier = Modifier.align(Alignment.CenterVertically)
+                        )
+                        BasicTextField(
+                            value = viewModel.cashPayment.value.toString(),
+                            onValueChange = {
+                                try {
+                                    viewModel.cashPayment.value = it.toInt()
+                                }catch (e:Exception){
+                                    println(e)
+                                }
+                                            },
+                            keyboardOptions = KeyboardOptions(
+                                imeAction = ImeAction.Done,
+                                keyboardType = KeyboardType.Number
+                            ),
+                            maxLines = 1,
+                            modifier = Modifier
+                                .width(100.dp)
+                                .height(37.dp)
+                                .padding(start = 5.dp, end = 15.dp),
+                            // textStyle = TextStyle.Default.copy(fontSize = 20.sp),
+                            textStyle = TextStyle(
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold
+                            ),
+
+                            ) {
+                            TextFieldDefaults.OutlinedTextFieldDecorationBox(
+                                value = viewModel.cashPayment.value.toString(),
+                                innerTextField = it,
+                                enabled = true,
+                                singleLine = true,
+                                visualTransformation = VisualTransformation.None,
+                                interactionSource = MutableInteractionSource(),
+                                contentPadding = PaddingValues(all = 4.dp),
+                                colors = ExposedDropdownMenuDefaults.textFieldColors(backgroundColor = Color.White)
+                            )
                         }
                     }
                 }
-                Spacer(modifier = Modifier.height(5.dp))
-                // HorizontalScrollableCoupon(getPersonAge())
-                Column(
+            }
+            Spacer(modifier = Modifier.height(5.dp))
+            // HorizontalScrollableCoupon(getPersonAge())
+            Column(
+                modifier = Modifier
+                    .wrapContentHeight()
+                    .fillMaxWidth()
+            ) {
+                Row(Modifier.wrapContentSize()) {
+                    Text(
+                        text = "Coupons",
+                        color = Color.DarkGray,
+                        modifier = Modifier
+                            .wrapContentSize()
+                            .padding(horizontal = 15.dp)
+                            .align(Alignment.CenterVertically),
+
+                        )
+                    // val cntxt = LocalContext.current
+
+                    TextButton(modifier = Modifier
+                        .wrapContentSize()
+                        .align(Alignment.CenterVertically),
+                        enabled = viewModel.couponTotal.value <= 0,
+                        onClick = {
+                            viewModel.calculateCoupon()
+                            //Toast.makeText(cntxt, "Coupon=₹${viewModel.couponTotal.value}", Toast.LENGTH_SHORT).show()
+                        }) {
+                        Text(
+                            text = "Apply Coupon",
+                            color = GreenLight,
+                            fontWeight = FontWeight.Bold,
+                            textDecoration = TextDecoration.Underline
+                        )
+                    }
+                }
+
+                Row(
                     modifier = Modifier
                         .wrapContentHeight()
                         .fillMaxWidth()
                 ) {
-                    Row(Modifier.wrapContentSize()) {
-                        Text(
-                            text = "Coupons",
-                            color = Color.DarkGray,
-                            modifier = Modifier
-                                .wrapContentSize()
-                                .padding(horizontal = 15.dp)
-                                .align(Alignment.CenterVertically),
-
-                            )
-                       // val cntxt = LocalContext.current
-
-                        TextButton(modifier = Modifier
-                            .wrapContentSize()
-                            .align(Alignment.CenterVertically),
-                            enabled = viewModel.couponTotal.value <= 0,
-                            onClick = {
-                                viewModel.calculateCoupon()
-                                //Toast.makeText(cntxt, "Coupon=₹${viewModel.couponTotal.value}", Toast.LENGTH_SHORT).show()
-                            }) {
-                            Text(
-                                text = "Apply Coupon",
-                                color = GreenLight,
-                                fontWeight = FontWeight.Bold,
-                                 textDecoration = TextDecoration.Underline
-                            )
-                        }
-                    }
-
-                    Row(
-                        modifier = Modifier
-                            .wrapContentHeight()
-                            .fillMaxWidth()
-                    ) {
-                        Column(Modifier.weight(1f, true)) {
-                            HorizontalScrollableCoupon(getPersonAge(), viewModel,
-                                onPriceChange = { value, index, multi ->
-                                   // viewModel.coupons[index] = value.toInt()
-                                    viewModel.coupons[index] = Pair(first = multi, second = value.toInt())
+                    Column(Modifier.weight(1f, true)) {
+                        HorizontalScrollableCoupon(getPersonAge(), viewModel,
+                            onPriceChange = { value, index, multi ->
+                                // viewModel.coupons[index] = value.toInt()
+                                try {
+                                    viewModel.coupons[index] =Pair(first = multi, second = value.toInt())
+                                }catch (e:Exception){
+                                    println(e)
                                 }
-                            )
-                        }
 
-                        Text(
-                            text = "₹${viewModel.couponTotal.value}",
-                            color = Color.Black,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier
-                                .wrapContentSize()
-                                .padding(horizontal = 10.dp)
-                                .align(Alignment.CenterVertically),
-                            fontSize = 20.sp
+                            }
                         )
                     }
-                }
-                Spacer(modifier = Modifier.height(5.dp))
-                Surface(
-                    shape = RoundedCornerShape(5.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp)
-                        .padding(horizontal = 15.dp),
-                    color = PinkLight,
-                    contentColor = Color.White
-                ) {
-                    Row(
-                        Modifier
-                            .wrapContentHeight()
-                            .fillMaxWidth()
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .wrapContentSize()
-                                .weight(3f, true)
-                                .align(Alignment.CenterVertically)
-                        ) {
-                            Text(text = "Due Payment", color = Color.White)
-                            Text(
-                                text = "With previous ₹ 2000 Due",
-                                color = Color.White,
-                                fontSize = 10.sp
-                            )
-                        }
-                        Text(
-                            text = "₹2500/-",
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier
-                                .wrapContentSize()
-                                .padding(horizontal = 10.dp)
-                                .align(Alignment.CenterVertically),
-                            fontSize = 20.sp
-                        )
-                    }
-                }//surface\
-                Spacer(modifier = Modifier.height(7.dp))
-                val context = LocalContext.current
-                Button(
-                    onClick = {
-                        Toast.makeText(context, "Generate Bill", Toast.LENGTH_SHORT).show()
-                    },
-                    shape = RoundedCornerShape(5.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
 
-                        .padding(horizontal = 15.dp)
-                        .height(50.dp),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = GreenLight)
-                ) {
                     Text(
-                        text = "Generate Bill",
-                        color = Color.White,
-                        style = MaterialTheme.typography.h6,
+                        text = "₹${viewModel.couponTotal.value}",
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier
+                            .wrapContentSize()
+                            .padding(horizontal = 10.dp)
+                            .align(Alignment.CenterVertically),
+                        fontSize = 20.sp
                     )
                 }
-                Spacer(modifier = Modifier.height(20.dp))
             }
-        }
+            Spacer(modifier = Modifier.height(5.dp))
+            Surface(
+                shape = RoundedCornerShape(5.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
+                    .padding(horizontal = 15.dp),
+                color = PinkLight,
+                contentColor = Color.White
+            ) {
+                Row(
+                    Modifier
+                        .wrapContentHeight()
+                        .fillMaxWidth()
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .wrapContentSize()
+                            .weight(3f, true)
+                            .align(Alignment.CenterVertically)
+                    ) {
+                        Text(text = "Due Payment", color = Color.White)
+                        Text(
+                            text = "With previous ₹ ${viewModel.previousDue.value} Due",
+                            color = Color.White,
+                            fontSize = 10.sp
+                        )
+                    }
+                    Text(
+                        text = "₹${viewModel.currentDue.value}",
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier
+                            .wrapContentSize()
+                            .padding(horizontal = 10.dp)
+                            .align(Alignment.CenterVertically),
+                        fontSize = 20.sp
+                    )
+                }
+            }//surface\
+            Spacer(modifier = Modifier.height(7.dp))
+            val context = LocalContext.current
+            Button(
+                onClick = {
+                    Toast.makeText(context, "Generate Bill", Toast.LENGTH_SHORT).show()
+                },
+                shape = RoundedCornerShape(5.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
 
+                    .padding(horizontal = 15.dp)
+                    .height(50.dp),
+                colors = ButtonDefaults.buttonColors(backgroundColor = GreenLight)
+            ) {
+                Text(
+                    text = "Generate Bill",
+                    color = Color.White,
+                    style = MaterialTheme.typography.h6,
+                )
+            }
+            Spacer(modifier = Modifier.height(20.dp))
+        }
     }
+}
+
+
+    }//parent column
 }

@@ -67,6 +67,7 @@ fun HorizontalScrollableCoupon(
                             shape = RoundedCornerShape(5.dp, 5.dp, 5.dp, 5.dp),
                             color = Color.White
                         ) {
+
                             MyBasicTextField(text = price, onValueChange = {
                                 onPriceChange(it, index, person.age)
                             })

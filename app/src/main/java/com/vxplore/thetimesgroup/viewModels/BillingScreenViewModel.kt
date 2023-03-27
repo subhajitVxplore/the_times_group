@@ -1,10 +1,7 @@
 package com.vxplore.thetimesgroup.viewModels
 
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.toMutableStateList
+import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import com.example.core.utils.AppNavigator
 import com.vxplore.core.common.Destination
@@ -28,11 +25,10 @@ class BillingScreenViewModel @Inject constructor(private val appNavigator: AppNa
     var expand = mutableStateOf(false)  // Expand State
     var stroke = mutableStateOf(1)
 
-    var cashPaymentText = mutableStateOf("")
+    var cashPayment = mutableStateOf(0)
+    var previousDue = mutableStateOf(1000)
+    var currentDue = mutableStateOf(0)
 
-    var toiTaken = mutableStateOf("")
-    var etTaken = mutableStateOf("")
-    var esTaken = mutableStateOf("")
     var toiReturn = mutableStateOf("")
     var etReturn = mutableStateOf("")
     var esReturn = mutableStateOf("")
@@ -40,6 +36,7 @@ class BillingScreenViewModel @Inject constructor(private val appNavigator: AppNa
     //var personList: List<Person>
    // var couponList = listOf<Person>()
     //var coupons = MutableList(getPersonAge().size) { 0 }
+
     var takenPapers = MutableList<Pair<Int, Int>>(getPaperPrice().size) { Pair(0,0) }
     var takenPaperTotal = mutableStateOf(0)
     var coupons = MutableList<Pair<Int, Int>>(getPersonAge().size) { Pair(0,0) }
@@ -48,6 +45,17 @@ class BillingScreenViewModel @Inject constructor(private val appNavigator: AppNa
     //val _coupons = coupons.toMutableStateList()
 
 
+    init {
+        currentDue.value=previousDue.value
+    }
+    fun calculateCurrentDue(){
+        if((takenPaperTotal.value != 0) or(cashPayment.value != 0) or (couponTotal.value != 0)){
+
+            currentDue.value+=((takenPaperTotal.value - cashPayment.value ) - couponTotal.value )
+        }else{
+
+        }
+    }
     fun calculatePapersPrice(){
         takenPapers.forEach{
             takenPaperTotal.value += it.first*it.second
