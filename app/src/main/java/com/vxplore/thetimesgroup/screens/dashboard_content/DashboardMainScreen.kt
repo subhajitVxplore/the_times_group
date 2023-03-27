@@ -27,6 +27,7 @@ import com.vxplore.thetimesgroup.extensions.bottomToUp
 import com.vxplore.thetimesgroup.extensions.screenHeight
 import com.vxplore.thetimesgroup.extensions.screenWidth
 import com.vxplore.thetimesgroup.extensions.upToBottom
+import com.vxplore.thetimesgroup.screens.getPaperSoldDetails
 import com.vxplore.thetimesgroup.ui.theme.*
 import com.vxplore.thetimesgroup.viewModels.DashboardViewModel
 
@@ -130,7 +131,7 @@ fun DashboardMainScreen(openDrawer: () -> Unit, viewModel: DashboardViewModel) {
                         }
 
                     }
-                    MyDoughnutChart()
+                    MyDoughnutChart(getPaperSoldDetails())
                     Text(
                         text = "Total Paper Circulations",
                         modifier = Modifier
@@ -178,7 +179,6 @@ fun DashboardMainScreen(openDrawer: () -> Unit, viewModel: DashboardViewModel) {
                         }
                     }
                    showVendorsList(vendorList = viewModel.vendors.collectAsState().value,viewModel.vendorsLoading.value)
-
                 //CircularProgressIndicator()
                 })
         }

@@ -15,16 +15,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.vxplore.thetimesgroup.screens.Paper
+import com.vxplore.thetimesgroup.screens.PaperSold
+import com.vxplore.thetimesgroup.screens.Person
 import com.vxplore.thetimesgroup.ui.theme.DonutGreenDark
 import com.vxplore.thetimesgroup.ui.theme.DonutGreenLight
 import com.vxplore.thetimesgroup.ui.theme.DonutGreenMidium
 
 @Composable
 fun MyDoughnutChart(
+    paperSoldList: List<PaperSold>,
     values: List<Float> = listOf(15f, 40f, 25f),
     colors: List<Color> = listOf(
         DonutGreenLight, DonutGreenDark, DonutGreenMidium
     ),
+    //legend: List<String> = listOf("ES - 350000 (20%)", "TOI - 250000 (30%)", "E.T - 500000 (40%)"),
     legend: List<String> = listOf("ES - 350000 (20%)", "TOI - 250000 (30%)", "E.T - 500000 (40%)"),
     size: Dp = 130.dp,
     thickness: Dp = 45.dp
@@ -44,7 +49,9 @@ fun MyDoughnutChart(
                 //  verticalArrangement = Arrangement.Center,
             ) {
                 for (i in values.indices) {
-                    DisplayLegend(color = colors[i], legend = legend[i])
+                 DisplayLegend(color = colors[i], legend = legend[i])
+//                for ((index, paper) in paperSoldList.withIndex()) {
+//                    DisplayLegend(color = colors[index], legend = paper.name+"(${paper.percentage})")
                 }
             }
         }

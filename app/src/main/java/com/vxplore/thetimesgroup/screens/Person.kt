@@ -33,7 +33,7 @@ fun getPersonAge() = listOf(
 data class Paper(
     val name: String,
     val price: Int,
-  )
+)
 fun getPaperPrice() = listOf(
     Paper("Times of India", 5),
     Paper("Economics Times", 7),
@@ -46,5 +46,21 @@ fun getPaperPrice() = listOf(
     Paper("The Hindu", 4),
     Paper("Dainik Jagran", 2),
     Paper("Dainik Bhaskar", 2),
+)
 
+data class PaperSold(
+    val name: String,
+    val price: Int,
+    val percentage: String,
+)
+fun getPaperSoldDetails() = listOf(
+    PaperSold("TOI", 10000,"10%"),
+    PaperSold("ET", 70000,"70%"),
+    PaperSold("ES", 20000,"20%"),
+    PaperSold("AB", 80000,"80%"),
+    PaperSold("Btm", 30000,"30%"),
+    PaperSold("TTlg", 50000,"50%"),
+    PaperSold("HT", 40000,"40%"),
+    PaperSold("TIE", 10000,"10%"),
+    PaperSold("DB", 60000,"60%")
 )

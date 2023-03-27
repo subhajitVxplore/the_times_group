@@ -10,6 +10,7 @@ val Teal200 = Color(0xFF03DAC5)
 val Error200 = Color(0xFFEBADB5)
 
 val GreyLight = Color(0xFFE2E2E2)
+
 //val GreyLight = Color(0x29)
 val GreyDark = Color(0xFF60626C)
 val GreenDark = Color(0xFF219C0B)
@@ -20,3 +21,12 @@ val DonutGreenMidium = Color(0xFF477D50)
 val DonutGreenDark = Color(0xFF275E30)
 val WhiteGray = Color(0xFFEBEFFC)
 val BrownGray = Color(0xFF675858)
+
+val MyColors = listOf(
+    Color(0xFF219C0B.toInt()),
+    Color(0xFF6A9E73.toInt()),
+    Color(0xFF477D50.toInt()),
+    Color(0xFF275E30.toInt()),
+    Color(0xFF509944.toInt()),
+)
+//backgroundColor = colors[index % colors.size],
