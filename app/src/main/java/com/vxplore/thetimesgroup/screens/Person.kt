@@ -36,15 +36,15 @@ data class Paper(
   )
 fun getPaperPrice() = listOf(
     Paper("Times of India", 5),
-    Paper("Economics Times", 7),
-    Paper("Ei Samay", 3),
-    Paper("Ananda Bazar", 2),
-    Paper("Bortoman", 2),
-    Paper("The Telegraph", 5),
-    Paper("Hindustan Times", 5),
-    Paper("The Indian Express", 7),
-    Paper("The Hindu", 4),
-    Paper("Dainik Jagran", 2),
-    Paper("Dainik Bhaskar", 2),
+//    Paper("Economics Times", 7),
+//    Paper("Ei Samay", 3),
+//    Paper("Ananda Bazar", 2),
+//    Paper("Bortoman", 2),
+//    Paper("The Telegraph", 5),
+//    Paper("Hindustan Times", 5),
+//    Paper("The Indian Express", 7),
+//    Paper("The Hindu", 4),
+//    Paper("Dainik Jagran", 2),
+//    Paper("Dainik Bhaskar", 2),
 
 )

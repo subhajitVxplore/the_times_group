@@ -1,14 +1,10 @@
 @file:Suppress("DEPRECATION")
-
 package com.vxplore.thetimesgroup.screens
-
 import android.app.Activity
 import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
@@ -25,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -32,6 +29,7 @@ import com.vxplore.thetimesgroup.R
 import com.vxplore.thetimesgroup.custom_views.ExpandableCard
 import com.vxplore.thetimesgroup.custom_views.HorizontalScrollableCoupon
 import com.vxplore.thetimesgroup.custom_views.TextFieldWithDropdownUsage
+import com.vxplore.thetimesgroup.custom_views.showPapersTakenList
 import com.vxplore.thetimesgroup.ui.theme.DonutGreenLight
 import com.vxplore.thetimesgroup.ui.theme.GreenLight
 import com.vxplore.thetimesgroup.ui.theme.GreyLight
@@ -44,7 +42,6 @@ fun VendorBillingScreen(
     viewModel: BillingScreenViewModel = hiltViewModel(),
 ) {
 //    var coupon_total = 0
-
     Column(modifier = Modifier.fillMaxSize()) {
         Row(
             modifier = Modifier
@@ -73,11 +70,14 @@ fun VendorBillingScreen(
             )
 
             Box(
-                modifier = Modifier.wrapContentHeight().fillMaxWidth().align(Alignment.CenterVertically),
+                modifier = Modifier
+                    .wrapContentHeight()
+                    .fillMaxWidth()
+                    .align(Alignment.CenterVertically),
                 contentAlignment = Alignment.TopEnd
             ) {
 
-                val context = LocalContext.current
+                //val context = LocalContext.current
                 Button(
                     onClick = {
                         viewModel.onBillingToAddVendor()
@@ -100,7 +100,13 @@ fun VendorBillingScreen(
         // Spacer(modifier = Modifier.height(7.dp))
         TextFieldWithDropdownUsage()
         // Spacer(modifier = Modifier.height(7.dp))
-        showPapersTakenList(paperList = getPaperPrice(),viewModel)
+        //showPapersTakenList(paperList = getPaperPrice(),viewModel)
+        showPapersTakenList(paperList = getPaperPrice(), viewModel,
+            onPriceChange = { value, index, multi ->
+                // viewModel.coupons[index] = value.toInt()
+                viewModel.takenPapers[index] = Pair(first = multi, second = value.toInt())
+            }
+        )
         Spacer(modifier = Modifier.height(7.dp))
         ExpandableCard(header = "Returns",paperList = getPaperPrice(),viewModel = viewModel)
         Box(
@@ -116,16 +122,45 @@ fun VendorBillingScreen(
                     thickness = 0.8.dp,
                     modifier = Modifier.padding(horizontal = 10.dp)
                 )
-                Text(
-                    text = "₹ 7500/-",
-                    style = MaterialTheme.typography.h5,
-                    color = Color.Black,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier
-                        .wrapContentSize()
-                        .padding(horizontal = 10.dp)
-                        .align(Alignment.End)
-                )
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()) {
+                    Button(
+                       // enabled = viewModel.takenPaperTotal.value <= 0,
+                        onClick = {
+                                  viewModel.calculatePapersPrice()
+                            //viewModel.onBillingToAddVendor()
+                            //Toast.makeText(context, "Add Vendor", Toast.LENGTH_SHORT).show()
+                        },
+                        shape = RoundedCornerShape(25.dp),
+                        modifier = Modifier
+                            .wrapContentSize()
+                            .align(Alignment.CenterVertically).padding(start = 10.dp),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Gray)
+                    ) {
+                        Text(
+                            text = "Calculate price",
+                            color = Color.White,
+                            fontSize = 13.sp,
+                            modifier = Modifier.align(Alignment.CenterVertically),
+                            fontStyle = FontStyle.Normal
+                        )
+                    }
+                    Box(modifier = Modifier.fillMaxWidth().wrapContentHeight().align(Alignment.CenterVertically)){
+                        Text(
+                            text = "₹${viewModel.takenPaperTotal.value}",
+                            style = MaterialTheme.typography.h5,
+                            color = Color.Black,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier
+                                .wrapContentSize()
+                                .padding(horizontal = 10.dp)
+                                .align(Alignment.CenterEnd)
+                        )
+                    }
+
+                }
+
                 Divider(
                     color = Color.LightGray,
                     thickness = 0.8.dp,
@@ -215,13 +250,15 @@ fun VendorBillingScreen(
                                 text = "Apply Coupon",
                                 color = GreenLight,
                                 fontWeight = FontWeight.Bold,
-                                // textDecoration = TextDecoration.Underline
+                                 textDecoration = TextDecoration.Underline
                             )
                         }
                     }
 
                     Row(
-                        modifier = Modifier.wrapContentHeight().fillMaxWidth()
+                        modifier = Modifier
+                            .wrapContentHeight()
+                            .fillMaxWidth()
                     ) {
                         Column(Modifier.weight(1f, true)) {
                             HorizontalScrollableCoupon(getPersonAge(), viewModel,
@@ -260,7 +297,10 @@ fun VendorBillingScreen(
                             .fillMaxWidth()
                     ) {
                         Column(
-                            modifier = Modifier.wrapContentSize().weight(3f, true).align(Alignment.CenterVertically)
+                            modifier = Modifier
+                                .wrapContentSize()
+                                .weight(3f, true)
+                                .align(Alignment.CenterVertically)
                         ) {
                             Text(text = "Due Payment", color = Color.White)
                             Text(
@@ -273,7 +313,10 @@ fun VendorBillingScreen(
                             text = "₹2500/-",
                             color = Color.White,
                             fontWeight = FontWeight.Bold,
-                            modifier = Modifier.wrapContentSize().padding(horizontal = 10.dp).align(Alignment.CenterVertically),
+                            modifier = Modifier
+                                .wrapContentSize()
+                                .padding(horizontal = 10.dp)
+                                .align(Alignment.CenterVertically),
                             fontSize = 20.sp
                         )
                     }
@@ -285,7 +328,8 @@ fun VendorBillingScreen(
                         Toast.makeText(context, "Generate Bill", Toast.LENGTH_SHORT).show()
                     },
                     shape = RoundedCornerShape(5.dp),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
 
                         .padding(horizontal = 15.dp)
                         .height(50.dp),
@@ -302,58 +346,4 @@ fun VendorBillingScreen(
         }
 
     }
-}
-
-
-
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-fun showPapersTakenList(paperList: List<Paper>, viewModel: BillingScreenViewModel) {
-
-            LazyColumn(modifier = Modifier.height(100.dp).fillMaxWidth()) {
-                itemsIndexed(items = paperList) { index, paperr ->
-                    Box(
-                        modifier = Modifier
-                            .wrapContentHeight()
-                            .fillMaxWidth(), contentAlignment = Alignment.TopEnd
-                    ) {
-                        Row(Modifier.wrapContentHeight()) {
-                            Text(
-                                text = paperr.name,
-                                color = Color.DarkGray,
-                                modifier = Modifier.align(Alignment.CenterVertically)
-                            )
-                            BasicTextField(
-                                value = viewModel.toiTaken.value,
-                                onValueChange = { viewModel.toiTaken.value = it },
-                                keyboardOptions = KeyboardOptions(
-                                    imeAction = ImeAction.Done,
-                                    keyboardType = KeyboardType.Number
-                                ),
-                                maxLines = 1,
-                                modifier = Modifier
-                                    .width(125.dp)
-                                    .height(35.dp)
-                                    .padding(horizontal = 15.dp),
-                                textStyle = TextStyle.Default.copy(fontSize = 20.sp)
-                            ) {
-                                TextFieldDefaults.OutlinedTextFieldDecorationBox(
-                                    value = viewModel.toiTaken.value,
-                                    innerTextField = it,
-                                    enabled = true,
-                                    singleLine = true,
-                                    visualTransformation = VisualTransformation.None,
-                                    interactionSource = MutableInteractionSource(),
-                                    contentPadding = PaddingValues(all = 4.dp),
-                                    colors = ExposedDropdownMenuDefaults.textFieldColors(backgroundColor = Color.White)
-                                )
-                            }
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(7.dp))
-                }
-
-            }
-
-
 }
