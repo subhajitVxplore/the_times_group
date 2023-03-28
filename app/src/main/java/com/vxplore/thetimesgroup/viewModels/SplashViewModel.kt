@@ -11,33 +11,32 @@ import com.vxplore.core.common.DialogData
 import com.vxplore.core.common.EmitType
 import com.vxplore.core.common.IntroStatus
 import com.vxplore.core.domain.model.AppVersion
+import com.vxplore.core.domain.model.BaseUrlModel
+import com.vxplore.core.domain.model.Vendor
 import com.vxplore.core.domain.useCasess.SplashUseCases
+import com.vxplore.core.helpers.AppStore
 import com.vxplore.thetimesgroup.custom_views.UiData
 import com.vxplore.thetimesgroup.extensions.MyDialog
+import com.vxplore.thetimesgroup.extensions.castListToRequiredTypes
 import com.vxplore.thetimesgroup.extensions.castValueToRequiredTypes
 import com.vxplore.thetimesgroup.helpers_impl.SavableMutableState
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     private val appNavigator: AppNavigator,
     private val splashUseCases: SplashUseCases,
+    private val pref: AppStore,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-
     init {
-        viewModelScope.launch {
-            checkIntroStatus()
-            checkAppVersion()
-        }
+        getBaseUrll()
     }
 
     val versionUpdateDialog = mutableStateOf<MyDialog?>(null)
@@ -154,6 +153,33 @@ class SplashViewModel @Inject constructor(
 
 
 
+
+    fun getBaseUrll() {
+        splashUseCases.getBaseUrll()
+            .flowOn(Dispatchers.IO)
+            .onEach {
+                when (it.type) {
+                    EmitType.BaseUrl -> {
+                        it.value?.apply {
+                            castValueToRequiredTypes<String>()?.let {
+                                pref.storeBaseUrl(it)
+                                checkIntroStatus()
+                                checkAppVersion()
+                            }
+                        }
+                    }
+
+                    EmitType.NetworkError -> {
+                        it.value?.apply {
+                            castValueToRequiredTypes<String>()?.let {
+
+                            }
+                        }
+                    }
+                    else -> {}
+                }
+            }.launchIn(viewModelScope)
+    }
 
 
 }

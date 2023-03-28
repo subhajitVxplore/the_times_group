@@ -25,6 +25,18 @@ class AppStoreImpl @Inject constructor(
         }.first() ?: false
     }
 
+    override suspend fun storeBaseUrl(url: String) {
+        prefs.edit {
+            it[stringPreferencesKey(PrefConstants.BASE_URL)] = url
+        }
+    }
+
+    override suspend fun fetchBaseUrl(): String {
+        return prefs.data.map {
+            it[stringPreferencesKey(PrefConstants.BASE_URL)]
+        }.first() ?: ""
+    }
+
     override suspend fun login(userId: String) {
         prefs.edit {
             it[stringPreferencesKey(PrefConstants.USER_ID)] = userId

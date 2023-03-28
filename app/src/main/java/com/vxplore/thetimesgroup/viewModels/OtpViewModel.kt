@@ -47,11 +47,11 @@ class OtpViewModel @Inject constructor(
 
 
 fun verifyOtp(otpp: String) {
-
         otpUseCases.verifyOtp(otpp,number)
             .flowOn(Dispatchers.IO)
             .onEach {
                 when (it.type) {
+
                     EmitType.Navigate -> {
                         it.value?.apply {
                             castValueToRequiredTypes<String>()?.let { destination->

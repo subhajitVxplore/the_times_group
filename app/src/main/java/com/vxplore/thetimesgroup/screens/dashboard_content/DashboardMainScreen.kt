@@ -12,6 +12,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,6 +35,7 @@ import com.vxplore.thetimesgroup.viewModels.DashboardViewModel
 @Composable
 fun DashboardMainScreen(openDrawer: () -> Unit, viewModel: DashboardViewModel) {
     val ctx = LocalContext.current
+
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = {viewModel.onDashboardToBilling()},
@@ -45,10 +47,16 @@ fun DashboardMainScreen(openDrawer: () -> Unit, viewModel: DashboardViewModel) {
         }
     ) { padding->
     Column(modifier = Modifier.fillMaxSize()) {
-        Surface( modifier = Modifier.weight(1f)) {
-            Column(content = { Box(modifier = Modifier.wrapContentHeight().fillMaxWidth(),) {
-                        Row( modifier = Modifier.padding(13.dp).wrapContentSize().align(Alignment.Center)) {
-                            Column(modifier = Modifier.wrapContentHeight().weight(1.0f, true).background(GreenLight, shape = RoundedCornerShape(5.dp))) {
+        Surface(modifier = Modifier.weight(1f)) {
+            Column(content = { Box(modifier = Modifier.wrapContentHeight().fillMaxWidth()) {
+                        Row( modifier = Modifier
+                            .padding(13.dp)
+                            .wrapContentSize()
+                            .align(Alignment.Center)) {
+                            Column(modifier = Modifier
+                                .wrapContentHeight()
+                                .weight(1.0f, true)
+                                .background(GreenLight, shape = RoundedCornerShape(5.dp))) {
                                 Text(text = "Today's Total",color = Color.White,fontSize = 12.sp,modifier = Modifier.padding(10.dp, 5.dp, 0.dp, 0.dp))
 
                                 Text(
@@ -65,17 +73,20 @@ fun DashboardMainScreen(openDrawer: () -> Unit, viewModel: DashboardViewModel) {
                                     modifier = Modifier.padding(10.dp, 0.dp, 0.dp, 5.dp)
                                 )
                                 Box(
-                                    modifier = Modifier.wrapContentHeight().fillMaxWidth()
-                                        .background(Color.Black,shape = RoundedCornerShape(0.dp, 0.dp, 5.dp, 5.dp)),
+                                    modifier = Modifier
+                                        .wrapContentHeight()
+                                        .fillMaxWidth()
+                                        .background(
+                                            Color.Black,
+                                            shape = RoundedCornerShape(0.dp, 0.dp, 5.dp, 5.dp)
+                                        ),
                                     contentAlignment = Alignment.CenterStart,
                                 ) {
                                     Text(
                                         text = "This Month 450000",
                                         color = Color.White,
                                         fontSize = 12.sp,
-                                        modifier = Modifier.padding(
-                                            horizontal = 10.dp, vertical = 5.dp
-                                        )
+                                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
                                     )
                                 }
                             }
@@ -147,7 +158,10 @@ fun DashboardMainScreen(openDrawer: () -> Unit, viewModel: DashboardViewModel) {
                         color = GreyLight,
                         shape = RoundedCornerShape(3.dp),
                         //elevation = 5.dp,
-                        modifier = Modifier.fillMaxWidth().wrapContentSize().padding(5.dp)) {
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentSize()
+                            .padding(5.dp)) {
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -164,7 +178,9 @@ fun DashboardMainScreen(openDrawer: () -> Unit, viewModel: DashboardViewModel) {
                             Text(
                                 text = "Daily Avg.",
                                 fontSize = 12.sp,
-                                modifier = Modifier.weight(1f, true).padding(15.dp, 0.dp, 0.dp, 0.dp)
+                                modifier = Modifier
+                                    .weight(1f, true)
+                                    .padding(15.dp, 0.dp, 0.dp, 0.dp)
                             )
                             Text(
                                 text = "Return Avg.",
@@ -203,28 +219,39 @@ fun showVendorsList(vendorList: List<Vendor>,loading: Boolean,) {
         if (!it) {
             LazyColumn() {
                 itemsIndexed(items = vendorList) { index, vendorr ->
-                    Row(modifier = Modifier.fillMaxWidth().wrapContentHeight().padding(10.dp, 10.dp, 0.dp, 10.dp)) {
+                    Row(modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                        .padding(10.dp, 10.dp, 0.dp, 10.dp)) {
 
                         Text(
                             text = vendorr.top_vendors,
                             fontWeight = FontWeight.Bold,
                             fontSize = 12.sp,
-                            modifier = Modifier.weight(1f, true).padding(5.dp, 0.dp, 0.dp, 0.dp)
+                            modifier = Modifier
+                                .weight(1f, true)
+                                .padding(5.dp, 0.dp, 0.dp, 0.dp)
                         )
                         Text(
                             text = vendorr.daily_avg,
                             fontSize = 12.sp,
-                            modifier = Modifier.weight(1f, true).padding(25.dp, 0.dp, 0.dp, 0.dp)
+                            modifier = Modifier
+                                .weight(1f, true)
+                                .padding(25.dp, 0.dp, 0.dp, 0.dp)
                         )
                         Text(
                             text = vendorr.return_avg,
                             fontSize = 12.sp,
-                            modifier = Modifier.weight(1f, true).padding(20.dp, 0.dp, 0.dp, 0.dp)
+                            modifier = Modifier
+                                .weight(1f, true)
+                                .padding(20.dp, 0.dp, 0.dp, 0.dp)
                         )
                         Text(
                             text = vendorr.payment_due,
                             fontSize = 12.sp,
-                            modifier = Modifier.weight(1f, true).padding(20.dp, 0.dp, 0.dp, 0.dp)
+                            modifier = Modifier
+                                .weight(1f, true)
+                                .padding(20.dp, 0.dp, 0.dp, 0.dp)
                         )
 
                     }

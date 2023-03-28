@@ -4,7 +4,9 @@ package com.vxplore.core.domain.useCasess
 import com.vxplore.core.helpers.AppStore
 import com.vxplore.core.helpers.Info
 import com.vxplore.core.common.*
+import com.vxplore.core.domain.repositoriess.BaseUrlRepository
 import com.vxplore.core.domain.repositoriess.SplashRepository
+import com.vxplore.core.domain.repositoriess.VendorDetailsRepository
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
@@ -77,4 +79,34 @@ class SplashUseCases @Inject constructor(
             emit(Data(type = EmitType.Navigate, value = Destination.MobileNo))
         }
     }
+
+    fun getBaseUrll() = flow{
+        when (val response = splashRepository.baseUrl()) {
+            is Resource.Success -> {
+                response.data?.apply {
+                    when (status) {
+                        true -> {
+                            emit(Data(type = EmitType.BaseUrl, value = base_url))
+                        }
+                        else -> {
+                            emit(Data(type = EmitType.BackendError, value = message))
+                        }
+                    }
+                }
+            }
+            is Resource.Error -> {
+                handleFailedResponse(
+                    response = response,
+                    message = response.message,
+                    emitType = EmitType.NetworkError
+                )
+            }
+            else -> {
+
+            }
+        }
+    }
+
+
+
 }

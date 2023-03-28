@@ -28,20 +28,12 @@ class OtpUseCases @Inject constructor(
                                     pref.login(tesTuserId)
                                     emit(Data(EmitType.Navigate, value = Destination.Dashboard()))
                                 } else {
-                                    emit(
-                                        Data(
-                                            EmitType.Navigate,
-                                            value = Destination.MobileNo(number ?: "")
-                                        )
-                                    )
+                                    emit(Data(EmitType.Navigate,value = Destination.Register()))
                                 }
-
-
                             } else {
+                                emit(Data(EmitType.Navigate,value = Destination.MobileNo(number ?: "")))
                                 emit(Data(type = EmitType.ERROR, value = message))
                             }
-
-
                         }
                         else -> {
                             emit(Data(type = EmitType.BackendError, value = message))

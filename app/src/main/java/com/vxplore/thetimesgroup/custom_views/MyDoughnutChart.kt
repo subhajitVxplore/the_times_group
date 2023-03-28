@@ -3,6 +3,8 @@ package com.vxplore.thetimesgroup.custom_views
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -15,43 +17,33 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.vxplore.thetimesgroup.screens.Paper
 import com.vxplore.thetimesgroup.screens.PaperSold
-import com.vxplore.thetimesgroup.screens.Person
-import com.vxplore.thetimesgroup.ui.theme.DonutGreenDark
-import com.vxplore.thetimesgroup.ui.theme.DonutGreenLight
-import com.vxplore.thetimesgroup.ui.theme.DonutGreenMidium
+import com.vxplore.thetimesgroup.screens.getPaperSoldDetails
+import com.vxplore.thetimesgroup.ui.theme.MyColors
 
 @Composable
 fun MyDoughnutChart(
     paperSoldList: List<PaperSold>,
-    values: List<Float> = listOf(15f, 40f, 25f),
-    colors: List<Color> = listOf(
-        DonutGreenLight, DonutGreenDark, DonutGreenMidium
-    ),
-    //legend: List<String> = listOf("ES - 350000 (20%)", "TOI - 250000 (30%)", "E.T - 500000 (40%)"),
-    legend: List<String> = listOf("ES - 350000 (20%)", "TOI - 250000 (30%)", "E.T - 500000 (40%)"),
     size: Dp = 130.dp,
     thickness: Dp = 45.dp
 ) {
-    // Sum of all the values
+   // val values: List<Float> = listOf(10f,20f,30f,50f)
+//    val values: List<Float> = getPaperSoldDetails().map { it.floatValue }.toList()
+    val values: List<Float> = paperSoldList.map {it.floatValue}
     val sumOfValues = values.sum()
-    // Calculate each proportion
     val proportions = values.map { it * 100 / sumOfValues }
-    // Convert each proportion to angle
     val sweepAngles = proportions.map { 360 * it / 100 }
+
 
     Row(
         modifier = Modifier.fillMaxWidth().wrapContentHeight().padding(25.dp)) {
         Box(modifier = Modifier. weight(1f,true), ) {
             Column(
-                modifier = Modifier.wrapContentSize().padding(0.dp,40.dp,0.dp,0.dp),
+                modifier = Modifier.wrapContentSize().verticalScroll(rememberScrollState()),
                 //  verticalArrangement = Arrangement.Center,
             ) {
                 for (i in values.indices) {
-                 DisplayLegend(color = colors[i], legend = legend[i])
-//                for ((index, paper) in paperSoldList.withIndex()) {
-//                    DisplayLegend(color = colors[index], legend = paper.name+"(${paper.percentage})")
+                 DisplayLegend(color = paperSoldList[i].color, legend = paperSoldList[i].name+" - ${paperSoldList[i].price}"+"(${paperSoldList[i].percentage})")
                 }
             }
         }
@@ -62,7 +54,7 @@ fun MyDoughnutChart(
             Canvas(modifier = Modifier.size(size = size).align(Alignment.TopEnd)) {
                 var startAngle = -90f
                 for (i in values.indices) {
-                    drawArc(color = colors[i],startAngle = startAngle,sweepAngle = sweepAngles[i],useCenter = false,style = Stroke(width = thickness.toPx(), cap = StrokeCap.Butt))
+                    drawArc(color =  paperSoldList[i].color,startAngle = startAngle,sweepAngle = sweepAngles[i],useCenter = false,style = Stroke(width = thickness.toPx(), cap = StrokeCap.Butt))
                     startAngle += sweepAngles[i]
                 }
             }
@@ -80,7 +72,7 @@ fun DisplayLegend(color: Color, legend: String) {
     Row(
         horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(modifier = Modifier.size(12.dp).background(color = color, shape = RectangleShape) )
+        Box(modifier = Modifier.size(11.dp).background(color = color, shape = RectangleShape) )
         Spacer(modifier = Modifier.width(4.dp))
         Text(text = legend,color = Color.Black,fontSize = 13.sp,)
     }

@@ -21,6 +21,7 @@ import com.vxplore.thetimesgroup.extensions.MyDialog
 import com.vxplore.thetimesgroup.extensions.castListToRequiredTypes
 import com.vxplore.thetimesgroup.extensions.castValueToRequiredTypes
 import com.vxplore.thetimesgroup.helpers_impl.SavableMutableState
+import com.vxplore.thetimesgroup.screens.PaperSold
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -37,10 +38,23 @@ class DashboardViewModel @Inject constructor(
     private val _vendors = MutableStateFlow(emptyList<Vendor>())
     val vendors = _vendors.asStateFlow()
     val dashboardBack = mutableStateOf<MyDialog?>(null)
+    var values = listOf<PaperSold>()
+    var sumOfValues = mutableStateOf(0f)
+
+   // values: List<Float> = listOf(10f, 20f, 30f,40f,50f),
 
     //val vendorsQuery = mutabletateOf("")
     init {
         getVendors()
+        calculateDonutSweepAngles()
+    }
+
+    fun calculateDonutSweepAngles(){
+        values.forEach{
+            sumOfValues.value += it.floatValue
+
+        }
+
     }
 
     fun onDashboardToBilling() {

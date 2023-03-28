@@ -1,6 +1,7 @@
 package com.vxplore.core.common
 
 enum class EmitType {
+    BaseUrl,
     AppVersion,
     Otp,
     VENDORS,
@@ -11,5 +12,6 @@ enum class EmitType {
     ERROR,
     IntroStatus,
     NetworkError,
+
 
 }

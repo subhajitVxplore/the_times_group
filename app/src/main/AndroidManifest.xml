@@ -27,6 +27,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="base_url"
+            android:value="https://www.v-xplore.com/dev/rohan/toi-ci3/" />
     </application>
 
 </manifest>

@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import com.vxplore.core.domain.repositoriess.BaseUrlRepository
 import com.vxplore.core.domain.repositoriess.OtpRepository
 import com.vxplore.core.domain.repositoriess.SplashRepository
 import com.vxplore.core.domain.repositoriess.VendorDetailsRepository
@@ -12,9 +13,12 @@ import com.vxplore.core.helpers.Info
 import com.vxplore.thetimesgroup.data.online.AppVersionApi
 import com.vxplore.thetimesgroup.helpers_impl.AppInfo
 import com.vxplore.thetimesgroup.helpers_impl.AppStoreImpl
+import com.vxplore.thetimesgroup.repository_impls.BaseUrlRepositoryImpl
 import com.vxplore.thetimesgroup.repository_impls.OtpRepositoryImpl
 import com.vxplore.thetimesgroup.repository_impls.SplashRepositoryImpl
 import com.vxplore.thetimesgroup.repository_impls.VendorDetailsRepositoryImpl
+import com.vxplore.thetimesgroup.utility.Constants
+import com.vxplore.thetimesgroup.utility.Metar
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -32,29 +36,35 @@ interface AppModule {
 
     companion object {
         private val Context.dataStore by preferencesDataStore("timesGroup")
+
         private fun <T> provideApi(klass: Class<T>): T {
+            return Retrofit.Builder()
+                .baseUrl(Metar[Constants.BASE_URL])
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(klass)
+        }
+        private fun <T> provideApi2(klass: Class<T>): T {
             return Retrofit.Builder()
                 .baseUrl("https://api.npoint.io/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(klass)
-
-
         }
 
         @Singleton
         @Provides
-        fun provideAppVersion(): AppVersionApi = provideApi(AppVersionApi::class.java);
+        fun provideAppVersion(): AppVersionApi = provideApi2(AppVersionApi::class.java)
 
         @Singleton
         @Provides
-        fun provideDataStore(@ApplicationContext appContext: Context): DataStore<Preferences> =
-            appContext.dataStore
+        fun provideDataStore(@ApplicationContext appContext: Context): DataStore<Preferences> = appContext.dataStore
 
-//        @Provides
-//        @Singleton
-//        fun provideMovies(): MovieApi = provideApi(MovieApi::class.java)
-    }
+        @Singleton
+        @Provides
+        fun provideBaseUrl(): MyApiList = provideApi(MyApiList::class.java)
+
+    }//companion object
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Binds
@@ -71,6 +81,10 @@ interface AppModule {
 
     @Binds
     fun bindVendorDetailsRepo(impl: VendorDetailsRepositoryImpl): VendorDetailsRepository
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    @Binds
+    fun bindBaseUrlRepo(impl: BaseUrlRepositoryImpl): BaseUrlRepository
 
 
 }
