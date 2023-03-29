@@ -26,10 +26,8 @@ import com.vxplore.thetimesgroup.viewModels.RegisterViewModel
 
 @Composable
 fun RegistrationScreen(viewModel: RegisterViewModel = hiltViewModel()) {
-
     //val keyboardController = LocalSoftwareKeyboardController.current
     // val mContext = LocalContext.current
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -96,6 +94,59 @@ fun RegistrationScreen(viewModel: RegisterViewModel = hiltViewModel()) {
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
         )
+//        OutlinedTextField(
+//            value = viewModel.pincodeText.value,
+//            onValueChange = { viewModel.pincodeText.value = it },
+//            label = { Text("Pincode") },
+//            colors = TextFieldDefaults.outlinedTextFieldColors(
+//                focusedBorderColor = Color.Gray,
+//                unfocusedBorderColor = Color.Gray
+//            ),
+//            modifier = Modifier.fillMaxWidth(),
+//            singleLine = true,
+//            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Number),
+//        )
+//        OutlinedTextField(
+//            value = viewModel.districtText.value,
+//            onValueChange = { viewModel.districtText.value = it },
+//            label = { Text("District") },
+//            colors = TextFieldDefaults.outlinedTextFieldColors(
+//                focusedBorderColor = Color.Gray,
+//                unfocusedBorderColor = Color.Gray
+//            ),
+//            modifier = Modifier.fillMaxWidth(),
+//            singleLine = true
+//        )
+//        OutlinedTextField(
+//            value = viewModel.stateText.value,
+//            onValueChange = { viewModel.stateText.value = it },
+//            label = { Text("State") },
+//            colors = TextFieldDefaults.outlinedTextFieldColors(
+//                focusedBorderColor = Color.Gray,
+//                unfocusedBorderColor = Color.Gray
+//            ),
+//            modifier = Modifier.width(200.dp),
+//            singleLine = true
+//        )
+
+        val context= LocalContext.current
+
+        Spacer(modifier = Modifier.height(7.dp))
+
+        MyDropdown("State", getPaperPrice(),
+        onSelect = {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+        }
+            )
+
+        Spacer(modifier = Modifier.height(7.dp))
+
+        MyDropdown("District", getPaperPrice(),
+        onSelect = {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+        }
+            )
+
         OutlinedTextField(
             value = viewModel.pincodeText.value,
             onValueChange = { viewModel.pincodeText.value = it },
@@ -104,42 +155,9 @@ fun RegistrationScreen(viewModel: RegisterViewModel = hiltViewModel()) {
                 focusedBorderColor = Color.Gray,
                 unfocusedBorderColor = Color.Gray
             ),
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Number),
-        )
-        OutlinedTextField(
-            value = viewModel.districtText.value,
-            onValueChange = { viewModel.districtText.value = it },
-            label = { Text("District") },
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color.Gray,
-                unfocusedBorderColor = Color.Gray
-            ),
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true
-        )
-        OutlinedTextField(
-            value = viewModel.stateText.value,
-            onValueChange = { viewModel.stateText.value = it },
-            label = { Text("State") },
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color.Gray,
-                unfocusedBorderColor = Color.Gray
-            ),
             modifier = Modifier.width(200.dp),
             singleLine = true
         )
-
-        val context= LocalContext.current
-        MyDropdown("State", getPaperPrice(),
-        onSelect = {
-
-            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
-        }
-            )
-
-
 
         Box(modifier = Modifier.fillMaxSize()) {
             Column(

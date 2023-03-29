@@ -56,7 +56,7 @@ fun SplashScreen(viewModel: SplashViewModel = hiltViewModel()) {
         )
         delay(3000L)
         //navController.navigate(AppRoutes.MOBILE_NO)
-        viewModel.onSplashRun()
+        //viewModel.onSplashRun()
     }
 
     // Image

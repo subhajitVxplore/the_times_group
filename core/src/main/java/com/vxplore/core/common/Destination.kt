@@ -18,12 +18,14 @@ sealed class Destination(protected val route: String, vararg arguments: Any) {
     object Splash : NoArgumentsDestination(AppRoutes.SPLASH)
     object MobileNo : Destination(AppRoutes.MOBILE_NO, "mobileNo_id"){
         const val MOBILE_N = "mobileNo_id"
-        operator fun invoke(number: String): String = route.appendParams(
-            MobileNo.MOBILE_N to number
+        const val DUMMY_NUMBER = "0000000000"
+        operator fun invoke(number: String = DUMMY_NUMBER): String = route.appendParams(
+            MOBILE_N to number
         )
     }
     object Otp : Destination(route = AppRoutes.OTP, "mobileNo_id") {
         const val MOBILE_NO = "mobileNo_id"
+
         operator fun invoke(number: String): String = route.appendParams(
             MOBILE_NO to number
         )
@@ -42,7 +44,10 @@ private fun String.appendParams(vararg params: Pair<String, Any?>): String {
 
     params.forEach {
         it.second?.toString()?.let { arg ->
-            builder.append("/$arg")
+            if(arg.isNotEmpty()) {
+                builder.append("/$arg")
+            }
+
         }
     }
 

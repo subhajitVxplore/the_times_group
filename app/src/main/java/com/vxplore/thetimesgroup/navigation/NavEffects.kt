@@ -1,6 +1,7 @@
 package com.vxplore.thetimesgroup.navigation
 
 import android.app.Activity
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
@@ -23,6 +24,8 @@ internal fun NavHostController.NavEffects(
 
             when (navIntent) {
                 is NavigationIntent.NavigateTo -> {
+                    Log.d("BackStackEntry", "${this@NavEffects.currentBackStackEntry?.destination}")
+
                     navigate(navIntent.route) {
                         launchSingleTop = navIntent.isSingleTop
                         navIntent.popUpToRoute?.let {

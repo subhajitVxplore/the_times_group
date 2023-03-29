@@ -4,19 +4,13 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
-import com.vxplore.core.domain.repositoriess.BaseUrlRepository
-import com.vxplore.core.domain.repositoriess.OtpRepository
-import com.vxplore.core.domain.repositoriess.SplashRepository
-import com.vxplore.core.domain.repositoriess.VendorDetailsRepository
+import com.vxplore.core.domain.repositoriess.*
 import com.vxplore.core.helpers.AppStore
 import com.vxplore.core.helpers.Info
 import com.vxplore.thetimesgroup.data.online.AppVersionApi
 import com.vxplore.thetimesgroup.helpers_impl.AppInfo
 import com.vxplore.thetimesgroup.helpers_impl.AppStoreImpl
-import com.vxplore.thetimesgroup.repository_impls.BaseUrlRepositoryImpl
-import com.vxplore.thetimesgroup.repository_impls.OtpRepositoryImpl
-import com.vxplore.thetimesgroup.repository_impls.SplashRepositoryImpl
-import com.vxplore.thetimesgroup.repository_impls.VendorDetailsRepositoryImpl
+import com.vxplore.thetimesgroup.repository_impls.*
 import com.vxplore.thetimesgroup.utility.Constants
 import com.vxplore.thetimesgroup.utility.Metar
 import dagger.Binds
@@ -70,6 +64,12 @@ interface AppModule {
     @Binds
     fun bindAppStore(appStoreImpl: AppStoreImpl): AppStore
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    @Binds
+    fun bindBaseUrlRepo(impl: BaseUrlRepositoryImpl): BaseUrlRepository
+    @Binds
+    fun bindMobileNoScreenRepo(impl: MobileNoScreenRepositoryImpl): MobileNoScreenRepository
+
     @Binds
     fun bindAppInfo(appInfo: AppInfo): Info
 
@@ -82,9 +82,8 @@ interface AppModule {
     @Binds
     fun bindVendorDetailsRepo(impl: VendorDetailsRepositoryImpl): VendorDetailsRepository
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    @Binds
-    fun bindBaseUrlRepo(impl: BaseUrlRepositoryImpl): BaseUrlRepository
+
+
 
 
 }

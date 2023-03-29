@@ -32,7 +32,7 @@ import com.vxplore.thetimesgroup.viewModels.MobileNoScreenViewModel
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun MobileNoScreen(
-     viewModel: MobileNoScreenViewModel = hiltViewModel()
+    viewModel: MobileNoScreenViewModel = hiltViewModel()
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val mContext = LocalContext.current
@@ -48,8 +48,8 @@ fun MobileNoScreen(
         val activity = LocalContext.current as Activity
         Image(painter = painterResource(id = R.drawable.ic_baseline_keyboard_backspace_24),
             contentDescription = "countryImage",
-            modifier = Modifier.clickable{
-               // activity.onBackPressed()
+            modifier = Modifier.clickable {
+                // activity.onBackPressed()
                 activity.finishAffinity()
             }
         )
@@ -96,17 +96,20 @@ fun MobileNoScreen(
                         .padding(5.dp, 0.dp, 0.dp, 0.dp)
                 )
 
-                val maxLength=9
+                val maxLength = 9
                 TextField(
                     value = viewModel.MobileNoText.value ?: "",
                     singleLine = true,
                     onValueChange = {
-                        if (it.length <= 10){ viewModel.MobileNoText.value = it}
-                        else if (it.length >maxLength) { keyboardController?.hide()}
-                        else {
-                            Toast.makeText(mContext, "Can not be more than 10", Toast.LENGTH_SHORT).show()
+                        if (it.length <= 10) {
+                            viewModel.MobileNoText.value = it
+                        } else if (it.length > maxLength) {
+                            keyboardController?.hide()
+                        } else {
+                            Toast.makeText(mContext, "Can not be more than 10", Toast.LENGTH_SHORT)
+                                .show()
                             //keyboardController?.hide()
-                    }
+                        }
 
                     },
                     textStyle = TextStyle.Default.copy(fontSize = 23.sp),
@@ -120,7 +123,7 @@ fun MobileNoScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .align(Alignment.CenterVertically)
-                        .background(Color.White) ,
+                        .background(Color.White),
 
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Done, keyboardType = KeyboardType.Number
@@ -176,13 +179,14 @@ fun MobileNoScreen(
                     onClick = {
                         //Toast.makeText(context, "continue", Toast.LENGTH_SHORT).show()
                         //onContinueClick()
-                        if (viewModel.MobileNoText.value != null && viewModel.MobileNoText.value!!.length < 10){
+                        if (viewModel.MobileNoText.value != null && viewModel.MobileNoText.value!!.length < 10) {
                             Toast.makeText(context, "10 digits required", Toast.LENGTH_SHORT).show()
                         } else {
-                           // navController.navigate(AppRoutes.OTP+ "/${MobileNoText.text}",)
-                            viewModel.onMobToOtp("${viewModel.MobileNoText.value}")
+                            // navController.navigate(AppRoutes.OTP+ "/${MobileNoText.text}",)
+                            //viewModel.onMobToOtp("${viewModel.MobileNoText.value}")
+                            viewModel.sendOtp("${viewModel.MobileNoText.value}")
                         }
-                      //  navController.navigate(Routes.Settings.route + "/$counter")
+                        //  navController.navigate(Routes.Settings.route + "/$counter")
                     },
                     shape = RoundedCornerShape(5.dp),
                     modifier = Modifier
@@ -205,10 +209,15 @@ fun MobileNoScreen(
                         .padding(7.dp, 7.dp, 0.dp, 0.dp)
                         .align(Alignment.CenterHorizontally),
                     color = Color.Gray
-                    )
+                )
             }
         }
     }
 
-
+    LaunchedEffect(viewModel.notifier.value) {
+        if (viewModel.notifier.value.isNotEmpty()) {
+            Toast.makeText(mContext, viewModel.notifier.value, Toast.LENGTH_SHORT).show()
+            viewModel.notifier.value = ""
+        }
+    }
 }

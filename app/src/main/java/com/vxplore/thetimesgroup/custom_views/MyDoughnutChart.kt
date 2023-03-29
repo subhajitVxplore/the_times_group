@@ -36,7 +36,7 @@ fun MyDoughnutChart(
 
 
     Row(
-        modifier = Modifier.fillMaxWidth().wrapContentHeight().padding(25.dp)) {
+        modifier = Modifier.fillMaxWidth().height(200.dp).padding(25.dp)) {
         Box(modifier = Modifier. weight(1f,true), ) {
             Column(
                 modifier = Modifier.wrapContentSize().verticalScroll(rememberScrollState()),

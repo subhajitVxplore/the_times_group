@@ -13,19 +13,18 @@ class OtpUseCases @Inject constructor(
     private val pref: AppStore
     ) {
 
-    fun verifyOtp(otp: String, number: String?) = flow {
+    fun verifyOtp(number: String?,otp: String) = flow {
 
-        var tesTuserId= "1234"
-
-        when (val response = otpRepository.otpDetailsRepo(otp)) {
-
+        when (val response = otpRepository.verifyOtpRepository(number.toString(),otp)) {
             is Resource.Success -> {
                 response.data?.apply {
                     when (status) {
                         true -> {
-                            if (otp == otp_details[0].otp) {
-                                if (number == otp_details[0].phone) {
-                                    pref.login(tesTuserId)
+                            if (isMatched) {
+                                if (userStatus.contains("REGISTERED")) {
+                                    pref.login(userId)
+                                    //pref.isRegistered()
+                                    pref.storeRegistrationStatus("REGISTERED")
                                     emit(Data(EmitType.Navigate, value = Destination.Dashboard()))
                                 } else {
                                     emit(Data(EmitType.Navigate,value = Destination.Register()))

@@ -6,6 +6,8 @@ interface AppStore {
     suspend fun isIntroDone(): Boolean
     suspend fun storeBaseUrl(url: String)
     suspend fun fetchBaseUrl(): String
+    suspend fun storeRegistrationStatus(userStatus: String)
+    suspend fun fetchRegistrationStatus(): String
     suspend fun login(userId:String,)
     suspend fun userId(): String
     suspend fun logout()

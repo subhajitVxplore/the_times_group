@@ -22,13 +22,12 @@ class OtpViewModel @Inject constructor(
     private val appNavigator: AppNavigator,
     private val otpUseCases: OtpUseCases,
     savedStateHandle: SavedStateHandle
-):ViewModel(){
-
+) : ViewModel() {
 
 
     val number = savedStateHandle.get<String>(Destination.MobileNo.MOBILE_N)
     fun onOtpToMob(mobileNumber: String) {
-        Log.d("MOBILE", mobileNumber)
+        Log.d("MOBILE", number.toString())
         appNavigator.tryNavigateTo(
             route = Destination.MobileNo(mobileNumber),
             popUpToRoute = Destination.Otp(mobileNumber),
@@ -36,25 +35,14 @@ class OtpViewModel @Inject constructor(
             inclusive = true
         )
     }
-    fun onOtpToRegister(mobileNumber: String) {
-        appNavigator.tryNavigateTo(
-            route = Destination.Register(),
-            popUpToRoute = Destination.Otp(mobileNumber),
-            isSingleTop = true,
-            inclusive = true
-        )
-    }
 
-
-fun verifyOtp(otpp: String) {
-        otpUseCases.verifyOtp(otpp,number)
-            .flowOn(Dispatchers.IO)
-            .onEach {
+    fun verifyOtp(otpp: String) {
+        otpUseCases.verifyOtp(number, otpp).flowOn(Dispatchers.IO).onEach {
                 when (it.type) {
 
                     EmitType.Navigate -> {
                         it.value?.apply {
-                            castValueToRequiredTypes<String>()?.let { destination->
+                            castValueToRequiredTypes<String>()?.let { destination ->
                                 appNavigator.tryNavigateTo(
                                     destination,
                                     popUpToRoute = Destination.Otp.fullRoute,
@@ -76,7 +64,6 @@ fun verifyOtp(otpp: String) {
                 }
             }.launchIn(viewModelScope)
     }
-
 
 
 }

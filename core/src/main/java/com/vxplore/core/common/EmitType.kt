@@ -12,6 +12,7 @@ enum class EmitType {
     ERROR,
     IntroStatus,
     NetworkError,
+    INFORM,
 
 
 }

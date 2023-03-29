@@ -66,5 +66,14 @@ fun getPaperSoldDetails() = listOf(
     PaperSold("TTlg", 50000,"50%",50f,Color(0xFF219C0B.toInt())),
     PaperSold("HT", 40000,"40%",40f,Color(0xFF6A9E73.toInt())),
     PaperSold("TIE", 10000,"10%",10f,Color(0xFF477D50.toInt())),
+    PaperSold("TOI", 10000,"10%",10f,Color(0xFF219C0B.toInt())),
+    PaperSold("ET", 70000,"70%",70f,Color(0xFF6A9E73.toInt())),
+    PaperSold("ES", 20000,"20%",20f,Color(0xFF477D50.toInt())),
+    PaperSold("AB", 80000,"80%",80f,Color(0xFF275E30.toInt())),
+    PaperSold("Btm", 30000,"30%",30f,Color(0xFF509944.toInt())),
+    PaperSold("TTlg", 50000,"50%",50f,Color(0xFF219C0B.toInt())),
+    PaperSold("HT", 40000,"40%",40f,Color(0xFF6A9E73.toInt())),
+    PaperSold("TIE", 10000,"10%",10f,Color(0xFF477D50.toInt())),
     PaperSold("DB", 60000,"60%",60f,Color(0xFF477D50.toInt()))
+
 )

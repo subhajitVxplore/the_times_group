@@ -35,21 +35,13 @@ class SplashUseCases @Inject constructor(
                             if (currentVersion < appVersion.versionCode) {
                                 emit(Data(type = EmitType.AppVersion, value = appVersion))
                             } else {
-                                if(appStore.isLoggedIn()) {
-                                    emit(
-                                        Data(
-                                            type = EmitType.Navigate,
-                                            value = Destination.Dashboard
-                                        )
-                                    )
-                                } else {
-                                    emit(
-                                        Data(
-                                            type = EmitType.Navigate,
-                                            value = Destination.MobileNo
-                                        )
-                                    )
-                                }
+//                                if (appStore.fetchRegistrationStatus() == "REGISTERED"){
+                                    if(appStore.isLoggedIn()) {
+                                        emit(Data(type = EmitType.Navigate,value = Destination.Dashboard))
+                                    } else {
+                                        emit(Data(type = EmitType.Navigate,value = Destination.MobileNo))
+                                    }
+//                                }else{emit(Data(type = EmitType.Navigate,value = Destination.Register))}
                             }
                         }
                         else -> {
@@ -72,7 +64,7 @@ class SplashUseCases @Inject constructor(
     }
 
 
-    fun navigateToAppropiateScreen() = flow<Data> {
+    fun navigateToAppropiateScreen() = flow {
         if(appStore.isLoggedIn()) {
             emit(Data(type = EmitType.Navigate, value = Destination.Dashboard))
         } else {

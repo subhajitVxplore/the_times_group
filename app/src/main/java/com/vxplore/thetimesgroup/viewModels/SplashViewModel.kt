@@ -49,7 +49,7 @@ class SplashViewModel @Inject constructor(
                     EmitType.IntroStatus -> {
                         dataEntry.value?.apply {
                             castValueToRequiredTypes<IntroStatus>()?.let {
-                               // splashBtnStatus.setValue(it)
+                                // splashBtnStatus.setValue(it)
                             }
                         }
                     }
@@ -97,10 +97,20 @@ class SplashViewModel @Inject constructor(
                     }
                     EmitType.Navigate -> {
                         it.value?.apply {
-                            castValueToRequiredTypes<Destination.NoArgumentsDestination>()?.let {destination->
+
+                            castValueToRequiredTypes<Destination.NoArgumentsDestination>()?.let { destination ->
                                 appNavigator.tryNavigateTo(
                                     destination(),
-                                    popUpToRoute = Destination.Splash.fullRoute,
+                                    popUpToRoute = Destination.Splash(),
+                                    isSingleTop = true,
+                                    inclusive = true
+                                )
+                            }
+
+                            castValueToRequiredTypes<Destination.MobileNo>()?.let { destination ->
+                                appNavigator.tryNavigateTo(
+                                    destination.invoke(),
+                                    popUpToRoute = Destination.Splash(),
                                     isSingleTop = true,
                                     inclusive = true
                                 )
@@ -124,6 +134,7 @@ class SplashViewModel @Inject constructor(
         savedStateHandle = savedStateHandle,
         initialData = null
     )
+
     private fun handleDialogEvents() {
         versionUpdateDialog.value?.onConfirm = {
             it?.castValueToRequiredTypes<AppVersion>()?.apply {
@@ -150,8 +161,6 @@ class SplashViewModel @Inject constructor(
             }.launchIn(viewModelScope)
         }
     }
-
-
 
 
     fun getBaseUrll() {

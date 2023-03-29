@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class AppStoreImpl @Inject constructor(
+//    private val prefs: DataStore<androidx.datastore.preferences.core.Preferences>
     private val prefs: DataStore<androidx.datastore.preferences.core.Preferences>
 ) : AppStore {
     override suspend fun intro(status: Boolean) {
@@ -34,6 +35,17 @@ class AppStoreImpl @Inject constructor(
     override suspend fun fetchBaseUrl(): String {
         return prefs.data.map {
             it[stringPreferencesKey(PrefConstants.BASE_URL)]
+        }.first() ?: ""
+    }
+    override suspend fun storeRegistrationStatus(userStatus: String) {
+        prefs.edit {
+            it[stringPreferencesKey(PrefConstants.REGISTRATION_STATUS)] = userStatus
+        }
+    }
+
+    override suspend fun fetchRegistrationStatus(): String {
+        return prefs.data.map {
+            it[stringPreferencesKey(PrefConstants.REGISTRATION_STATUS)]
         }.first() ?: ""
     }
 
