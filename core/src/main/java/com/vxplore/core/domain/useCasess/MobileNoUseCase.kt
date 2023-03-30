@@ -8,7 +8,6 @@ import javax.inject.Inject
 
 class MobileNoUseCase @Inject constructor(private val mobileNoScreenRepository: MobileNoScreenRepository) {
 
-
     fun sendOtp(number: String) = flow {
         when (val response = mobileNoScreenRepository.sendOtpRepository(number)) {
 

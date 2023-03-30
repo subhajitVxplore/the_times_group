@@ -12,8 +12,10 @@ class VendorDetailsUseCases @Inject constructor(private val vendorDetailsReposit
 
 
     fun getVendors() = flow{
+        emit(Data(EmitType.Loading, true))
         when (val response = vendorDetailsRepository.vendorDetailsRepo()) {
             is Resource.Success -> {
+                emit(Data(EmitType.Loading, false))
                 response.data?.apply {
                     when (status) {
                         true -> {
@@ -26,6 +28,7 @@ class VendorDetailsUseCases @Inject constructor(private val vendorDetailsReposit
                 }
             }
             is Resource.Error -> {
+
                 handleFailedResponse(
                     response = response,
                     message = response.message,

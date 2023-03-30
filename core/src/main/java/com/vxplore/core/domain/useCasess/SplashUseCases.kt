@@ -32,16 +32,16 @@ class SplashUseCases @Inject constructor(
                 response.data?.apply {
                     when (status) {
                         true -> {
-                            if (currentVersion < appVersion.versionCode) {
+                            if (currentVersion < appVersion.versionCode.toInt()) {
                                 emit(Data(type = EmitType.AppVersion, value = appVersion))
                             } else {
-//                                if (appStore.fetchRegistrationStatus() == "REGISTERED"){
+                                if (appStore.fetchRegistrationStatus() == "REGISTERED"){
                                     if(appStore.isLoggedIn()) {
                                         emit(Data(type = EmitType.Navigate,value = Destination.Dashboard))
                                     } else {
                                         emit(Data(type = EmitType.Navigate,value = Destination.MobileNo))
                                     }
-//                                }else{emit(Data(type = EmitType.Navigate,value = Destination.Register))}
+                                }else{emit(Data(type = EmitType.Navigate,value = Destination.Register))}
                             }
                         }
                         else -> {

@@ -1,5 +1,7 @@
 package com.vxplore.thetimesgroup.custom_views
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -14,10 +16,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.vxplore.thetimesgroup.screens.Paper
+import com.vxplore.core.common.DropDownCommonInterface
+import com.vxplore.thetimesgroup.extensions.bottomToUp
+import com.vxplore.thetimesgroup.extensions.screenHeight
+import com.vxplore.thetimesgroup.extensions.screenWidth
+import com.vxplore.thetimesgroup.extensions.upToBottom
+import com.vxplore.thetimesgroup.ui.theme.GreenLight
+import com.vxplore.thetimesgroup.ui.theme.GreyLight
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun MyDropdown(label: String, dataList: List<Paper>, onSelect: (String) -> Unit) {
+fun MyDropdown(label: String,loading: Boolean, dataList: List<DropDownCommonInterface>, onSelect: (String) -> Unit) {//need to inherit "DropDownItem" to model classes
 
     var mExpanded by remember { mutableStateOf(false) }
     var mSelectedText by remember { mutableStateOf("") }
@@ -30,35 +39,53 @@ fun MyDropdown(label: String, dataList: List<Paper>, onSelect: (String) -> Unit)
     else
         Icons.Filled.KeyboardArrowDown
 
-    Column() {
-        Surface(
-            border = BorderStroke(1.dp, Color.Gray),
-            shape = RoundedCornerShape(4.dp),
-            //backgroundColor = Color.Yellow
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp)
-            ) {
 
-                Row(modifier = Modifier.fillMaxHeight().weight(1f).padding(start = 15.dp)) {
-                    Text(
-                        text = mSelectedText,
-                        //label = label,
-                        color = Color.DarkGray,
-                        fontSize = 17.sp,
-                        modifier = Modifier.align(Alignment.CenterVertically)
-                    )
-                }
-                    Icon(icon, "contentDescription",
-                        Modifier
-                            .padding(end=4.dp)
-                            .align(Alignment.CenterVertically)
-                            .clickable { mExpanded = !mExpanded })
 
+    AnimatedContent(
+        targetState = loading,
+        transitionSpec = {
+            if(targetState && !initialState) {
+                upToBottom()
+            } else {
+                bottomToUp()
             }
         }
+    ) {
+        if (!it) {
+
+            Column() {
+                Surface(
+                    border = BorderStroke(1.dp, Color.Gray),
+                    shape = RoundedCornerShape(4.dp),
+                    //backgroundColor = Color.Yellow
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(50.dp)
+                    ) {
+
+                        Row(modifier = Modifier
+                            .clickable { mExpanded = !mExpanded }
+                            .fillMaxHeight()
+                            .weight(1f)
+                            .padding(start = 15.dp)) {
+                            Text(
+                                text = mSelectedText,
+                                //label = label,
+                                color = Color.DarkGray,
+                                fontSize = 17.sp,
+                                modifier = Modifier.align(Alignment.CenterVertically)
+                            )
+                        }
+                        Icon(icon, "contentDescription",
+                            Modifier
+                                .padding(end = 4.dp)
+                                .align(Alignment.CenterVertically)
+                                .clickable { mExpanded = !mExpanded })
+
+                    }
+                }
 
 //        OutlinedTextField(
 //            readOnly = true,
@@ -71,20 +98,50 @@ fun MyDropdown(label: String, dataList: List<Paper>, onSelect: (String) -> Unit)
 //
 //            }
 //        )
+//Card(
+//    shape = RoundedCornerShape(10.dp),
+//    elevation = 20.dp,
+//    modifier = Modifier.padding(top = 30.dp, bottom = 30.dp)
+//) {
 
-        DropdownMenu(
-            expanded = mExpanded,
-            onDismissRequest = { mExpanded = false },
-        ) {
-            dataList.forEach {
-                DropdownMenuItem(onClick = {
-                    mSelectedText = it.name
-                    mExpanded = false
-                    onSelect(mSelectedText)
-                }) {
-                    Text(text = it.name)
+    DropdownMenu(
+        modifier= Modifier.height(250.dp),
+        expanded = mExpanded,
+
+        onDismissRequest = { mExpanded = false },
+    ) {
+        dataList.forEach {
+            DropdownMenuItem(onClick = {
+                mSelectedText = it.value
+                mExpanded = false
+                onSelect(mSelectedText)
+            }) {
+                Column{
+                    Text(text = it.value)
+                    Divider(color = GreyLight, thickness = 0.8.dp, modifier = Modifier.padding(top = 10.dp))
                 }
             }
-        }//DropdownMenu
+        }
+    }//DropdownMenu
+//}
+
+            }
+
+        } else {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .size(width = screenWidth * 0.15f, height = screenHeight * 0.15f)
+                    .padding(bottom = screenHeight * 0.05f),
+                color = GreenLight,
+                strokeWidth = 5.dp,
+            )
+        }
     }
+
 }
+
+/////////////////////////////////////////////////////////////////
+
+//interface DropDownItem {
+//    val name: String
+//}

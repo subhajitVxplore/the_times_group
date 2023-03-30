@@ -191,7 +191,6 @@ fun MobileNoScreen(
                     shape = RoundedCornerShape(5.dp),
                     modifier = Modifier
                         .fillMaxWidth()
-
                         .height(50.dp),
                     colors = ButtonDefaults.buttonColors(backgroundColor = Color.Black)
                 ) {

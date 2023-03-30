@@ -217,6 +217,9 @@ fun showVendorsList(vendorList: List<Vendor>,loading: Boolean,) {
         }
     ) {
         if (!it) {
+
+
+
             LazyColumn() {
                 itemsIndexed(items = vendorList) { index, vendorr ->
                     Row(modifier = Modifier
@@ -228,10 +231,8 @@ fun showVendorsList(vendorList: List<Vendor>,loading: Boolean,) {
                             text = vendorr.top_vendors,
                             fontWeight = FontWeight.Bold,
                             fontSize = 12.sp,
-                            modifier = Modifier
-                                .weight(1f, true)
-                                .padding(5.dp, 0.dp, 0.dp, 0.dp)
-                        )
+                            modifier = Modifier.weight(1f, true).padding(5.dp, 0.dp, 0.dp, 0.dp))
+
                         Text(
                             text = vendorr.daily_avg,
                             fontSize = 12.sp,
@@ -258,6 +259,9 @@ fun showVendorsList(vendorList: List<Vendor>,loading: Boolean,) {
                     Divider(color = GreyLight, thickness = 0.8.dp, modifier = Modifier.padding(10.dp, 0.dp, 10.dp, 0.dp))
                 }
             }
+
+
+
         } else {
             CircularProgressIndicator(
                 modifier = Modifier

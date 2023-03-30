@@ -1,21 +1,20 @@
 package com.vxplore.thetimesgroup.repository_impls
 
 import com.vxplore.core.common.Resource
-import com.vxplore.core.domain.model.AppVersionResponse
+import com.vxplore.core.domain.model.AppVersionModel
 import com.vxplore.core.domain.model.BaseUrlModel
 import com.vxplore.core.domain.repositoriess.SplashRepository
 import com.vxplore.thetimesgroup.data.online.AppVersionApi
 import com.vxplore.thetimesgroup.mainController.MyApiList
-
 import javax.inject.Inject
 
 class SplashRepositoryImpl @Inject constructor(
-        private val appVersionApi: AppVersionApi,
+//        private val appVersionApi: AppVersionApi,
         private val myApiList: MyApiList
 ): SplashRepository {
-    override suspend fun appVersion(currentVersion: Int): Resource<AppVersionResponse> {
+    override suspend fun appVersion(currentVersion: Int): Resource<AppVersionModel> {
        return try {
-            val  reslt = appVersionApi.getAppVersion();
+            val  reslt = myApiList.getAppVersion();
             Resource.Success(reslt)
         } catch (ex: Exception) {
            Resource.Error(message = ex.message)

@@ -85,7 +85,7 @@ fun SplashScreen(viewModel: SplashViewModel = hiltViewModel()) {
                         horizontalArrangement = Arrangement.End,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        if ((currentData?.data as AppVersion).isSkipable) {
+                        if ((currentData?.data as AppVersion).isSkipable=="NO") {
                             currentData?.negative?.let {
                                 OutlinedButton(
                                     modifier = Modifier.padding(10.dp),

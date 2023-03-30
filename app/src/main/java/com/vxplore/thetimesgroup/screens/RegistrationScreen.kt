@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.vxplore.thetimesgroup.R
 import com.vxplore.thetimesgroup.custom_views.MyDropdown
+import com.vxplore.thetimesgroup.ui.theme.GreyLight
 import com.vxplore.thetimesgroup.viewModels.RegisterViewModel
 
 @Composable
@@ -39,11 +41,10 @@ fun RegistrationScreen(viewModel: RegisterViewModel = hiltViewModel()) {
         Image(painter = painterResource(id = R.drawable.ic_baseline_keyboard_backspace_24),
             contentDescription = "countryImage",
             modifier = Modifier.clickable {
-                  activity.onBackPressed()
+                activity.onBackPressed()
 //                activity.finishAffinity()
 //                activity.finish()
-            }
-        )
+            })
 
         Text(
             text = "Complete your registration",
@@ -53,8 +54,7 @@ fun RegistrationScreen(viewModel: RegisterViewModel = hiltViewModel()) {
         Text(
             text = "Please fill all mandatory information",
             // style = MaterialTheme.typography.h3,
-            modifier = Modifier.padding(10.dp, 7.dp, 0.dp, 0.dp),
-            color = Color.Gray
+            modifier = Modifier.padding(10.dp, 7.dp, 0.dp, 0.dp), color = Color.Gray
         )
 
         OutlinedTextField(
@@ -62,8 +62,7 @@ fun RegistrationScreen(viewModel: RegisterViewModel = hiltViewModel()) {
             onValueChange = { viewModel.yourNameText.value = it },
             label = { Text("Your Name") },
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color.Gray,
-                unfocusedBorderColor = Color.Gray
+                focusedBorderColor = Color.Gray, unfocusedBorderColor = Color.Gray
             ),
             modifier = Modifier.fillMaxWidth(),
             singleLine = true
@@ -73,24 +72,17 @@ fun RegistrationScreen(viewModel: RegisterViewModel = hiltViewModel()) {
             onValueChange = { viewModel.emailAddressText.value = it },
             label = { Text("Email Address") },
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color.Gray,
-                unfocusedBorderColor = Color.Gray
+                focusedBorderColor = Color.Gray, unfocusedBorderColor = Color.Gray
             ),
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Done, keyboardType = KeyboardType.Email
-            ),
-
-        )
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Email),
+            )
         OutlinedTextField(
             value = viewModel.addressText.value,
             onValueChange = { viewModel.addressText.value = it },
             label = { Text("Address") },
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color.Gray,
-                unfocusedBorderColor = Color.Gray
-            ),
+            colors = TextFieldDefaults.outlinedTextFieldColors(focusedBorderColor = Color.Gray, unfocusedBorderColor = Color.Gray),
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
         )
@@ -129,35 +121,54 @@ fun RegistrationScreen(viewModel: RegisterViewModel = hiltViewModel()) {
 //            singleLine = true
 //        )
 
-        val context= LocalContext.current
+        val context = LocalContext.current
 
         Spacer(modifier = Modifier.height(7.dp))
+//        Card(
+//            shape = RoundedCornerShape(10.dp),
+//            elevation=20.dp,
+//            modifier = Modifier.fillMaxWidth().padding(top = 30.dp, bottom = 30.dp)
+//        ) {
+            MyDropdown("State",
+                viewModel.stateLoading.value,
+                viewModel.states.collectAsState().value,
+                onSelect = {
+                    Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                    viewModel.getDistrictByStateState(it)
+                })
 
-        MyDropdown("State", getPaperPrice(),
-        onSelect = {
-            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
-        }
-            )
+//        }
+
 
         Spacer(modifier = Modifier.height(7.dp))
+        MyDropdown("District",
+            viewModel.districtLoading.value,
+            viewModel.districts.collectAsState().value,
+            onSelect = {
+                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                viewModel.selectedDistrict.value = it
+            })
 
-        MyDropdown("District", getPaperPrice(),
-        onSelect = {
-            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+        Spacer(modifier = Modifier.height(7.dp))
+        Row(modifier = Modifier.width(200.dp)) {
+            MyDropdown("Pincode",
+                viewModel.stateLoading.value,
+                viewModel.states.collectAsState().value,
+                onSelect = { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() })
         }
-            )
 
-        OutlinedTextField(
-            value = viewModel.pincodeText.value,
-            onValueChange = { viewModel.pincodeText.value = it },
-            label = { Text("Pincode") },
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color.Gray,
-                unfocusedBorderColor = Color.Gray
-            ),
-            modifier = Modifier.width(200.dp),
-            singleLine = true
-        )
+
+//        OutlinedTextField(
+//            value = viewModel.pincodeText.value,
+//            onValueChange = { viewModel.pincodeText.value = it },
+//            label = { Text("Pincode") },
+//            colors = TextFieldDefaults.outlinedTextFieldColors(
+//                focusedBorderColor = Color.Gray,
+//                unfocusedBorderColor = Color.Gray
+//            ),
+//            modifier = Modifier.width(200.dp),
+//            singleLine = true
+//        )
 
         Box(modifier = Modifier.fillMaxSize()) {
             Column(
@@ -185,9 +196,7 @@ fun RegistrationScreen(viewModel: RegisterViewModel = hiltViewModel()) {
                     Text(
                         text = "I agree with all terms and conditions.",
                         // style = MaterialTheme.typography.h3,
-                        modifier = Modifier
-                            .align(Alignment.CenterVertically),
-                        color = Color.Gray
+                        modifier = Modifier.align(Alignment.CenterVertically), color = Color.Gray
                     )
 
                 }
@@ -219,8 +228,7 @@ fun RegistrationScreen(viewModel: RegisterViewModel = hiltViewModel()) {
                     // style = MaterialTheme.typography.h3,
                     modifier = Modifier
                         .padding(7.dp, 7.dp, 0.dp, 0.dp)
-                        .align(Alignment.CenterHorizontally),
-                    color = Color.Gray
+                        .align(Alignment.CenterHorizontally), color = Color.Gray
 
                 )
             }

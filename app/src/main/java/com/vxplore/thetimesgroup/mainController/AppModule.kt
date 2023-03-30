@@ -67,6 +67,10 @@ interface AppModule {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @Binds
     fun bindBaseUrlRepo(impl: BaseUrlRepositoryImpl): BaseUrlRepository
+
+    @Binds
+    fun bindRegisterRepo(impl: RegisterRepositoryImpl): RegisterRepository
+
     @Binds
     fun bindMobileNoScreenRepo(impl: MobileNoScreenRepositoryImpl): MobileNoScreenRepository
 

@@ -6,6 +6,7 @@ enum class UiData {
     AppStoreLink,
     UserMobileNumber,
     LoginContinueBtnEnable,
+    RegisterApiLoading,
     LoginApiLoading,
     DriverOtpInput,
     DrawerGuestureState,
@@ -14,4 +15,7 @@ enum class UiData {
     RationaleDialog,
     AllPermissionNotGranted,
     PermissionDeniedForever,
+    StateApiLoading,
+    DistrictApiLoading,
+    PincodeApiLoading,
 }
