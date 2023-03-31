@@ -1,9 +1,9 @@
 package com.vxplore.core.common
 
 interface DropDownCommonInterface{
-    val value: String
+    val name: String
 }
 
-//interface DropDownInterface {
-//    val pincode: String
-//}
+interface DropDownPincodeInterface {
+    val pincode: String
+}

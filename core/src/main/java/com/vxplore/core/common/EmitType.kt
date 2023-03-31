@@ -5,6 +5,7 @@ enum class EmitType {
     AppVersion,
     States,
     Districts,
+    Pincodes,
     Otp,
     VENDORS,
     BackendError,

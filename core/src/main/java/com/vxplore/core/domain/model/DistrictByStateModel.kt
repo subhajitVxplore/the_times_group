@@ -10,5 +10,6 @@ data class DistrictByStateModel(
 
 data class District(
     val id: String,
-    override val value: String
-): DropDownCommonInterface
+    override val name: String,
+
+    ): DropDownCommonInterface

@@ -1,6 +1,6 @@
 package com.vxplore.core.domain.model
 
-import com.vxplore.core.common.DropDownCommonInterface
+import com.vxplore.core.common.DropDownPincodeInterface
 
 data class PincodeByDistrict(
     val message: String,
@@ -10,5 +10,5 @@ data class PincodeByDistrict(
 
 data class Pincode(
     val id: Int,
-    override val value: String
-) : DropDownCommonInterface
+    override val pincode: String
+) : DropDownPincodeInterface

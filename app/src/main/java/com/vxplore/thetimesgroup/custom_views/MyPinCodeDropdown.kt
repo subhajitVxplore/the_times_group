@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.vxplore.core.common.DropDownCommonInterface
+import com.vxplore.core.common.DropDownPincodeInterface
 import com.vxplore.thetimesgroup.extensions.bottomToUp
 import com.vxplore.thetimesgroup.extensions.screenHeight
 import com.vxplore.thetimesgroup.extensions.screenWidth
@@ -26,7 +27,7 @@ import com.vxplore.thetimesgroup.ui.theme.GreyLight
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun MyDropdown(label: String,loading: Boolean, dataList: List<DropDownCommonInterface>, onSelect: (String) -> Unit) {//need to inherit "DropDownItem" to model classes
+fun MyPinCodeDropdown(label: String, loading: Boolean, dataList: List<DropDownPincodeInterface>, onSelect: (String) -> Unit) {//need to inherit "DropDownItem" to model classes
 
     var mExpanded by remember { mutableStateOf(false) }
     var mSelectedText by remember { mutableStateOf("") }
@@ -112,19 +113,18 @@ fun MyDropdown(label: String,loading: Boolean, dataList: List<DropDownCommonInte
     ) {
         dataList.forEach {
             DropdownMenuItem(onClick = {
-                mSelectedText = it.name
+                mSelectedText = it.pincode
                 mExpanded = false
                 onSelect(mSelectedText)
             }) {
                 Column{
-                    Text(text = it.name)
+                    Text(text = it.pincode)
                     Divider(color = GreyLight, thickness = 0.8.dp, modifier = Modifier.padding(top = 10.dp))
                 }
             }
         }
     }//DropdownMenu
 //}
-
             }
 
         } else {

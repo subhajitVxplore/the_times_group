@@ -48,7 +48,6 @@ class AppStoreImpl @Inject constructor(
             it[stringPreferencesKey(PrefConstants.REGISTRATION_STATUS)]
         }.first() ?: ""
     }
-
     override suspend fun login(userId: String) {
         prefs.edit {
             it[stringPreferencesKey(PrefConstants.USER_ID)] = userId

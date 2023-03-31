@@ -16,13 +16,14 @@ sealed class Destination(protected val route: String, vararg arguments: Any) {
     }
 
     object Splash : NoArgumentsDestination(AppRoutes.SPLASH)
-    object MobileNo : Destination(AppRoutes.MOBILE_NO, "mobileNo_id"){
+    object MobileNo : Destination(AppRoutes.MOBILE_NO, "mobileNo_id") {
         const val MOBILE_N = "mobileNo_id"
         const val DUMMY_NUMBER = "0000000000"
         operator fun invoke(number: String = DUMMY_NUMBER): String = route.appendParams(
             MOBILE_N to number
         )
     }
+
     object Otp : Destination(route = AppRoutes.OTP, "mobileNo_id") {
         const val MOBILE_NO = "mobileNo_id"
 
@@ -33,7 +34,15 @@ sealed class Destination(protected val route: String, vararg arguments: Any) {
 
     // object Otp : NoArgumentsDestination(AppRoutes.OTP )
     object Dashboard : NoArgumentsDestination(AppRoutes.DASHBOARD)
-    object Register : NoArgumentsDestination(AppRoutes.REGISTER)
+
+    //    object Register : NoArgumentsDestination(AppRoutes.REGISTER)
+    object Register : Destination(route = AppRoutes.REGISTER, "mobileNo_id") {
+        const val MOBILE_NO = "mobileNo_id"
+        operator fun invoke(number: String): String = route.appendParams(
+            MOBILE_NO to number
+        )
+    }
+
     object Billing : NoArgumentsDestination(AppRoutes.BILLING)
     object AddVendor : NoArgumentsDestination(AppRoutes.ADD_VENDOR)
     object AddVendorSuccess : NoArgumentsDestination(AppRoutes.ADD_VENDOR_SUCCESS)
@@ -44,7 +53,7 @@ private fun String.appendParams(vararg params: Pair<String, Any?>): String {
 
     params.forEach {
         it.second?.toString()?.let { arg ->
-            if(arg.isNotEmpty()) {
+            if (arg.isNotEmpty()) {
                 builder.append("/$arg")
             }
 

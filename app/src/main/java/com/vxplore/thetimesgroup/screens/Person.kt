@@ -75,5 +75,4 @@ fun getPaperSoldDetails() = listOf(
     PaperSold("HT", 40000, "40%", 40f, Color(0xFF6A9E73.toInt())),
     PaperSold("TIE", 10000, "10%", 10f, Color(0xFF477D50.toInt())),
     PaperSold("DB", 60000, "60%", 60f, Color(0xFF477D50.toInt()))
-
 )

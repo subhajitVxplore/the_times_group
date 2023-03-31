@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.vxplore.thetimesgroup.R
 import com.vxplore.thetimesgroup.custom_views.MyDropdown
+import com.vxplore.thetimesgroup.custom_views.MyPinCodeDropdown
 import com.vxplore.thetimesgroup.ui.theme.GreyLight
 import com.vxplore.thetimesgroup.viewModels.RegisterViewModel
 
@@ -78,6 +79,17 @@ fun RegistrationScreen(viewModel: RegisterViewModel = hiltViewModel()) {
             singleLine = true,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Email),
             )
+//        OutlinedTextField(
+//            value = viewModel.mobileText.value,
+//            onValueChange = { viewModel.mobileText.value = it },
+//            label = { Text("Mobile No.") },
+//            colors = TextFieldDefaults.outlinedTextFieldColors(
+//                focusedBorderColor = Color.Gray, unfocusedBorderColor = Color.Gray
+//            ),
+//            modifier = Modifier.fillMaxWidth(),
+//            singleLine = true,
+//            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Email),
+//            )
         OutlinedTextField(
             value = viewModel.addressText.value,
             onValueChange = { viewModel.addressText.value = it },
@@ -134,7 +146,8 @@ fun RegistrationScreen(viewModel: RegisterViewModel = hiltViewModel()) {
                 viewModel.states.collectAsState().value,
                 onSelect = {
                     Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
-                    viewModel.getDistrictByStateState(it)
+                    viewModel.selectedState.value = it
+                    viewModel.getDistrictByState(it)
                 })
 
 //        }
@@ -147,15 +160,19 @@ fun RegistrationScreen(viewModel: RegisterViewModel = hiltViewModel()) {
             onSelect = {
                 Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
                 viewModel.selectedDistrict.value = it
+                viewModel.getPincodeByDistrict(it)
             })
 
         Spacer(modifier = Modifier.height(7.dp))
-        Row(modifier = Modifier.width(200.dp)) {
-            MyDropdown("Pincode",
+//        Row(modifier = Modifier.width(200.dp)) {
+            MyPinCodeDropdown("Pincode",
                 viewModel.stateLoading.value,
-                viewModel.states.collectAsState().value,
-                onSelect = { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() })
-        }
+                viewModel.pincodes.collectAsState().value,
+                onSelect = {
+                    Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                    viewModel.selectedPincode.value = it
+                })
+//        }
 
 
 //        OutlinedTextField(
@@ -182,7 +199,6 @@ fun RegistrationScreen(viewModel: RegisterViewModel = hiltViewModel()) {
                         .fillMaxWidth()
                         .wrapContentHeight()
                         .padding(0.dp, 0.dp, 0.dp, 7.dp)
-
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.ic_round_check_circle_24),
@@ -192,27 +208,22 @@ fun RegistrationScreen(viewModel: RegisterViewModel = hiltViewModel()) {
                             .height(35.dp)
                             .align(Alignment.CenterVertically)
                     )
-
                     Text(
                         text = "I agree with all terms and conditions.",
                         // style = MaterialTheme.typography.h3,
                         modifier = Modifier.align(Alignment.CenterVertically), color = Color.Gray
                     )
-
                 }
-
                 Button(
-
                     onClick = {
                         //Toast.makeText(context, "continue", Toast.LENGTH_SHORT).show()
                         //onContinueClick()
                         //  navController.navigate(Routes.Settings.route + "/$counter")
-
+                              viewModel.register()
                     },
                     shape = RoundedCornerShape(5.dp),
                     modifier = Modifier
                         .fillMaxWidth()
-
                         .height(50.dp),
                     colors = ButtonDefaults.buttonColors(backgroundColor = Color.Black)
                 ) {
@@ -228,8 +239,8 @@ fun RegistrationScreen(viewModel: RegisterViewModel = hiltViewModel()) {
                     // style = MaterialTheme.typography.h3,
                     modifier = Modifier
                         .padding(7.dp, 7.dp, 0.dp, 0.dp)
-                        .align(Alignment.CenterHorizontally), color = Color.Gray
-
+                        .align(Alignment.CenterHorizontally),
+                    color = Color.Gray
                 )
             }
         }

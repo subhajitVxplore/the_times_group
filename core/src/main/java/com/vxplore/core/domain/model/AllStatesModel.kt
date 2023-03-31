@@ -9,9 +9,8 @@ data class AllStatesModel(
 )
 
 data class State(
-
-    override val value: String,
     val id: String,
+    override val name: String
 ): DropDownCommonInterface
 
 //data class Paper(override var name: String, val price: Int) : DropDownItem

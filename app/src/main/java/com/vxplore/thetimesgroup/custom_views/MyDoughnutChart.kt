@@ -40,7 +40,6 @@ fun MyDoughnutChart(
         Box(modifier = Modifier. weight(1f,true), ) {
             Column(
                 modifier = Modifier.wrapContentSize().verticalScroll(rememberScrollState()),
-                //  verticalArrangement = Arrangement.Center,
             ) {
                 for (i in values.indices) {
                  DisplayLegend(color = paperSoldList[i].color, legend = paperSoldList[i].name+" - ${paperSoldList[i].price}"+"(${paperSoldList[i].percentage})")

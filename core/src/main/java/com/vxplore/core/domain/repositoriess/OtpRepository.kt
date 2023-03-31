@@ -6,7 +6,6 @@ import com.vxplore.core.domain.model.SendOtpModel
 import com.vxplore.core.domain.model.VerifyOtpModel
 
 interface OtpRepository {
-
     suspend fun otpDetailsRepo(myOtp: String): Resource<OtpDtailsResponse>
     suspend fun verifyOtpRepository(mobile_no: String,myOtp: String): Resource<VerifyOtpModel>
 

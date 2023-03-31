@@ -11,14 +11,16 @@ interface MyApiList {
     @GET("appVersion")
     suspend fun getAppVersion(): AppVersionModel
 
-    @GET("Location/states")
+    @GET("states")
     suspend fun getAllState(): AllStatesModel
 
     @GET("state/districts")
     suspend fun getDistrictByState(@Query("state") state: String): DistrictByStateModel
+    @GET("state/districts/pincodes")
+    suspend fun getPincodeByDistrict(@Query("district") district: String): PincodeByDistrict
 
     @FormUrlEncoded
-    @POST("users/{userId}/add/vendor")
+    @POST("users/{userId}/registration")
     suspend fun register(
         @Path("userId") userId: String,
         @Field("name") name: String,
@@ -28,14 +30,12 @@ interface MyApiList {
         @Field("state") state: String,
         @Field("district") district: String,
         @Field("pincode") pincode: String
-    ): AddVendorModel
+    ): RegisterModel
 
-
-
-    @GET("Onboarding/sendOtp")
+    @GET("sendOtp")
     suspend fun sendOtp(@Query("mobile") mobile: String): SendOtpModel
 
-    @GET("Onboarding/verifyOtp")
+    @GET("verifyOtp")
     suspend fun verifyOtp(
         @Query("mobile") mobile: String,
         @Query("otp") otp: String
@@ -53,8 +53,5 @@ interface MyApiList {
 //    @FormUrlEncoded
 //    @POST("api/v2/app/changeLanguageApi")
 //    suspend fun addVendor(hashMap:HashMap<String, String>): AddVendorModel
-
-
-
 
 }
