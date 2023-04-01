@@ -26,10 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.vxplore.thetimesgroup.R
-import com.vxplore.thetimesgroup.custom_views.ExpandableCard
-import com.vxplore.thetimesgroup.custom_views.HorizontalScrollableCoupon
-import com.vxplore.thetimesgroup.custom_views.TextFieldWithDropdownUsage
-import com.vxplore.thetimesgroup.custom_views.showPapersTakenList
+import com.vxplore.thetimesgroup.custom_views.*
 import com.vxplore.thetimesgroup.ui.theme.DonutGreenLight
 import com.vxplore.thetimesgroup.ui.theme.GreenLight
 import com.vxplore.thetimesgroup.ui.theme.GreyLight
@@ -100,7 +97,8 @@ fun VendorBillingScreen(
                 .weight(weight = 1f)
 
         ) {
-            TextFieldWithDropdownUsage()
+            //TextFieldWithDropdownUsage()
+            MySearchField(viewModel)
             showPapersTakenList(paperList = getPaperPrice(), viewModel,
                 onPriceChange = { value, index, multi ->
                     try {

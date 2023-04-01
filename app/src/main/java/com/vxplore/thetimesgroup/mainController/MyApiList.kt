@@ -52,6 +52,12 @@ interface MyApiList {
         @Field("pincodes") pincodes: String
     ): AddVendorModel
 
+    @GET("vendor/search")
+    suspend fun searchVendor(
+        @Query("distributor_id") distributor_id: String,
+        @Query("search_text") search_text: String
+    ): SearchVendorModel
+
 //    @FormUrlEncoded
 //    @POST("api/v2/app/changeLanguageApi")
 //    suspend fun addVendor(hashMap:HashMap<String, String>): AddVendorModel

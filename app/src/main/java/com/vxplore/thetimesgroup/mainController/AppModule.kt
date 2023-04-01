@@ -92,6 +92,9 @@ interface AppModule {
     @Binds
     fun bindAddVendorRepo(impl: AddVendorRepositoryImpl): AddVendorRepository
 
+    @Binds
+    fun bindsearchVendorRepo(impl: SearchVendorRepositoryImpl): SearchVendorRepository
+
 
 
 

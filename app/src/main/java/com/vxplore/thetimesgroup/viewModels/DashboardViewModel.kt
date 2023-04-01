@@ -41,6 +41,8 @@ class DashboardViewModel @Inject constructor(
     var values = listOf<PaperSold>()
     var sumOfValues = mutableStateOf(0f)
 
+
+
    // values: List<Float> = listOf(10f, 20f, 30f,40f,50f),
 
     //val vendorsQuery = mutabletateOf("")

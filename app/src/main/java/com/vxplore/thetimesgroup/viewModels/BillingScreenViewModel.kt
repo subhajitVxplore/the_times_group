@@ -44,6 +44,20 @@ class BillingScreenViewModel @Inject constructor(private val appNavigator: AppNa
 
     //val _coupons = coupons.toMutableStateList()
 
+//    var prescriptionSortParameters = mutableStateListOf<SortParameter>()
+//    var prescriptionQuery by mutableStateOf("")
+//    var netWorkListener: ((Net) -> Unit) = {}
+
+    var expandDropDown by mutableStateOf(false)
+    fun openDropDown() {
+        expandDropDown = !expandDropDown
+    }
+//    var prescriptionSortParameters = mutableStateListOf<SortParameter>()
+//    var prescriptionQuery by mutableStateOf("")
+//    var netWorkListener: ((Net) -> Unit) = {}
+
+
+
     init {
         currentDue.value=previousDue.value
     }

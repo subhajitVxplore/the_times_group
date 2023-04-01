@@ -32,14 +32,14 @@ fun onValueChanged(value: TextFieldValue) {
     dropDownExpanded.value = true
     textFieldValue.value = value
 
-//    dropDownOptions.value = all.filter {
-//        it.startsWith(value.text) && it != value.text
-//    }.take(3)
+    dropDownOptions.value = all.filter {
+        it.startsWith(value.text) && it != value.text
+    }.take(3)
 
-    dropDownOptions.value = vendorList.map {
-        if (it.name.lowercase() == value.text.lowercase()) it.name
-        else ""
-    }.filter { it == "" }
+//    dropDownOptions.value = vendorList.map {
+//        if (it.name.lowercase() == value.text.lowercase()) it.name
+//        else ""
+//    }.filter { it == "" }
 }
 
 @Composable
