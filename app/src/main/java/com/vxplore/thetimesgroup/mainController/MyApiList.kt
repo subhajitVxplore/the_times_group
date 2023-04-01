@@ -16,6 +16,7 @@ interface MyApiList {
 
     @GET("state/districts")
     suspend fun getDistrictByState(@Query("state") state: String): DistrictByStateModel
+
     @GET("state/districts/pincodes")
     suspend fun getPincodeByDistrict(@Query("district") district: String): PincodeByDistrict
 
@@ -42,8 +43,9 @@ interface MyApiList {
     ): VerifyOtpModel
 
     @FormUrlEncoded
-    @POST("users/UABEC3A5F20230328/add/vendor")
+    @POST("users/{userId}/add/vendor")
     suspend fun addVendor(
+        @Path("userId") userId: String,
         @Field("name") name: String,
         @Field("mobile") mobile: String,
         @Field("email") email: String,

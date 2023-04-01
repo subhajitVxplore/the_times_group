@@ -21,6 +21,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.vxplore.core.helpers.AppStore
 import com.vxplore.thetimesgroup.R
 import com.vxplore.thetimesgroup.custom_views.MyDropdown
 import com.vxplore.thetimesgroup.custom_views.MyPinCodeDropdown
@@ -214,12 +215,15 @@ fun RegistrationScreen(viewModel: RegisterViewModel = hiltViewModel()) {
                         modifier = Modifier.align(Alignment.CenterVertically), color = Color.Gray
                     )
                 }
+
+
                 Button(
                     onClick = {
-                        //Toast.makeText(context, "continue", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "continue:", Toast.LENGTH_SHORT).show()
                         //onContinueClick()
                         //  navController.navigate(Routes.Settings.route + "/$counter")
                               viewModel.register()
+
                     },
                     shape = RoundedCornerShape(5.dp),
                     modifier = Modifier

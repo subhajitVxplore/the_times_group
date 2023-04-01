@@ -39,7 +39,6 @@ class RegisterUsecases @Inject constructor(private val registerRepository: Regis
         }
     }
 
-
     fun getDistrictByState(state: String) = flow {
         //emit(Data(EmitType.Loading, true))
         when (val response = registerRepository.getDistrictByStateRepository(state)) {
@@ -102,13 +101,15 @@ class RegisterUsecases @Inject constructor(private val registerRepository: Regis
 
     fun register(name: String,email: String,mobile: String,address: String,state: String,district: String,pincode: String) = flow {
         //emit(Data(EmitType.Loading, true))
+        var uid=appStore.userId()
         when (val response = registerRepository.registerRepository(appStore.userId(),name,email,mobile,address,state,district,pincode)) {
             is Resource.Success -> {
                 emit(Data(EmitType.Loading, false))
                 response.data?.apply {
                     when (status) {
                         true -> {
-                            emit(Data(EmitType.Navigate, value = Destination.Otp(mobile)))
+                            //emit(Data(EmitType.Navigate, value = Destination.Otp(mobile)))
+                            emit(Data(EmitType.Navigate, value = Destination.Dashboard()))
                             emit(Data(type = EmitType.INFORM, value = message))
                         }
                         else -> {

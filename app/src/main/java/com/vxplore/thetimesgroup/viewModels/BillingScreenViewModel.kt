@@ -44,13 +44,11 @@ class BillingScreenViewModel @Inject constructor(private val appNavigator: AppNa
 
     //val _coupons = coupons.toMutableStateList()
 
-
     init {
         currentDue.value=previousDue.value
     }
     fun calculateCurrentDue(){
         if((takenPaperTotal.value != 0) or(cashPayment.value != 0) or (couponTotal.value != 0)){
-
             currentDue.value+=((takenPaperTotal.value - cashPayment.value ) - couponTotal.value )
         }else{
 
@@ -75,6 +73,10 @@ class BillingScreenViewModel @Inject constructor(private val appNavigator: AppNa
             //inclusive = true
         )
     }
+
+
+
+
 
 
 

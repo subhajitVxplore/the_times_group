@@ -11,6 +11,10 @@ class HiltControllerApp : Application() {
         super.onCreate()
 
         Metar.initialize(this)
+        app = this
     }
 
+    companion object {
+        var app: HiltControllerApp? = null
+    }
 }

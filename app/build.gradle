@@ -78,7 +78,9 @@ dependencies {
 
     implementation "androidx.datastore:datastore-preferences:1.0.0"
 
-
+    // Chucker
+    debugImplementation "com.github.chuckerteam.chucker:library:3.5.2"
+    releaseImplementation "com.github.chuckerteam.chucker:library-no-op:3.5.2"
 }
 
 kapt {

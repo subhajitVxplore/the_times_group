@@ -33,7 +33,6 @@ class RegisterViewModel @Inject constructor(
 
     var yourNameText = mutableStateOf("")
     var emailAddressText = mutableStateOf("")
-    var mobileText = mutableStateOf("")
     var addressText = mutableStateOf("")
 
     private val _states = MutableStateFlow(emptyList<State>())

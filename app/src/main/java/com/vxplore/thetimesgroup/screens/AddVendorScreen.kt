@@ -66,6 +66,21 @@ fun AddVendorScreen(viewModel: AddVendorViewModel = hiltViewModel()) {
             modifier = Modifier.fillMaxWidth().padding(horizontal = 15.dp, vertical = 5.dp),
             singleLine = true
         )
+
+
+        OutlinedTextField(
+            value = "",
+            onValueChange = {""},
+            label = { Text("Vendor Phone") },
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color.Gray,
+                unfocusedBorderColor = Color.Gray
+            ),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 15.dp, vertical = 5.dp),
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Number),
+        )
+
         OutlinedTextField(
             value = "",
             onValueChange = { "" },

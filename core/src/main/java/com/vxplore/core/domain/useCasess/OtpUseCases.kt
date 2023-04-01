@@ -21,10 +21,11 @@ class OtpUseCases @Inject constructor(
                     when (status) {
                         true -> {
                             if (isMatched) {
+                                pref.login(userId)
                                 pref.storeRegistrationStatus(userStatus)
                                   if (pref.fetchRegistrationStatus() == "REGISTERED"){
                                 // if (userStatus.contains("REGISTERED")) {
-                                    pref.login(userId)
+                                   // pref.login(userId)
                                     emit(Data(EmitType.Navigate, value = Destination.Dashboard()))
                                 } else {
                                     emit(Data(EmitType.Navigate,value = Destination.Register(number.toString())))
