@@ -10,6 +10,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -97,18 +98,20 @@ fun VendorBillingScreen(
                 .weight(weight = 1f)
 
         ) {
-            //TextFieldWithDropdownUsage()
-            MySearchField(viewModel)
-            showPapersTakenList(paperList = getPaperPrice(), viewModel,
-                onPriceChange = { value, index, multi ->
-                    try {
-                        viewModel.takenPapers[index] = Pair(first = multi, second = value.toInt())
-                    }catch (e:Exception){
-                        println(e)
-                    }
-
+              TextFieldWithDropdownUsage()
+            Spacer(modifier = Modifier.height(7.dp))
+            //MySearchField(viewModel)
+            Spacer(modifier = Modifier.height(7.dp))
+            showPapersTakenList(
+                paperList = getPaperPrice() as MutableList<Paper>, viewModel
+            ) { value, index, multi ->
+                try {
+                    viewModel.takenPapers[index] = Pair(first = multi, second = value.toInt())
+                } catch (e: Exception) {
+                    println(e)
                 }
-            )
+
+            }
             Spacer(modifier = Modifier.height(7.dp))
             ExpandableCard(header = "Returns", paperList = getPaperPrice(), viewModel = viewModel)
         }
@@ -375,6 +378,14 @@ Column(modifier = Modifier.weight(1f,true)) {
     }
 }
 
-
     }//parent column
+
+    val mContext= LocalContext.current
+    LaunchedEffect(viewModel.toastError.value) {
+        if (viewModel.toastError.value.isNotEmpty()) {
+            Toast.makeText(mContext, viewModel.toastError.value, Toast.LENGTH_SHORT).show()
+            viewModel.toastError.value = ""
+        }
+    }
+
 }

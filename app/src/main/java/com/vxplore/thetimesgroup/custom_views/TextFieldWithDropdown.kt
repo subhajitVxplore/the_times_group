@@ -14,33 +14,18 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
+import com.vxplore.core.domain.model.SearchVendor
+import com.vxplore.core.domain.model.SearchVendorModel
 import com.vxplore.thetimesgroup.screens.Person
 
 
-val all = listOf("aaa", "baa", "aab", "abb", "bab")
+//val all = listOf("aaa", "baa", "aab", "abb", "bab")
 
-val dropDownOptions = mutableStateOf(emptyList<String>())
+
 var vendorList = mutableListOf<Person>()
+val dropDownOptions = mutableStateOf(emptyList<String>())
 val textFieldValue = mutableStateOf(TextFieldValue())
 val dropDownExpanded = mutableStateOf(false)
-
-fun onDropdownDismissRequest() {
-    dropDownExpanded.value = false
-}
-
-fun onValueChanged(value: TextFieldValue) {
-    dropDownExpanded.value = true
-    textFieldValue.value = value
-
-    dropDownOptions.value = all.filter {
-        it.startsWith(value.text) && it != value.text
-    }.take(3)
-
-//    dropDownOptions.value = vendorList.map {
-//        if (it.name.lowercase() == value.text.lowercase()) it.name
-//        else ""
-//    }.filter { it == "" }
-}
 
 @Composable
 fun TextFieldWithDropdownUsage() {
@@ -53,6 +38,28 @@ fun TextFieldWithDropdownUsage() {
         list = dropDownOptions.value,
     )
 }
+
+fun onDropdownDismissRequest() {
+    dropDownExpanded.value = false
+}
+
+
+fun onValueChanged(value: TextFieldValue) {
+    dropDownExpanded.value = true
+    textFieldValue.value = value
+    val all = listOf("aaa", "baa", "aab", "abb", "bab")
+    //  val all: List<SearchVendor> = emptyList()
+    //  val all: List<SearchVendor> = emptyList()
+        dropDownOptions.value = all.filter {
+            it.startsWith(value.text) && it != value.text
+        }.take(3)
+//    dropDownOptions.value = all.map {
+//        if (it.name.lowercase() == value.text.lowercase()) it.name
+//        else ""
+//    }.filter { it.startsWith(value.text) && it != value.text}.take(3)
+}
+
+
 
 
 @Composable
@@ -107,7 +114,6 @@ fun TextFieldWithDropdown(
         }
     }
 }
-
 
 ////////////////////////////////////////////////////////////////////
 //        BasicTextField(

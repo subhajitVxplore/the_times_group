@@ -14,21 +14,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.vxplore.core.domain.model.SearchVendor
 import com.vxplore.thetimesgroup.screens.Paper
+import com.vxplore.thetimesgroup.screens.Person
 import com.vxplore.thetimesgroup.viewModels.BillingScreenViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun showPapersTakenList(paperList: List<Paper>, viewModel: BillingScreenViewModel,
-                        price: String = "",
-                        onPriceChange: (String, Int, Int) -> Unit) {
+fun showPapersTakenList(
+    paperList: MutableList<Paper>, viewModel: BillingScreenViewModel,
+    price: String = "",
+    onPriceChange: (String, Int, Int) -> Unit) {
 //    LazyColumn(modifier = Modifier.height(300.dp).fillMaxWidth()) {
 //                itemsIndexed(items = paperList) { index, paperr ->
     Column(modifier = Modifier.fillMaxSize()) {
