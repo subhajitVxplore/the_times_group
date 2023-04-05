@@ -34,7 +34,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 fun AddVendorScreen(viewModel: AddVendorViewModel = hiltViewModel()) {
 
     Column(modifier = Modifier.fillMaxSize()) {
-        Row(modifier = Modifier.fillMaxWidth().height(50.dp).background(GreyLight).padding(5.dp)) {
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .height(50.dp)
+            .background(GreyLight)
+            .padding(5.dp)) {
 
             val activity = LocalContext.current as Activity
             Image(painter = painterResource(id = R.drawable.ic_baseline_keyboard_backspace_24),
@@ -64,22 +68,29 @@ fun AddVendorScreen(viewModel: AddVendorViewModel = hiltViewModel()) {
                 focusedBorderColor = Color.Gray,
                 unfocusedBorderColor = Color.Gray
             ),
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 15.dp, vertical = 5.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 15.dp, vertical = 5.dp),
             singleLine = true
         )
 
 
         OutlinedTextField(
             value = "",
-            onValueChange = {""},
+            onValueChange = { "" },
             label = { Text("Vendor Phone") },
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = Color.Gray,
                 unfocusedBorderColor = Color.Gray
             ),
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 15.dp, vertical = 5.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 15.dp, vertical = 5.dp),
             singleLine = true,
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Number),
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Done,
+                keyboardType = KeyboardType.Number
+            ),
         )
 
         OutlinedTextField(
@@ -90,13 +101,14 @@ fun AddVendorScreen(viewModel: AddVendorViewModel = hiltViewModel()) {
                 focusedBorderColor = Color.Gray,
                 unfocusedBorderColor = Color.Gray
             ),
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 15.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 15.dp),
             singleLine = true,
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Done, keyboardType = KeyboardType.Email
             ),
-
-            )
+        )
 
 
 //        OutlinedTextField(
@@ -140,7 +152,6 @@ fun AddVendorScreen(viewModel: AddVendorViewModel = hiltViewModel()) {
             )
         }
     }
-
 
 
 }

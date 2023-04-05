@@ -1,9 +1,8 @@
 package com.vxplore.thetimesgroup.viewModels
 
-import android.app.Notification
-import android.util.Log
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.core.utils.AppNavigator
@@ -11,26 +10,22 @@ import com.vxplore.core.common.Action
 import com.vxplore.core.common.Destination
 import com.vxplore.core.domain.model.SearchVendor
 import com.vxplore.core.domain.model.SearchVendorModel
-import com.vxplore.core.domain.model.SortParameter
-import com.vxplore.core.domain.model.Vendor
-import com.vxplore.core.domain.useCasess.AddVendorUseCases
-import com.vxplore.core.domain.useCasess.SearchVendorUseCases
+import com.vxplore.core.domain.useCasess.BillingScreenUseCases
 import com.vxplore.thetimesgroup.extensions.castListToRequiredTypes
 import com.vxplore.thetimesgroup.extensions.castValueToRequiredTypes
-import com.vxplore.thetimesgroup.screens.Person
 import com.vxplore.thetimesgroup.screens.getPaperPrice
 import com.vxplore.thetimesgroup.screens.getPersonAge
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class BillingScreenViewModel @Inject constructor(private val appNavigator: AppNavigator,private val searchVendorUseCases : SearchVendorUseCases) : ViewModel() {
+class BillingScreenViewModel @Inject constructor(private val appNavigator: AppNavigator,private val billingScreenUseCases : BillingScreenUseCases) : ViewModel() {
 
-
-    var showClearButton = mutableStateOf(false)
     var expand = mutableStateOf(false)  // Expand State
     var stroke = mutableStateOf(1)
 
@@ -39,53 +34,26 @@ class BillingScreenViewModel @Inject constructor(private val appNavigator: AppNa
     var currentDue = mutableStateOf(0)
 
     var toiReturn = mutableStateOf("")
-    var etReturn = mutableStateOf("")
-    var esReturn = mutableStateOf("")
-
-    //var personList: List<Person>
-   // var couponList = listOf<Person>()
-    //var coupons = MutableList(getPersonAge().size) { 0 }
 
     var takenPapers = MutableList<Pair<Int, Int>>(getPaperPrice().size) { Pair(0,0) }
     var takenPaperTotal = mutableStateOf(0)
     var coupons = MutableList<Pair<Int, Int>>(getPersonAge().size) { Pair(0,0) }
     var couponTotal = mutableStateOf(0)
 
-    //val _coupons = coupons.toMutableStateList()
-    private val _prescriptions: MutableStateFlow<List<SearchVendorModel>> = MutableStateFlow(emptyList())
-  //  val prescriptions: StateFlow<List<SearchVendorModel>> = _prescriptions
-//    private val _suggestions = MutableStateFlow<List<SearchVendor>>(emptyList())
 
+    private val _suggestionsss: MutableStateFlow<List<SearchVendorModel>> = MutableStateFlow(emptyList())
     private val _suggestions = MutableStateFlow(emptyList<SearchVendor>())
     val suggestion = _suggestions.asStateFlow()
-   // val suggestion: StateFlow<List<SearchVendor>> = _suggestions
-
     var suggestionListVisibility by mutableStateOf(false)
-    private var prescriptionsBackup: List<SearchVendorModel> = emptyList()
-
-    var prescriptionSortParameters = mutableStateListOf<SortParameter>()
+    private var suggestionsBackup: List<SearchVendorModel> = emptyList()
     var searchVendorQuery by mutableStateOf("")
 
-
     val toastError = mutableStateOf("")
-
-
-    var expandDropDown by mutableStateOf(false)
-    fun openDropDown() {
-        expandDropDown = !expandDropDown
-    }
-//    var prescriptionSortParameters = mutableStateListOf<SortParameter>()
-//    var searchVendorQuery by mutableStateOf("")
-//    var netWorkListener: ((Net) -> Unit) = {}
-
-
 
     init {
         currentDue.value=previousDue.value
     }
-
-
-
+    
     fun calculateCurrentDue(){
         if((takenPaperTotal.value != 0) or(cashPayment.value != 0) or (couponTotal.value != 0)){
             currentDue.value+=((takenPaperTotal.value - cashPayment.value ) - couponTotal.value )
@@ -114,29 +82,28 @@ class BillingScreenViewModel @Inject constructor(private val appNavigator: AppNa
     }
 ////////////////////////////////////////////////////////////////////////////
 
-    fun clearPrescriptionQuery() {
+    fun clearVendorsQuery() {
         searchVendorQuery = ""
         suggestionListVisibility = false
         viewModelScope.launch {
-            prescriptionsBackup.apply {
-                _prescriptions.emit(this)
+            suggestionsBackup.apply {
+                _suggestionsss.emit(this)
             }
         }
     }
 
-    fun updatePrescriptionQuery(query: String) {
+    fun updateVendorsQuery(query: String) {
         searchVendorQuery = query
         getPrescriptionSuggestions(query = searchVendorQuery)
     }
 
-
     private fun getPrescriptionSuggestions(query: String) {
-        searchVendorUseCases.generateVendorsSuggestions(query = query).onEach {
+        billingScreenUseCases.generateVendorsSuggestions(query = query).onEach {
             when (it.actionType) {
                 Action.SUGGESTIONS -> {
                     it.targetType?.castListToRequiredTypes<SearchVendor>()?.let {
                         _suggestions.emit(it)
-                        Log.d("Hello==","Responssse${it.toString()}")
+                      //  Log.d("Hello==","Responssse${it.toString()}")
                     }
                 }
                 Action.NO_SUGGESTIONS -> {

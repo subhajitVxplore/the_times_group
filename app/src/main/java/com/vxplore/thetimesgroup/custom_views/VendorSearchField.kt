@@ -21,12 +21,12 @@ import com.vxplore.thetimesgroup.viewModels.BillingScreenViewModel
 @Composable
 fun VendorSearchField(viewModel: BillingScreenViewModel) {
     Row(modifier = Modifier.fillMaxWidth()) {
-        SearchPrescriptionSection(viewModel)
+        SearchVendorsSection(viewModel)
     }
 }
 
 @Composable
-private fun RowScope.SearchPrescriptionSection(viewModel: BillingScreenViewModel) {
+private fun RowScope.SearchVendorsSection(viewModel: BillingScreenViewModel) {
 
     val maxWidth = LocalConfiguration.current.screenWidthDp.dp
 
@@ -35,14 +35,14 @@ private fun RowScope.SearchPrescriptionSection(viewModel: BillingScreenViewModel
             OutlinedTextField(
                 value = viewModel.searchVendorQuery,
                 onValueChange = {
-                    viewModel.updatePrescriptionQuery(it)
+                    viewModel.updateVendorsQuery(it)
                 },
                 singleLine = true,
                 trailingIcon = {
                     if (viewModel.searchVendorQuery.isNotEmpty()) {
                         Icon(painter = painterResource(id = R.drawable.ic_baseline_close_24),
                             contentDescription = null, modifier = Modifier.clickable {
-                                viewModel.clearPrescriptionQuery()
+                                viewModel.clearVendorsQuery()
                             })
                     } else {
                         Icon(
