@@ -8,6 +8,7 @@ enum class EmitType {
     Pincodes,
     Otp,
     VENDORS,
+    SEARCH_VENDORS,
     BackendError,
     Navigate,
     Loading,

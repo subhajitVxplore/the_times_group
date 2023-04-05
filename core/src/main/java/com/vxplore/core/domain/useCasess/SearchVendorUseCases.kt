@@ -37,7 +37,7 @@ class SearchVendorUseCases @Inject constructor(private  val searchVendorReposito
                             }
                         }
                         else -> {
-                            emit(Command(Action.BACKEND_ERROR, message))
+                            emit(Command(Action.BACKEND_ERROR, message+userID))
                         }
                     }
                 }

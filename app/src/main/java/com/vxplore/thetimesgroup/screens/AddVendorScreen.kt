@@ -22,6 +22,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.vxplore.core.domain.model.Pincode
 import com.vxplore.thetimesgroup.R
 import com.vxplore.thetimesgroup.ui.theme.GreenLight
 import com.vxplore.thetimesgroup.ui.theme.GreyLight
@@ -97,18 +98,19 @@ fun AddVendorScreen(viewModel: AddVendorViewModel = hiltViewModel()) {
 
             )
 
-        OutlinedTextField(
-            value = "",
-            onValueChange = { ""},
-            label = { Text("Serving PinCode(s)") },
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color.Gray,
-                unfocusedBorderColor = Color.Gray
-            ),
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 15.dp, vertical = 5.dp),
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Number),
-        )
+
+//        OutlinedTextField(
+//            value = "",
+//            onValueChange = { ""},
+//            label = { Text("Serving PinCode(s)") },
+//            colors = TextFieldDefaults.outlinedTextFieldColors(
+//                focusedBorderColor = Color.Gray,
+//                unfocusedBorderColor = Color.Gray
+//            ),
+//            modifier = Modifier.fillMaxWidth().padding(horizontal = 15.dp, vertical = 5.dp),
+//            singleLine = true,
+//            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Number),
+//        )
 
         Text(
             text = "You can add multiple (,) separated pinCode(s).",

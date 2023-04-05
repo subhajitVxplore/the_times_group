@@ -53,7 +53,7 @@ class BillingScreenViewModel @Inject constructor(private val appNavigator: AppNa
 
     //val _coupons = coupons.toMutableStateList()
     private val _prescriptions: MutableStateFlow<List<SearchVendorModel>> = MutableStateFlow(emptyList())
-    val prescriptions: StateFlow<List<SearchVendorModel>> = _prescriptions
+  //  val prescriptions: StateFlow<List<SearchVendorModel>> = _prescriptions
 //    private val _suggestions = MutableStateFlow<List<SearchVendor>>(emptyList())
 
     private val _suggestions = MutableStateFlow(emptyList<SearchVendor>())
@@ -64,7 +64,7 @@ class BillingScreenViewModel @Inject constructor(private val appNavigator: AppNa
     private var prescriptionsBackup: List<SearchVendorModel> = emptyList()
 
     var prescriptionSortParameters = mutableStateListOf<SortParameter>()
-    var prescriptionQuery by mutableStateOf("")
+    var searchVendorQuery by mutableStateOf("")
 
 
     val toastError = mutableStateOf("")
@@ -75,7 +75,7 @@ class BillingScreenViewModel @Inject constructor(private val appNavigator: AppNa
         expandDropDown = !expandDropDown
     }
 //    var prescriptionSortParameters = mutableStateListOf<SortParameter>()
-//    var prescriptionQuery by mutableStateOf("")
+//    var searchVendorQuery by mutableStateOf("")
 //    var netWorkListener: ((Net) -> Unit) = {}
 
 
@@ -83,6 +83,9 @@ class BillingScreenViewModel @Inject constructor(private val appNavigator: AppNa
     init {
         currentDue.value=previousDue.value
     }
+
+
+
     fun calculateCurrentDue(){
         if((takenPaperTotal.value != 0) or(cashPayment.value != 0) or (couponTotal.value != 0)){
             currentDue.value+=((takenPaperTotal.value - cashPayment.value ) - couponTotal.value )
@@ -112,7 +115,7 @@ class BillingScreenViewModel @Inject constructor(private val appNavigator: AppNa
 ////////////////////////////////////////////////////////////////////////////
 
     fun clearPrescriptionQuery() {
-        prescriptionQuery = ""
+        searchVendorQuery = ""
         suggestionListVisibility = false
         viewModelScope.launch {
             prescriptionsBackup.apply {
@@ -122,8 +125,8 @@ class BillingScreenViewModel @Inject constructor(private val appNavigator: AppNa
     }
 
     fun updatePrescriptionQuery(query: String) {
-        prescriptionQuery = query
-        getPrescriptionSuggestions(query = prescriptionQuery)
+        searchVendorQuery = query
+        getPrescriptionSuggestions(query = searchVendorQuery)
     }
 
 
@@ -149,10 +152,8 @@ class BillingScreenViewModel @Inject constructor(private val appNavigator: AppNa
                         toastError.value=it
                     }
                 }
-
                 else -> {}
             }
-
         }.launchIn(viewModelScope)
     }
 
