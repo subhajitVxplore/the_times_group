@@ -4,6 +4,8 @@ package com.vxplore.thetimesgroup.screens
 
 import android.app.Activity
 import android.widget.Toast
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -12,6 +14,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,14 +28,20 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.vxplore.core.domain.model.Pincode
 import com.vxplore.thetimesgroup.R
+import com.vxplore.thetimesgroup.custom_views.PincodeSearchField
+import com.vxplore.thetimesgroup.custom_views.PincodesSuggestionsSection
+import com.vxplore.thetimesgroup.custom_views.SuggestionsSection
 import com.vxplore.thetimesgroup.ui.theme.GreenLight
 import com.vxplore.thetimesgroup.ui.theme.GreyLight
 import com.vxplore.thetimesgroup.viewModels.AddVendorViewModel
 import com.vxplore.thetimesgroup.viewModels.RegisterViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AddVendorScreen(viewModel: AddVendorViewModel = hiltViewModel()) {
+
+    val suggestions = viewModel.pincodes.collectAsState().value
 
     Column(modifier = Modifier.fillMaxSize()) {
         Row(modifier = Modifier
@@ -110,6 +120,18 @@ fun AddVendorScreen(viewModel: AddVendorViewModel = hiltViewModel()) {
             ),
         )
 
+        Spacer(modifier = Modifier.height(10.dp))
+        PincodeSearchField(viewModel)
+//        AnimatedContent(targetState = suggestions.isNotEmpty()) { state ->
+////            if (viewModel.selectedPincode.value != "") {
+//                when (state) {
+//                    true -> PincodesSuggestionsSection(viewModel.pincodes.collectAsState().value,viewModel)
+//                    false -> Surface() { state }
+//                }
+////            }
+//        }
+        Box(modifier = Modifier.fillMaxWidth().height(200.dp), contentAlignment = Alignment.TopCenter){
+
 
 //        OutlinedTextField(
 //            value = "",
@@ -131,12 +153,22 @@ fun AddVendorScreen(viewModel: AddVendorViewModel = hiltViewModel()) {
             fontSize = 14.sp
         )
 
+            ///suggestion dropdown section calling
+            AnimatedContent(targetState = suggestions.isNotEmpty()) { state ->
+            //    if (viewModel.selectedPincode.value != "") {
+                    when (state) {
+                        true -> PincodesSuggestionsSection(viewModel.pincodes.collectAsState().value,viewModel)
+                        false -> Surface() { state }
+                    }
+               // }
+            }
+    }
         Spacer(modifier = Modifier.height(30.dp))
         val context = LocalContext.current
         Button(
             onClick = {
-                viewModel.onAddVendorToAddVendorSuccess()
-                //Toast.makeText(context, "Generate Bill", Toast.LENGTH_SHORT).show()
+               /// viewModel.onAddVendorToAddVendorSuccess()
+               // Toast.makeText(context, "Generate Bill${viewModel.pincodes.value}", Toast.LENGTH_SHORT).show()
             },
             shape = RoundedCornerShape(5.dp),
             modifier = Modifier
@@ -154,4 +186,16 @@ fun AddVendorScreen(viewModel: AddVendorViewModel = hiltViewModel()) {
     }
 
 
+
+
+//    LaunchedEffect(viewModel.selectedPincode.value) {
+//        if (viewModel.selectedPincode.value.isNotEmpty()) {
+//            //Toast.makeText(mContext, viewModel.toastError.value, Toast.LENGTH_SHORT).show()
+//           // viewModel.selectedPincode.value = ""
+//            viewModel.filterSuggestions()
+//        }
+//    }
+
+
 }
+

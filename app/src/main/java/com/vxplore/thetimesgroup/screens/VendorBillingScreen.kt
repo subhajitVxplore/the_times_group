@@ -388,21 +388,19 @@ fun VendorBillingScreen(
                     }
                 }
 
-            }
+            }//column
 
 
+            ///suggestion dropdown section calling
             AnimatedContent(targetState = suggestions.isNotEmpty()) { state ->
-
                 if (viewModel.searchVendorQuery != "") {
                     when (state) {
                         true -> SuggestionsSection(suggestions,viewModel)
-
                         false -> Surface() { state }
                     }
                 }
-
             }
-        }
+        }//box
 
     }//parent column
 
@@ -414,44 +412,5 @@ fun VendorBillingScreen(
         }
     }
 
-
 }
 
-@Composable
-private fun BoxScope.SuggestionsSection(suggestions: List<SearchVendor>,viewModel: BillingScreenViewModel) {
-
-    var visible by remember { mutableStateOf(true) }
-
-
-
-
-    AnimatedVisibility(
-        visible = visible,
-        enter = fadeIn(initialAlpha = 0.4f),
-        exit = fadeOut(animationSpec = tween(durationMillis = 250))
-    ) {
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp),
-            shape = RoundedCornerShape(12.dp),
-            color = Color.LightGray
-        ) {
-            LazyColumn(modifier = Modifier.fillMaxWidth()) {
-
-                items(suggestions) { item ->
-                    Text(
-                        text = item.name,
-                        modifier = Modifier.fillMaxSize()
-                            .padding(all = 8.dp)
-                            .clickable(onClick = {
-                                viewModel.searchVendorQuery=item.name
-                                visible = !visible
-                            })
-                    )
-                }
-            }
-        }
-    }
-
-}

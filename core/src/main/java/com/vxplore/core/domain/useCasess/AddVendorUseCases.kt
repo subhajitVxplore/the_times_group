@@ -1,8 +1,11 @@
 package com.vxplore.core.domain.useCasess
 
+import android.util.Log
 import com.vxplore.core.common.*
+import com.vxplore.core.domain.model.Command
 import com.vxplore.core.domain.repositoriess.AddVendorRepository
 import com.vxplore.core.helpers.AppStore
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
@@ -37,4 +40,40 @@ class AddVendorUseCases @Inject constructor(private val addVendorRepository: Add
             }
         }
     }
+
+
+
+    fun getPincodesByDistributorId() = flow {
+        // emit(Data(EmitType.Loading, true))
+        when (val response = addVendorRepository.pincodesByDistributorIdRepository(appStore.userId())) {
+            is Resource.Success -> {
+                emit(Data(EmitType.Loading, false))
+                response.data?.apply {
+                    when (status) {
+                        true -> {
+                            emit(Data(EmitType.Pincodes, value = pincodes))
+                            emit(Data(type = EmitType.INFORM, value = message))
+                        }
+                        else -> {
+                            emit(Data(type = EmitType.BackendError, value = message))
+                        }
+                    }
+                }
+            }
+            is Resource.Error -> {
+                handleFailedResponse(
+                    response = response,
+                    message = response.message,
+                    emitType = EmitType.NetworkError
+                )
+            }
+            else -> {
+
+            }
+        }
+    }
+
+
+
+
 }
