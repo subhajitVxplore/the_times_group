@@ -9,11 +9,20 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class AddVendorUseCases @Inject constructor(private val addVendorRepository: AddVendorRepository,private val appStore: AppStore) {
+class AddVendorUseCases @Inject constructor(
+    private val addVendorRepository: AddVendorRepository,
+    private val appStore: AppStore
+) {
 
-    fun addVendor(name: String,mobile: String,email: String,pincodes: String) = flow {
+    fun addVendor(name: String, mobile: String, email: String, pincodes: String) = flow {
         //emit(Data(EmitType.Loading, true))
-        when (val response = addVendorRepository.addVendorRepository(appStore.userId(),name,mobile,email,pincodes)) {
+        when (val response = addVendorRepository.addVendorRepository(
+            appStore.userId(),
+            name,
+            mobile,
+            email,
+            pincodes
+        )) {
             is Resource.Success -> {
                 emit(Data(EmitType.Loading, false))
                 response.data?.apply {
@@ -42,16 +51,20 @@ class AddVendorUseCases @Inject constructor(private val addVendorRepository: Add
     }
 
 
-
-    fun getPincodesByDistributorId() = flow {
+    fun getPincodesByDistributorId(query: String) = flow {
         // emit(Data(EmitType.Loading, true))
-        when (val response = addVendorRepository.pincodesByDistributorIdRepository(appStore.userId())) {
+        when (val response =
+            addVendorRepository.pincodesByDistributorIdRepository(appStore.userId())) {
             is Resource.Success -> {
                 emit(Data(EmitType.Loading, false))
                 response.data?.apply {
                     when (status) {
                         true -> {
-                            emit(Data(EmitType.Pincodes, value = pincodes))
+                            emit(
+                                Data(
+                                    type = EmitType.Pincodes,
+                                    pincodes.filter { pin -> pin.pincode.contains(query)})
+                            )
                             emit(Data(type = EmitType.INFORM, value = message))
                         }
                         else -> {
@@ -72,8 +85,6 @@ class AddVendorUseCases @Inject constructor(private val addVendorRepository: Add
             }
         }
     }
-
-
 
 
 }

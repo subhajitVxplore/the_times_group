@@ -1,5 +1,6 @@
 package com.vxplore.thetimesgroup.viewModels
 
+import android.util.Log
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,7 +28,11 @@ import java.util.ArrayList
 import javax.inject.Inject
 
 @HiltViewModel
-class AddVendorViewModel @Inject constructor(private val addVendorUseCases: AddVendorUseCases, private val appNavigator: AppNavigator,savedStateHandle: SavedStateHandle) : ViewModel(){
+class AddVendorViewModel @Inject constructor(
+    private val addVendorUseCases: AddVendorUseCases,
+    private val appNavigator: AppNavigator,
+    savedStateHandle: SavedStateHandle
+) : ViewModel() {
 
 
     var yourNameText = mutableStateOf("")
@@ -42,9 +47,11 @@ class AddVendorViewModel @Inject constructor(private val addVendorUseCases: AddV
     private val _suggestionsss: MutableStateFlow<List<Pincodes>> = MutableStateFlow(emptyList())
     var suggestionListVisibility by mutableStateOf(false)
     private var suggestionsBackup: List<Pincodes> = emptyList()
-
-
     var filteredPincodes = mutableListOf<Pincodes>()
+
+    var currentString = mutableStateOf("")
+    val isFocused = mutableStateOf(false)
+    val selectedPincodes = mutableListOf<Pincodes>()
     // var filteredPincodes = StateFlow(emptyList<Pincodes>())
 
 //    private val _suggestionsss: MutableStateFlow<List<SearchVendorModel>> = MutableStateFlow(emptyList())
@@ -56,7 +63,7 @@ class AddVendorViewModel @Inject constructor(private val addVendorUseCases: AddV
 //    val toastError = mutableStateOf("")
 
     init {
-        getPincodesByDistributorId("")
+        //getPincodesByDistributorId("")
     }
 
     fun onAddVendorToAddVendorSuccess() {
@@ -70,12 +77,13 @@ class AddVendorViewModel @Inject constructor(private val addVendorUseCases: AddV
 
 
     fun addVendor() {
-        addVendorUseCases.addVendor(yourNameText.value,mobileText.value,emailAddressText.value,selectedPincode.value)
-            .flowOn(Dispatchers.IO).onEach {
+        addVendorUseCases.addVendor(
+            yourNameText.value, mobileText.value, emailAddressText.value, selectedPincode.value
+        ).flowOn(Dispatchers.IO).onEach {
                 when (it.type) {
                     EmitType.Navigate -> {
                         it.value?.apply {
-                            castValueToRequiredTypes<String>()?.let { destination->
+                            castValueToRequiredTypes<String>()?.let { destination ->
                                 appNavigator.tryNavigateTo(
                                     destination,
                                     popUpToRoute = Destination.Register.fullRoute,
@@ -97,7 +105,7 @@ class AddVendorViewModel @Inject constructor(private val addVendorUseCases: AddV
             }.launchIn(viewModelScope)
     }
 
-///////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////
     fun clearPincodesQuery() {
         selectedPincode.value = ""
         suggestionListVisibility = false
@@ -107,6 +115,7 @@ class AddVendorViewModel @Inject constructor(private val addVendorUseCases: AddV
             }
         }
     }
+
     fun updatePincodesQuery(query: String) {
         selectedPincode.value = query
         getPincodesByDistributorId(selectedPincode.value)
@@ -121,14 +130,15 @@ class AddVendorViewModel @Inject constructor(private val addVendorUseCases: AddV
     }
 
     fun getPincodesByDistributorId(query: String) {
-        addVendorUseCases.getPincodesByDistributorId()
-            .flowOn(Dispatchers.IO)
+
+
+        addVendorUseCases.getPincodesByDistributorId(query).flowOn(Dispatchers.IO)
             .onEach {
                 when (it.type) {
                     EmitType.Loading -> {
                         it.value?.apply {
                             castValueToRequiredTypes<Boolean>()?.let {
-                               // pinCodeLoading.setValue(it)
+                                // pinCodeLoading.setValue(it)
                             }
                         }
                     }
@@ -147,15 +157,24 @@ class AddVendorViewModel @Inject constructor(private val addVendorUseCases: AddV
                     }
                     else -> {}
                 }
-            }
-            .launchIn(viewModelScope)
+            }.launchIn(viewModelScope)
     }
 
 
-    fun filterSuggestions(){
+    fun getValueWithComma() {
+        if (selectedPincode.value.length.equals(6)) {
+            // selectedPincode.value+","
+            selectedPincode.value.plus(",")
+
+        } else {
+            selectedPincode.value
+        }
+    }
+
+    fun filterSuggestions() {
         val searchedText = selectedPincode.value
         filteredPincodes = if (searchedText.isEmpty()) {
-           pincodes.value.toMutableList()
+            pincodes.value.toMutableList()
         } else {
             val resultList = ArrayList<Pincodes>()
             for (p in pincodes.value) {
@@ -165,6 +184,7 @@ class AddVendorViewModel @Inject constructor(private val addVendorUseCases: AddV
         }
     }
 
-
-
+    fun onSelectPincode(pincodes: Pincodes) {
+        selectedPincode.value = "${selectedPincode.value},${pincodes.pincode},"
+    }
 }

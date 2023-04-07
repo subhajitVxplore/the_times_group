@@ -6,7 +6,6 @@ data class PincodesByDistributorIdModel(
     val status: Boolean
 )
 
-
 data class Pincodes(
     val id: Int,
     val pincode: String

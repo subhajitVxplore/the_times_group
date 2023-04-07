@@ -44,11 +44,13 @@ fun AddVendorScreen(viewModel: AddVendorViewModel = hiltViewModel()) {
     val suggestions = viewModel.pincodes.collectAsState().value
 
     Column(modifier = Modifier.fillMaxSize()) {
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .height(50.dp)
-            .background(GreyLight)
-            .padding(5.dp)) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp)
+                .background(GreyLight)
+                .padding(5.dp)
+        ) {
 
             val activity = LocalContext.current as Activity
             Image(painter = painterResource(id = R.drawable.ic_baseline_keyboard_backspace_24),
@@ -130,9 +132,10 @@ fun AddVendorScreen(viewModel: AddVendorViewModel = hiltViewModel()) {
 //                }
 ////            }
 //        }
-        Box(modifier = Modifier.fillMaxWidth().height(200.dp), contentAlignment = Alignment.TopCenter){
-
-
+        Box(
+            modifier = Modifier.fillMaxWidth().height(200.dp),
+            contentAlignment = Alignment.TopCenter
+        ) {
 //        OutlinedTextField(
 //            value = "",
 //            onValueChange = { ""},
@@ -146,29 +149,32 @@ fun AddVendorScreen(viewModel: AddVendorViewModel = hiltViewModel()) {
 //            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Number),
 //        )
 
-        Text(
-            text = "You can add multiple (,) separated pinCode(s).",
-            color = Color.Gray,
-            modifier = Modifier.padding(start = 15.dp),
-            fontSize = 14.sp
-        )
+            Text(
+                text = "You can add multiple (,) separated pinCode(s).",
+                color = Color.Gray,
+                modifier = Modifier.padding(start = 15.dp),
+                fontSize = 14.sp
+            )
 
             ///suggestion dropdown section calling
             AnimatedContent(targetState = suggestions.isNotEmpty()) { state ->
-            //    if (viewModel.selectedPincode.value != "") {
+                if ((viewModel.selectedPincode.value != "") and (viewModel.isFocused.value) ) {
                     when (state) {
-                        true -> PincodesSuggestionsSection(viewModel.pincodes.collectAsState().value,viewModel)
+                        true -> PincodesSuggestionsSection(
+                            viewModel.pincodes.collectAsState().value,
+                            viewModel
+                        )
                         false -> Surface() { state }
                     }
-               // }
+                }
             }
-    }
+        }
         Spacer(modifier = Modifier.height(30.dp))
         val context = LocalContext.current
         Button(
             onClick = {
-               /// viewModel.onAddVendorToAddVendorSuccess()
-               // Toast.makeText(context, "Generate Bill${viewModel.pincodes.value}", Toast.LENGTH_SHORT).show()
+                /// viewModel.onAddVendorToAddVendorSuccess()
+                // Toast.makeText(context, "Generate Bill${viewModel.pincodes.value}", Toast.LENGTH_SHORT).show()
             },
             shape = RoundedCornerShape(5.dp),
             modifier = Modifier
@@ -186,8 +192,6 @@ fun AddVendorScreen(viewModel: AddVendorViewModel = hiltViewModel()) {
     }
 
 
-
-
 //    LaunchedEffect(viewModel.selectedPincode.value) {
 //        if (viewModel.selectedPincode.value.isNotEmpty()) {
 //            //Toast.makeText(mContext, viewModel.toastError.value, Toast.LENGTH_SHORT).show()
@@ -196,6 +200,6 @@ fun AddVendorScreen(viewModel: AddVendorViewModel = hiltViewModel()) {
 //        }
 //    }
 
-
 }
+
 
