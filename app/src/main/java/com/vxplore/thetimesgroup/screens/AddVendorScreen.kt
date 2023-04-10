@@ -28,9 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.vxplore.core.domain.model.Pincode
 import com.vxplore.thetimesgroup.R
-import com.vxplore.thetimesgroup.custom_views.PincodeSearchField
-import com.vxplore.thetimesgroup.custom_views.PincodesSuggestionsSection
-import com.vxplore.thetimesgroup.custom_views.SuggestionsSection
+import com.vxplore.thetimesgroup.custom_views.*
 import com.vxplore.thetimesgroup.ui.theme.GreenLight
 import com.vxplore.thetimesgroup.ui.theme.GreyLight
 import com.vxplore.thetimesgroup.viewModels.AddVendorViewModel
@@ -42,7 +40,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 fun AddVendorScreen(viewModel: AddVendorViewModel = hiltViewModel()) {
 
     val suggestions = viewModel.pincodes.collectAsState().value
-
+    val context = LocalContext.current
     Column(modifier = Modifier.fillMaxSize()) {
         Row(
             modifier = Modifier
@@ -124,30 +122,14 @@ fun AddVendorScreen(viewModel: AddVendorViewModel = hiltViewModel()) {
 
         Spacer(modifier = Modifier.height(10.dp))
         PincodeSearchField(viewModel)
-//        AnimatedContent(targetState = suggestions.isNotEmpty()) { state ->
-////            if (viewModel.selectedPincode.value != "") {
-//                when (state) {
-//                    true -> PincodesSuggestionsSection(viewModel.pincodes.collectAsState().value,viewModel)
-//                    false -> Surface() { state }
-//                }
-////            }
-//        }
+
         Box(
-            modifier = Modifier.fillMaxWidth().height(200.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp),
             contentAlignment = Alignment.TopCenter
         ) {
-//        OutlinedTextField(
-//            value = "",
-//            onValueChange = { ""},
-//            label = { Text("Serving PinCode(s)") },
-//            colors = TextFieldDefaults.outlinedTextFieldColors(
-//                focusedBorderColor = Color.Gray,
-//                unfocusedBorderColor = Color.Gray
-//            ),
-//            modifier = Modifier.fillMaxWidth().padding(horizontal = 15.dp, vertical = 5.dp),
-//            singleLine = true,
-//            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done, keyboardType = KeyboardType.Number),
-//        )
+
 
             Text(
                 text = "You can add multiple (,) separated pinCode(s).",
@@ -157,16 +139,13 @@ fun AddVendorScreen(viewModel: AddVendorViewModel = hiltViewModel()) {
             )
 
             ///suggestion dropdown section calling
-            AnimatedContent(targetState = suggestions.isNotEmpty()) { state ->
-                if ((viewModel.selectedPincode.value != "") and (viewModel.isFocused.value) ) {
+            AnimatedContent(targetState = viewModel.mExpanded) { state ->
+              //  if ((viewModel.isFocused.value)) {
                     when (state) {
-                        true -> PincodesSuggestionsSection(
-                            viewModel.pincodes.collectAsState().value,
-                            viewModel
-                        )
+                        true -> PincodesSuggestionsSection(viewModel)
                         false -> Surface() { state }
                     }
-                }
+               // }
             }
         }
         Spacer(modifier = Modifier.height(30.dp))
@@ -191,7 +170,6 @@ fun AddVendorScreen(viewModel: AddVendorViewModel = hiltViewModel()) {
         }
     }
 
-
 //    LaunchedEffect(viewModel.selectedPincode.value) {
 //        if (viewModel.selectedPincode.value.isNotEmpty()) {
 //            //Toast.makeText(mContext, viewModel.toastError.value, Toast.LENGTH_SHORT).show()
@@ -201,5 +179,6 @@ fun AddVendorScreen(viewModel: AddVendorViewModel = hiltViewModel()) {
 //    }
 
 }
+
 
 

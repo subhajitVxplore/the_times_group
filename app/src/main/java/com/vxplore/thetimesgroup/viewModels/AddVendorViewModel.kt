@@ -1,10 +1,7 @@
 package com.vxplore.thetimesgroup.viewModels
 
 import android.util.Log
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,8 +15,10 @@ import com.vxplore.core.domain.model.SearchVendor
 import com.vxplore.core.domain.model.SearchVendorModel
 import com.vxplore.core.domain.useCasess.AddVendorUseCases
 import com.vxplore.core.domain.useCasess.RegisterUsecases
+import com.vxplore.thetimesgroup.custom_views.UiData
 import com.vxplore.thetimesgroup.extensions.castListToRequiredTypes
 import com.vxplore.thetimesgroup.extensions.castValueToRequiredTypes
+import com.vxplore.thetimesgroup.helpers_impl.SavableMutableState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -43,27 +42,24 @@ class AddVendorViewModel @Inject constructor(
     private val _pincodes = MutableStateFlow(emptyList<Pincodes>())
     val pincodes = _pincodes.asStateFlow()
     var selectedPincode = mutableStateOf("")
+    var previousSelectedPincode = mutableStateOf("")
 
     private val _suggestionsss: MutableStateFlow<List<Pincodes>> = MutableStateFlow(emptyList())
-    var suggestionListVisibility by mutableStateOf(false)
+    var suggestionListVisibility by  mutableStateOf(false)
     private var suggestionsBackup: List<Pincodes> = emptyList()
-    var filteredPincodes = mutableListOf<Pincodes>()
-
-    var currentString = mutableStateOf("")
     val isFocused = mutableStateOf(false)
-    val selectedPincodes = mutableListOf<Pincodes>()
-    // var filteredPincodes = StateFlow(emptyList<Pincodes>())
+    var mExpanded by  mutableStateOf(false)
 
-//    private val _suggestionsss: MutableStateFlow<List<SearchVendorModel>> = MutableStateFlow(emptyList())
-//    private val _suggestions = MutableStateFlow(emptyList<SearchVendor>())
-//    val suggestion = _suggestions.asStateFlow()
-//    var suggestionListVisibility by mutableStateOf(false)
-//    private var suggestionsBackup: List<SearchVendorModel> = emptyList()
-//    var searchVendorQuery by mutableStateOf("")
-//    val toastError = mutableStateOf("")
+
+
+    val stateLoading = SavableMutableState(
+        key = UiData.StateApiLoading,
+        savedStateHandle = savedStateHandle,
+        initialData = false
+    )
 
     init {
-        //getPincodesByDistributorId("")
+       // getPincodesByDistributorId("")
     }
 
     fun onAddVendorToAddVendorSuccess() {
@@ -116,18 +112,7 @@ class AddVendorViewModel @Inject constructor(
         }
     }
 
-    fun updatePincodesQuery(query: String) {
-        selectedPincode.value = query
-        getPincodesByDistributorId(selectedPincode.value)
-//        viewModelScope.launch {
-////            _pincodes.emit(pincodes.value.filterList {
-////                this.pincode.matches(query.toRegex())
-////            })
-//            pincodes.value.filter {
-//                it.pincode.startsWith(selectedPincode.value)
-//            }.take(3)
-//        }
-    }
+
 
     fun getPincodesByDistributorId(query: String) {
 
@@ -161,30 +146,11 @@ class AddVendorViewModel @Inject constructor(
     }
 
 
-    fun getValueWithComma() {
-        if (selectedPincode.value.length.equals(6)) {
-            // selectedPincode.value+","
-            selectedPincode.value.plus(",")
 
-        } else {
-            selectedPincode.value
-        }
-    }
-
-    fun filterSuggestions() {
-        val searchedText = selectedPincode.value
-        filteredPincodes = if (searchedText.isEmpty()) {
-            pincodes.value.toMutableList()
-        } else {
-            val resultList = ArrayList<Pincodes>()
-            for (p in pincodes.value) {
-                resultList.add(p)
-            }
-            resultList
-        }
-    }
 
     fun onSelectPincode(pincodes: Pincodes) {
-        selectedPincode.value = "${selectedPincode.value},${pincodes.pincode},"
+        selectedPincode.value=previousSelectedPincode.value
+        previousSelectedPincode.value = "${selectedPincode.value},${pincodes.pincode},"
+        selectedPincode.value=""
     }
 }
