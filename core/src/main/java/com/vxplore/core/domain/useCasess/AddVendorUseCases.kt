@@ -51,7 +51,7 @@ class AddVendorUseCases @Inject constructor(
     }
 
 
-    fun getPincodesByDistributorId(query: String) = flow {
+    fun getPincodesByDistributorId() = flow {
         // emit(Data(EmitType.Loading, true))
         when (val response =
             addVendorRepository.pincodesByDistributorIdRepository(appStore.userId())) {
@@ -63,7 +63,8 @@ class AddVendorUseCases @Inject constructor(
                             emit(
                                 Data(
                                     type = EmitType.Pincodes,
-                                    pincodes.filter { pin -> pin.pincode.contains(query)})
+                                    pincodes
+                                )
                             )
                             emit(Data(type = EmitType.INFORM, value = message))
                         }

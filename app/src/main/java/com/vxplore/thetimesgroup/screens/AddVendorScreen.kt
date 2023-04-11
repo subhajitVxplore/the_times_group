@@ -3,7 +3,6 @@
 package com.vxplore.thetimesgroup.screens
 
 import android.app.Activity
-import android.widget.Toast
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
@@ -14,7 +13,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,14 +24,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.vxplore.core.domain.model.Pincode
 import com.vxplore.thetimesgroup.R
 import com.vxplore.thetimesgroup.custom_views.*
 import com.vxplore.thetimesgroup.ui.theme.GreenLight
 import com.vxplore.thetimesgroup.ui.theme.GreyLight
 import com.vxplore.thetimesgroup.viewModels.AddVendorViewModel
-import com.vxplore.thetimesgroup.viewModels.RegisterViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -139,13 +134,11 @@ fun AddVendorScreen(viewModel: AddVendorViewModel = hiltViewModel()) {
             )
 
             ///suggestion dropdown section calling
-            AnimatedContent(targetState = viewModel.mExpanded) { state ->
-              //  if ((viewModel.isFocused.value)) {
+            AnimatedContent(targetState = viewModel.visible) { state ->
                     when (state) {
                         true -> PincodesSuggestionsSection(viewModel)
                         false -> Surface() { state }
                     }
-               // }
             }
         }
         Spacer(modifier = Modifier.height(30.dp))
