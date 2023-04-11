@@ -28,7 +28,7 @@ class AddVendorUseCases @Inject constructor(
                 response.data?.apply {
                     when (status) {
                         true -> {
-                            emit(Data(EmitType.Navigate, value = Destination.Billing()))
+                            emit(Data(EmitType.Navigate, value = Destination.AddVendorSuccess()))
                             emit(Data(type = EmitType.INFORM, value = message))
                         }
                         else -> {

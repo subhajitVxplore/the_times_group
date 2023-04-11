@@ -66,8 +66,8 @@ fun AddVendorScreen(viewModel: AddVendorViewModel = hiltViewModel()) {
 
 
         OutlinedTextField(
-            value = "",
-            onValueChange = { "" },
+            value = viewModel.vendorNameText.value,
+            onValueChange = { viewModel.vendorNameText.value=it },
             label = { Text("Vendor Name") },
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = Color.Gray,
@@ -81,8 +81,8 @@ fun AddVendorScreen(viewModel: AddVendorViewModel = hiltViewModel()) {
 
 
         OutlinedTextField(
-            value = "",
-            onValueChange = { "" },
+            value = viewModel.vendorMobileText.value,
+            onValueChange = { viewModel.vendorMobileText.value =it},
             label = { Text("Vendor Phone") },
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = Color.Gray,
@@ -99,8 +99,8 @@ fun AddVendorScreen(viewModel: AddVendorViewModel = hiltViewModel()) {
         )
 
         OutlinedTextField(
-            value = "",
-            onValueChange = { "" },
+            value = viewModel.vendorEmailAddressText.value,
+            onValueChange = { viewModel.vendorEmailAddressText.value=it },
             label = { Text("Vendor Email") },
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = Color.Gray,
@@ -146,6 +146,7 @@ fun AddVendorScreen(viewModel: AddVendorViewModel = hiltViewModel()) {
         Button(
             onClick = {
                 /// viewModel.onAddVendorToAddVendorSuccess()
+                      viewModel.addVendor()
                 // Toast.makeText(context, "Generate Bill${viewModel.pincodes.value}", Toast.LENGTH_SHORT).show()
             },
             shape = RoundedCornerShape(5.dp),
@@ -172,6 +173,7 @@ fun AddVendorScreen(viewModel: AddVendorViewModel = hiltViewModel()) {
 //    }
 
 }
+
 
 
 

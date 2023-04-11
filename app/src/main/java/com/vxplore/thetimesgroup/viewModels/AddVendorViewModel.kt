@@ -28,10 +28,9 @@ class AddVendorViewModel @Inject constructor(
 ) : ViewModel() {
 
     var visible by mutableStateOf(false)
-    var yourNameText = mutableStateOf("")
-    var mobileText = mutableStateOf("")
-    var emailAddressText = mutableStateOf("")
-    var addressText = mutableStateOf("")
+    var vendorNameText = mutableStateOf("")
+    var vendorMobileText = mutableStateOf("")
+    var vendorEmailAddressText = mutableStateOf("")
 
     private val _pincodes = MutableStateFlow(emptyList<Pincodes>())
     val pincodes = _pincodes.asStateFlow()
@@ -71,7 +70,7 @@ class AddVendorViewModel @Inject constructor(
 
     fun addVendor() {
         addVendorUseCases.addVendor(
-            yourNameText.value, mobileText.value, emailAddressText.value, selectedPincode.value
+            vendorNameText.value, vendorMobileText.value, vendorEmailAddressText.value, currentPincode.value
         ).flowOn(Dispatchers.IO).onEach {
             when (it.type) {
                 EmitType.Navigate -> {
@@ -79,7 +78,7 @@ class AddVendorViewModel @Inject constructor(
                         castValueToRequiredTypes<String>()?.let { destination ->
                             appNavigator.tryNavigateTo(
                                 destination,
-                                popUpToRoute = Destination.Register.fullRoute,
+                                popUpToRoute = Destination.AddVendor.fullRoute,
                                 isSingleTop = true,
                                 inclusive = true
                             )
