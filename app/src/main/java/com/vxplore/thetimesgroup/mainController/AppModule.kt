@@ -45,7 +45,6 @@ interface AppModule {
                     .build()
             ).build()
 
-
             return Retrofit.Builder()
                 .baseUrl(Metar[Constants.BASE_URL])
                 .addConverterFactory(GsonConverterFactory.create())
@@ -54,9 +53,33 @@ interface AppModule {
                 .create(klass)
         }
 
+
+
+//-----------------------------------------------------------------------------------------------------
+        private fun <T> provideApi2(klass: Class<T>): T {
+            val okHttpClient = OkHttpClient.Builder().addInterceptor(
+                ChuckerInterceptor.Builder(HiltControllerApp.app!!.applicationContext)
+                    .collector(ChuckerCollector(HiltControllerApp.app!!.applicationContext))
+                    .maxContentLength(250000L)
+                    .redactHeaders(emptySet())
+                    .alwaysReadResponseBody(false)
+                    .build()
+            ).build()
+
+            return Retrofit.Builder()
+                .baseUrl("https://api.npoint.io/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClient)
+                .build()
+                .create(klass)
+        }
         @Singleton
         @Provides
-        fun provideAppVersion(): AppVersionApi = provideApi(AppVersionApi::class.java)
+        fun provideAppVersion(): AppVersionApi = provideApi2(AppVersionApi::class.java)
+  //-----------------------------------------------------------------------------------------
+
+
+
 
         @Singleton
         @Provides
@@ -95,14 +118,17 @@ interface AppModule {
     @Binds
     fun bindsearchVendorRepo(impl: SearchVendorRepositoryImpl): SearchVendorRepository
 
+    @Binds
+    fun bindPapersByVendorIdRepo(impl: PapersByVendorIdRepositoryImpl): PapersByVendorIdRepository
 
 
 
 
 
 
+//-------------------------------------------------------------------------------------------
     @Binds
     fun bindVendorDetailsRepo(impl: VendorDetailsRepositoryImpl): VendorDetailsRepository
-
+//-------------------------------------------------------------------------------------------
 
 }

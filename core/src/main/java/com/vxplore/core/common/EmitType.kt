@@ -8,6 +8,8 @@ enum class EmitType {
     Pincodes,
     Otp,
     VENDORS,
+    PAPERS,
+    COUPONS,
     SEARCH_VENDORS,
     BackendError,
     Navigate,

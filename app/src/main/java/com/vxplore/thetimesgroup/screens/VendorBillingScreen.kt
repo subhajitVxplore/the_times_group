@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.vxplore.core.domain.model.Paper
 import com.vxplore.core.domain.model.SearchVendor
 import com.vxplore.thetimesgroup.R
 import com.vxplore.thetimesgroup.custom_views.*
@@ -110,9 +111,16 @@ fun VendorBillingScreen(
                         .verticalScroll(rememberScrollState())
                         .weight(1f)
                 ) {
-                    showPapersTakenList(
-                        paperList = getPaperPrice() as MutableList<Paper>, viewModel
-                    ) { value, index, multi ->
+//                    showPapersTakenList( paperList = getPaperPrice() as MutableList<Paper>, viewModel) { value, index, multi ->
+//                        try {
+//                            viewModel.takenPapers[index] =
+//                                Pair(first = multi, second = value.toInt())
+//                        } catch (e: Exception) {
+//                            println(e)
+//                        }
+//
+//                    }
+                    showPapersTakenList( viewModel.circleLoading.value,viewModel.paperss.collectAsState().value, viewModel) { value, index, multi ->
                         try {
                             viewModel.takenPapers[index] =
                                 Pair(first = multi, second = value.toInt())
@@ -123,8 +131,9 @@ fun VendorBillingScreen(
                     }
                     Spacer(modifier = Modifier.height(7.dp))
                     ExpandableCard(
+                        viewModel.circleLoading.value,
                         header = "Returns",
-                        paperList = getPaperPrice(),
+                        paperList = viewModel.paperss.collectAsState().value,
                         viewModel = viewModel
                     )
                 }
@@ -291,12 +300,10 @@ fun VendorBillingScreen(
                                 }
 
                                 Row(
-                                    modifier = Modifier
-                                        .wrapContentHeight()
-                                        .fillMaxWidth()
-                                ) {
+                                    modifier = Modifier.wrapContentHeight().fillMaxWidth()) {
+
                                     Column(Modifier.weight(1f, true)) {
-                                        HorizontalScrollableCoupon(getPersonAge(), viewModel,
+                                        HorizontalScrollableCoupon(viewModel.couponss.collectAsState().value, viewModel,
                                             onPriceChange = { value, index, multi ->
                                                 // viewModel.coupons[index] = value.toInt()
                                                 try {

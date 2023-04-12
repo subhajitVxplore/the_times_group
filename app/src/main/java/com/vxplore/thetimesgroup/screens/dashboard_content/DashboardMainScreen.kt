@@ -228,7 +228,7 @@ fun showVendorsList(vendorList: List<Vendor>,loading: Boolean,) {
                         .padding(10.dp, 10.dp, 0.dp, 10.dp)) {
 
                         Text(
-                            text = vendorr.top_vendors,
+                            text = vendorr.name,
                             fontWeight = FontWeight.Bold,
                             fontSize = 12.sp,
                             modifier = Modifier.weight(1f, true).padding(5.dp, 0.dp, 0.dp, 0.dp))
@@ -263,13 +263,16 @@ fun showVendorsList(vendorList: List<Vendor>,loading: Boolean,) {
 
 
         } else {
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .size(width = screenWidth * 0.15f, height = screenHeight * 0.15f)
-                    .padding(bottom = screenHeight * 0.05f),
-                color = GreenLight,
-                strokeWidth = 5.dp,
-            )
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .size(width = screenWidth * 0.15f, height = screenHeight * 0.15f)
+                        .padding(bottom = screenHeight * 0.05f),
+                    color = GreenLight,
+                    strokeWidth = 5.dp,
+                )
+            }
+
         }
     }
 

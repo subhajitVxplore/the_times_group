@@ -1,16 +1,20 @@
 package com.vxplore.core.domain.useCasess
 
 import android.util.Log
-import com.vxplore.core.common.Action
-import com.vxplore.core.common.Resource
+import com.vxplore.core.common.*
 import com.vxplore.core.domain.model.Command
+import com.vxplore.core.domain.repositoriess.PapersByVendorIdRepository
 import com.vxplore.core.domain.repositoriess.SearchVendorRepository
 import com.vxplore.core.helpers.AppStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class BillingScreenUseCases @Inject constructor(private  val searchVendorRepository: SearchVendorRepository, private val pref: AppStore){
+class BillingScreenUseCases @Inject constructor(
+    private val searchVendorRepository: SearchVendorRepository,
+    private val papersByVendorIdRepository: PapersByVendorIdRepository,
+    private val pref: AppStore
+) {
 
 
     fun generateVendorsSuggestions(query: String): Flow<Command> = flow {
@@ -24,7 +28,7 @@ class BillingScreenUseCases @Inject constructor(private  val searchVendorReposit
                 response.data?.apply {
                     when (status) {
                         true -> {
-                            if(vendors != null) {
+                            if (vendors != null) {
                                 if (vendors.isNotEmpty()) {
                                     //emit(Command(Action.NO_SUGGESTIONS, true)) //optional
                                     emit(Command(Action.SUGGESTIONS, vendors))
@@ -36,7 +40,7 @@ class BillingScreenUseCases @Inject constructor(private  val searchVendorReposit
                             }
                         }
                         else -> {
-                            emit(Command(Action.BACKEND_ERROR, message+userID))
+                            emit(Command(Action.BACKEND_ERROR, message + userID))
                         }
                     }
                 }
@@ -50,6 +54,36 @@ class BillingScreenUseCases @Inject constructor(private  val searchVendorReposit
     }
 
 
+    fun getPapersByVendorId(vendor_id: String) = flow {
+        emit(Data(EmitType.Loading, true))
+        when (val response = papersByVendorIdRepository.papersByVendorIdRepository(vendor_id)) {
+            is Resource.Success -> {
+                emit(Data(EmitType.Loading, false))
+                response.data?.apply {
+                    when (status) {
+                        true -> {
+                            emit(Data(EmitType.PAPERS, value = papers))
+                            emit(Data(EmitType.COUPONS, value = coupons))
+                            emit(Data(type = EmitType.INFORM, value = message))
+                        }
+                        else -> {
+                            emit(Data(type = EmitType.BackendError, value = message))
+                        }
+                    }
+                }
+            }
+            is Resource.Error -> {
+                handleFailedResponse(
+                    response = response,
+                    message = response.message,
+                    emitType = EmitType.NetworkError
+                )
+            }
+            else -> {
+
+            }
+        }
+    }
 
 
 }

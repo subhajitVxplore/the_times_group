@@ -19,7 +19,7 @@ class VendorDetailsUseCases @Inject constructor(private val vendorDetailsReposit
                 response.data?.apply {
                     when (status) {
                         true -> {
-                            emit(Data(type = EmitType.VENDORS, value = vendor_list))
+                            emit(Data(type = EmitType.VENDORS, value = top_vendors))
                         }
                         else -> {
                             emit(Data(type = EmitType.BackendError, value = message))

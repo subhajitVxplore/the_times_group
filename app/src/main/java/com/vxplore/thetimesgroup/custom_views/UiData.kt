@@ -8,6 +8,8 @@ enum class UiData {
     LoginContinueBtnEnable,
     RegisterApiLoading,
     LoginApiLoading,
+    PaperApiLoading,
+    PaperApiCouponShimmer,
     DriverOtpInput,
     DrawerGuestureState,
     PendingOrders,

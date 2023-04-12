@@ -17,7 +17,7 @@ interface AppVersionApi {
     @GET("167262d8a7b75af21497")
     suspend fun getOtpDetails(): OtpDtailsResponse
 
-    @GET("e7d392ebbd956f1312c7")
+    @GET("827a5ea26aa944fcd1d2")
     suspend fun getVendorDetails(): VendorDetailsResponse
 
 
