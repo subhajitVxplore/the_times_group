@@ -159,6 +159,7 @@ fun VendorBillingScreen(
                                     .wrapContentHeight()
                             ) {
 
+
  /////////////////////////////////Calculate Price Button/////////////////////////////////////////
 //                                Button(
 //                                    enabled = viewModel.takenPaperTotal.value <= 0,
