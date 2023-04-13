@@ -39,6 +39,7 @@ fun showPapersTakenList(
 
     val price: String = ""
 
+
     AnimatedContent(
         targetState = loading,
         transitionSpec = {

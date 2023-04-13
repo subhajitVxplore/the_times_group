@@ -104,6 +104,7 @@ class BillingScreenViewModel @Inject constructor(
         }
     }
 
+
     fun calculateTakenMinusReturnPaperTotal(){
         takenMinusreturnPaperTotal.value=(takenPaperTotal.value - returnPaperTotal.value)
     }
