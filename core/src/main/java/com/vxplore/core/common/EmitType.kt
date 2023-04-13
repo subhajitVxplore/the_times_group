@@ -23,6 +23,8 @@ enum class EmitType {
     PAPERS,
     DUE,
     PAPERS_LIST_SIZE,
+    PaperSold,
+    PaperReturn,
 
 
 }
