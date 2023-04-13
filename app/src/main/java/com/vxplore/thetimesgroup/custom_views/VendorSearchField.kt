@@ -96,7 +96,7 @@ fun BoxScope.SuggestionsSection(suggestions: List<SearchVendor>, viewModel: Bill
                             .padding(all = 8.dp)
                             .clickable(onClick = {
                                 viewModel.searchVendorQuery=item.name
-                                viewModel.foundVendorId=item.user_id
+                                viewModel.getPapersByVendorId(item.user_id)
                                 visible = !visible
                             })
                     )

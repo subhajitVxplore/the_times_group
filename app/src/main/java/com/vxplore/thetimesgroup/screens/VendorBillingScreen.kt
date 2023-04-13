@@ -120,22 +120,24 @@ fun VendorBillingScreen(
 //                        }
 //
 //                    }
-                    showPapersTakenList( viewModel.circleLoading.value,viewModel.paperss.collectAsState().value, viewModel) { value, index, multi ->
+                    showPapersTakenList( viewModel.circleLoading.value,viewModel.paperss.collectAsState().value, viewModel) { value2, index, value1 ->
                         try {
-                            viewModel.takenPapers[index] =
-                                Pair(first = multi, second = value.toInt())
+                           // viewModel.takenPapers[index] =Pair(first = value1, second = value2.toInt())
+                            viewModel.takenPapers.add(index, Pair(first = value1, second = value2.toInt()))
                         } catch (e: Exception) {
                             println(e)
                         }
-
                     }
                     Spacer(modifier = Modifier.height(7.dp))
-                    ExpandableCard(
-                        viewModel.circleLoading.value,
-                        header = "Returns",
-                        paperList = viewModel.paperss.collectAsState().value,
-                        viewModel = viewModel
-                    )
+                    ExpandableCard( viewModel.circleLoading.value,"Returns",viewModel.paperss.collectAsState().value,viewModel){ value2, index, value1 ->
+                        try {
+                            viewModel.takenPapers.add(index, Pair(first = value1, second = value2.toInt()))
+                        } catch (e: Exception) {
+                            println(e)
+                        }
+                    }
+
+
                 }
                 Column(modifier = Modifier.weight(1f, true)) {
                     Box(
@@ -156,27 +158,29 @@ fun VendorBillingScreen(
                                     .fillMaxWidth()
                                     .wrapContentHeight()
                             ) {
-                                Button(
-                                    enabled = viewModel.takenPaperTotal.value <= 0,
-                                    onClick = {
-                                        viewModel.calculatePapersPrice()
-                                        viewModel.calculateCurrentDue()
-                                    },
-                                    shape = RoundedCornerShape(25.dp),
-                                    modifier = Modifier
-                                        .wrapContentSize()
-                                        .align(Alignment.CenterVertically)
-                                        .padding(start = 10.dp),
-                                    colors = ButtonDefaults.buttonColors(backgroundColor = DonutGreenLight)
-                                ) {
-                                    Text(
-                                        text = "Calculate Price",
-                                        color = Color.White,
-                                        fontSize = 13.sp,
-                                        modifier = Modifier.align(Alignment.CenterVertically),
-                                        fontStyle = FontStyle.Normal
-                                    )
-                                }
+
+ /////////////////////////////////Calculate Price Button/////////////////////////////////////////
+//                                Button(
+//                                    enabled = viewModel.takenPaperTotal.value <= 0,
+//                                    onClick = {
+//                                        viewModel.calculatePapersPrice()
+//                                        viewModel.calculateCurrentDue()
+//                                    },
+//                                    shape = RoundedCornerShape(25.dp),
+//                                    modifier = Modifier
+//                                        .wrapContentSize()
+//                                        .align(Alignment.CenterVertically)
+//                                        .padding(start = 10.dp),
+//                                    colors = ButtonDefaults.buttonColors(backgroundColor = DonutGreenLight)
+//                                ) {
+//                                    Text(
+//                                        text = "Calculate Price",
+//                                        color = Color.White,
+//                                        fontSize = 13.sp,
+//                                        modifier = Modifier.align(Alignment.CenterVertically),
+//                                        fontStyle = FontStyle.Normal
+//                                    )
+//                                }
                                 Box(
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -184,7 +188,10 @@ fun VendorBillingScreen(
                                         .align(Alignment.CenterVertically)
                                 ) {
                                     Text(
-                                        text = "₹${viewModel.takenPaperTotal.value}",
+                                         //text = "₹${viewModel.takenMinusreturnPaperTotal.value}",
+                                        // text = "₹${viewModel.currentTakenPaperTotal.value}",
+                                        // text = "₹${viewModel.takenPaperTotal.value}",
+                                         text = "₹${viewModel.takenPaperTotal.value - viewModel.returnPaperTotal.value}",
                                         style = MaterialTheme.typography.h5,
                                         color = Color.Black,
                                         fontWeight = FontWeight.Bold,
@@ -202,7 +209,7 @@ fun VendorBillingScreen(
                                 thickness = 0.8.dp,
                                 modifier = Modifier.padding(horizontal = 10.dp)
                             )
-                            Spacer(modifier = Modifier.height(5.dp))
+                            Spacer(modifier = Modifier.height(20.dp))
                             Row(Modifier.wrapContentHeight()) {
                                 Text(
                                     text = "Mode of Payment",
@@ -263,7 +270,7 @@ fun VendorBillingScreen(
                                     }
                                 }
                             }
-                            Spacer(modifier = Modifier.height(5.dp))
+                            Spacer(modifier = Modifier.height(10.dp))
                             // HorizontalScrollableCoupon(getPersonAge())
                             Column(
                                 modifier = Modifier
@@ -288,6 +295,7 @@ fun VendorBillingScreen(
                                         enabled = viewModel.couponTotal.value <= 0,
                                         onClick = {
                                             viewModel.calculateCoupon()
+                                            viewModel.calculateCurrentDue()
                                             //Toast.makeText(cntxt, "Coupon=₹${viewModel.couponTotal.value}", Toast.LENGTH_SHORT).show()
                                         }) {
                                         Text(
@@ -300,7 +308,9 @@ fun VendorBillingScreen(
                                 }
 
                                 Row(
-                                    modifier = Modifier.wrapContentHeight().fillMaxWidth()) {
+                                    modifier = Modifier
+                                        .wrapContentHeight()
+                                        .fillMaxWidth()) {
 
                                     Column(Modifier.weight(1f, true)) {
                                         HorizontalScrollableCoupon(viewModel.couponss.collectAsState().value, viewModel,
@@ -344,19 +354,24 @@ fun VendorBillingScreen(
                                         .wrapContentHeight()
                                         .fillMaxWidth()
                                 ) {
-                                    Column(
-                                        modifier = Modifier
-                                            .wrapContentSize()
-                                            .weight(3f, true)
-                                            .align(Alignment.CenterVertically)
-                                    ) {
-                                        Text(text = "Due Payment", color = Color.White)
-                                        Text(
-                                            text = "With previous ₹ ${viewModel.previousDue.value} Due",
-                                            color = Color.White,
-                                            fontSize = 10.sp
-                                        )
+
+
+                                    Box(modifier = Modifier.fillMaxWidth().weight(1f, true).align(Alignment.CenterVertically).padding(start = 15.dp)){
+                                        Column(
+                                            modifier = Modifier
+                                                .wrapContentSize()
+                                                //.align(Alignment.CenterVertically)
+                                        ) {
+                                            Text(text = "Due Payment", color = Color.White, modifier = Modifier.align(Alignment.Start))
+                                            Text(
+                                                text = "With previous ₹ ${viewModel.previousDue.value} Due",
+                                                color = Color.White,
+                                                fontSize = 10.sp,
+                                                modifier = Modifier.align(Alignment.Start)
+                                            )
+                                        }
                                     }
+
                                     Text(
                                         text = "₹${viewModel.currentDue.value}",
                                         color = Color.White,
@@ -379,7 +394,6 @@ fun VendorBillingScreen(
                                 shape = RoundedCornerShape(5.dp),
                                 modifier = Modifier
                                     .fillMaxWidth()
-
                                     .padding(horizontal = 15.dp)
                                     .height(50.dp),
                                 colors = ButtonDefaults.buttonColors(backgroundColor = GreenLight)
@@ -394,7 +408,7 @@ fun VendorBillingScreen(
                         }
                     }
                 }
-
+                Spacer(modifier = Modifier.height(20.dp))
             }//column
 
 

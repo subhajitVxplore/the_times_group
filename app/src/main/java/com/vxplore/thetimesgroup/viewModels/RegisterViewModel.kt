@@ -10,9 +10,7 @@ import com.vxplore.core.common.EmitType
 import com.vxplore.core.domain.model.District
 import com.vxplore.core.domain.model.Pincode
 import com.vxplore.core.domain.model.State
-import com.vxplore.core.domain.model.Vendor
 import com.vxplore.core.domain.useCasess.RegisterUsecases
-import com.vxplore.core.domain.useCasess.VendorDetailsUseCases
 import com.vxplore.thetimesgroup.custom_views.UiData
 import com.vxplore.thetimesgroup.extensions.castListToRequiredTypes
 import com.vxplore.thetimesgroup.extensions.castValueToRequiredTypes

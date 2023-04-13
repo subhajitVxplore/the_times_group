@@ -64,6 +64,7 @@ class BillingScreenUseCases @Inject constructor(
                         true -> {
                             emit(Data(EmitType.PAPERS, value = papers))
                             emit(Data(EmitType.COUPONS, value = coupons))
+                            emit(Data(EmitType.DUE, value = dueAmount))
                             emit(Data(type = EmitType.INFORM, value = message))
                         }
                         else -> {

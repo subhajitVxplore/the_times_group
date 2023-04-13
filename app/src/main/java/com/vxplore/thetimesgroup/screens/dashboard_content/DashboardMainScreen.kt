@@ -48,7 +48,9 @@ fun DashboardMainScreen(openDrawer: () -> Unit, viewModel: DashboardViewModel) {
     ) { padding->
     Column(modifier = Modifier.fillMaxSize()) {
         Surface(modifier = Modifier.weight(1f)) {
-            Column(content = { Box(modifier = Modifier.wrapContentHeight().fillMaxWidth()) {
+            Column(content = { Box(modifier = Modifier
+                .wrapContentHeight()
+                .fillMaxWidth()) {
                         Row( modifier = Modifier
                             .padding(13.dp)
                             .wrapContentSize()
@@ -142,7 +144,8 @@ fun DashboardMainScreen(openDrawer: () -> Unit, viewModel: DashboardViewModel) {
                         }
 
                     }
-                    MyDoughnutChart(getPaperSoldDetails())
+                   // MyDoughnutChart(getPaperSoldDetails())
+                    MyDoughnutChart(viewModel.paperCodes.collectAsState().value,viewModel)
                     Text(
                         text = "Total Paper Circulations",
                         modifier = Modifier
@@ -231,7 +234,9 @@ fun showVendorsList(vendorList: List<Vendor>,loading: Boolean,) {
                             text = vendorr.name,
                             fontWeight = FontWeight.Bold,
                             fontSize = 12.sp,
-                            modifier = Modifier.weight(1f, true).padding(5.dp, 0.dp, 0.dp, 0.dp))
+                            modifier = Modifier
+                                .weight(1f, true)
+                                .padding(5.dp, 0.dp, 0.dp, 0.dp))
 
                         Text(
                             text = vendorr.daily_avg,

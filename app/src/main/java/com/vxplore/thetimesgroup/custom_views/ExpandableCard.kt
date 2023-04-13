@@ -2,6 +2,7 @@
 
 package com.vxplore.thetimesgroup.custom_views
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
@@ -21,8 +22,7 @@ import androidx.compose.material.*
 import androidx.compose.material.ExposedDropdownMenuDefaults.textFieldColors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -42,6 +42,7 @@ import com.vxplore.thetimesgroup.ui.theme.GreenLight
 import com.vxplore.thetimesgroup.ui.theme.GreyLight
 import com.vxplore.thetimesgroup.viewModels.BillingScreenViewModel
 
+@SuppressLint("SuspiciousIndentation")
 @OptIn(ExperimentalMaterialApi::class, ExperimentalAnimationApi::class)
 @Composable
 fun ExpandableCard(
@@ -50,9 +51,11 @@ fun ExpandableCard(
     //description: String, // Description
    // color: Color, // Color
     paperList: List<Paper>,
-    viewModel: BillingScreenViewModel
+    viewModel: BillingScreenViewModel,
+    onReturnPriceChange: (String, Int, Int) -> Unit
 ) {
     val rotationState by animateFloatAsState(if (viewModel.expand.value) 180f else 0f) // Rotation State
+    val price: String = ""
 
 
             Card(
@@ -149,6 +152,7 @@ fun ExpandableCard(
                                         )
                                         // Text(text = "Yesterday Total Paper ${paperr.previous_paper_count} (Subscription 300)", color = Color.Gray, fontSize = 10.sp)
                                     }
+
                                     Box(
                                         modifier = Modifier
                                             .wrapContentHeight()
@@ -158,9 +162,20 @@ fun ExpandableCard(
                                             modifier = Modifier.wrapContentSize()
                                                 .padding(horizontal = 15.dp), color = Color.White
                                         ) {
+
+
+                                            var value by remember(price) {
+                                                mutableStateOf(price)
+                                            }
+
                                             BasicTextField(
-                                                value = viewModel.toiReturn.value,
-                                                onValueChange = { viewModel.toiReturn.value = it },
+                                                value = value,
+                                                onValueChange = {
+                                                    value = it
+                                                    onReturnPriceChange(value, index, paperr.price)
+                                                    viewModel.calculateReturnPapersPrice()
+                                                   // viewModel.calculateTakenMinusReturnPaperTotal()
+                                                                },
                                                 keyboardOptions = KeyboardOptions(
                                                     imeAction = ImeAction.Done,
                                                     keyboardType = KeyboardType.Number
@@ -172,7 +187,7 @@ fun ExpandableCard(
                                                 textStyle = TextStyle.Default.copy(fontSize = 17.sp)
                                             ) {
                                                 TextFieldDefaults.OutlinedTextFieldDecorationBox(
-                                                    value = viewModel.toiReturn.value,
+                                                    value = value,
                                                     innerTextField = it,
                                                     enabled = true,
                                                     singleLine = true,

@@ -8,7 +8,8 @@ enum class EmitType {
     Pincodes,
     Otp,
     VENDORS,
-    PAPERS,
+    PAPER_CODE,
+    TOTAL_SOLD_PAPER,
     COUPONS,
     SEARCH_VENDORS,
     BackendError,
@@ -19,6 +20,9 @@ enum class EmitType {
     IntroStatus,
     NetworkError,
     INFORM,
+    PAPERS,
+    DUE,
+    PAPERS_LIST_SIZE,
 
 
 }

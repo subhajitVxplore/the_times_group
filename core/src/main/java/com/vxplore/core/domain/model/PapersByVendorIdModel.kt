@@ -4,7 +4,8 @@ data class PapersByVendorIdModel(
     val coupons: List<Coupon>,
     val message: String,
     val papers: List<Paper>,
-    val status: Boolean
+    val status: Boolean,
+    val dueAmount: Int
 )
 
 

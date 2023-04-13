@@ -5,11 +5,6 @@ data class VendorDetailsResponse(
     val status: Boolean,
     val top_vendors: List<Vendor>
 )
-//data class VendorDetailsResponse(
-//    val message: String,
-//    val status: Boolean,
-//    val vendor_list: List<Vendor>
-//)
 
 data class Vendor(
     val daily_avg: String,
@@ -17,10 +12,3 @@ data class Vendor(
     val payment_due: String,
     val return_avg: String
 )
-
-//data class Vendor(
-//    val daily_avg: String,
-//    val payment_due: String,
-//    val return_avg: String,
-//    val name: String
-//)

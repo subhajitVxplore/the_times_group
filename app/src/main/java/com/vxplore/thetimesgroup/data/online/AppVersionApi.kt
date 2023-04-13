@@ -1,5 +1,6 @@
 package com.vxplore.thetimesgroup.data.online
 
+import com.vxplore.core.domain.model.DonutChartModel
 import com.vxplore.core.domain.model.OtpDtailsResponse
 import com.vxplore.core.domain.model.RegisterDetailsResponse
 import com.vxplore.core.domain.model.VendorDetailsResponse
@@ -19,6 +20,9 @@ interface AppVersionApi {
 
     @GET("827a5ea26aa944fcd1d2")
     suspend fun getVendorDetails(): VendorDetailsResponse
+
+    @GET("990c5926c3c2c14a0342")
+    suspend fun getDonutChartDetails(): DonutChartModel
 
 
 }

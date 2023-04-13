@@ -1,5 +1,6 @@
 package com.vxplore.thetimesgroup.custom_views
 
+import android.annotation.SuppressLint
 import android.provider.ContactsContract.Data
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -27,6 +28,7 @@ import com.vxplore.thetimesgroup.extensions.upToBottom
 import com.vxplore.thetimesgroup.ui.theme.GreenLight
 import com.vxplore.thetimesgroup.viewModels.BillingScreenViewModel
 
+@SuppressLint("SuspiciousIndentation")
 @OptIn(ExperimentalMaterialApi::class, ExperimentalAnimationApi::class)
 @Composable
 fun HorizontalScrollableCoupon(
