@@ -8,9 +8,7 @@ import com.example.core.utils.AppNavigator
 import com.vxplore.core.common.Destination
 import com.vxplore.core.common.DialogData
 import com.vxplore.core.common.EmitType
-import com.vxplore.core.domain.model.DonutChartModel
-import com.vxplore.core.domain.model.PaperCode
-import com.vxplore.core.domain.model.Vendor
+import com.vxplore.core.domain.model.*
 import com.vxplore.core.domain.useCasess.DashboardUseCases
 import com.vxplore.thetimesgroup.custom_views.UiData
 import com.vxplore.thetimesgroup.extensions.MyDialog
@@ -38,6 +36,12 @@ class DashboardViewModel @Inject constructor(
     val paperCodes = _paperCodes.asStateFlow()
     var totalPapersSold = mutableStateOf("")
 
+    private val _todayPaperSold = MutableStateFlow(emptyList<com.vxplore.core.domain.model.PaperSold>())
+    val todayPaperSold = _todayPaperSold.asStateFlow()
+
+  private val _todayPaperReturn = MutableStateFlow(emptyList<PaperReturn>())
+    val todayPaperReturn = _todayPaperReturn.asStateFlow()
+
 
     val dashboardBack = mutableStateOf<MyDialog?>(null)
     var values = listOf<PaperSold>()
@@ -46,6 +50,7 @@ class DashboardViewModel @Inject constructor(
     // values: List<Float> = listOf(10f, 20f, 30f,40f,50f),
     //val vendorsQuery = mutabletateOf("")
     init {
+        getTodayPaperSoldByUserId()
         getVendors()
         calculateDonutSweepAngles()
         getDonutChartData()
@@ -82,6 +87,45 @@ class DashboardViewModel @Inject constructor(
             isSingleTop = true,
             inclusive = true
         )
+    }
+
+
+    fun getTodayPaperSoldByUserId() {
+        dashBoardUseCases.getTodayPaperSoldByUserId()
+            .flowOn(Dispatchers.IO)
+            .onEach {
+                when (it.type) {
+                    EmitType.Loading -> {
+                        it.value?.apply {
+                            castValueToRequiredTypes<Boolean>()?.let {
+                                //districtLoading.setValue(it)
+                            }
+                        }
+                    }
+
+                    EmitType.PaperSold -> {
+                        it.value?.castListToRequiredTypes<com.vxplore.core.domain.model.PaperSold>()?.let {
+                            _todayPaperSold.update { it }
+                        }
+                    }
+
+                    EmitType.PaperReturn -> {
+                        it.value?.castListToRequiredTypes<PaperReturn>()?.let {
+                            _todayPaperReturn.update { it }
+                        }
+                    }
+
+                    EmitType.NetworkError -> {
+                        it.value?.apply {
+                            castValueToRequiredTypes<String>()?.let {
+
+                            }
+                        }
+                    }
+                    else -> {}
+                }
+            }
+            .launchIn(viewModelScope)
     }
 
     fun getVendors() {

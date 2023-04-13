@@ -12,7 +12,8 @@ class DashboardUseCases @Inject constructor(
     private val pref: AppStore,
     private val vendorDetailsRepository: VendorDetailsRepository,
     private val donutChartDetailsRepository: DonutChartDetailsRepository,
-    private val todayPaperSoldByUserIdRepository: TodayPaperSoldByUserIdRepository
+    private val todayPaperSoldByUserIdRepository: TodayPaperSoldByUserIdRepository,
+    private val appStore: AppStore
 
 ) {
 
@@ -23,9 +24,9 @@ class DashboardUseCases @Inject constructor(
 
 
 
-    fun getDistrictByState(dist_id: String) = flow {
+    fun getTodayPaperSoldByUserId() = flow {
         //emit(Data(EmitType.Loading, true))
-        when (val response = todayPaperSoldByUserIdRepository.todayPaperSoldByUserIdRepository(dist_id)) {
+        when (val response = todayPaperSoldByUserIdRepository.todayPaperSoldByUserIdRepository(appStore.userId())) {
             is Resource.Success -> {
                 emit(Data(EmitType.Loading, false))
                 response.data?.apply {
