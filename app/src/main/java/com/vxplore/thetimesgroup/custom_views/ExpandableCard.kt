@@ -126,9 +126,6 @@ fun ExpandableCard(
                         }
                     ) {
                         if (!it) {
-
-
-
                             if (viewModel.expand.value) {
                         Spacer(modifier = Modifier.height(7.dp))
                         LazyColumn(
@@ -146,7 +143,7 @@ fun ExpandableCard(
                                     ) {
                                         Text(text = paperr.value, color = Color.DarkGray)
                                         Text(
-                                            text = "Yesterday Total Paper ${paperr.previous_paper_count}",
+                                            text = "Yesterday Total Paper ${paperr.previous_paper_count}, @ ₹${paperr.previous_price}",
                                             color = Color.Gray,
                                             fontSize = 10.sp
                                         )
@@ -173,7 +170,7 @@ fun ExpandableCard(
                                                 value = value,
                                                 onValueChange = {
                                                     value = it
-                                                    onReturnPriceChange(value, index, paperr.price)
+                                                    onReturnPriceChange(value, index, paperr.previous_price)
                                                     viewModel.calculateReturnPapersPrice()
                                                    // viewModel.calculateTakenMinusReturnPaperTotal()
                                                                 },

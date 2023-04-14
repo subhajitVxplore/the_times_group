@@ -12,7 +12,8 @@ data class PapersByVendorIdModel(
 data class Paper(
     val key: String,
     val previous_paper_count: Int,
-    val price: Int,
+    val todays_price: Int,
+    val previous_price: Int,
     val value: String
 )
 

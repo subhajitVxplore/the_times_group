@@ -48,10 +48,11 @@ class BillingScreenViewModel @Inject constructor(
     private val _couponss = MutableStateFlow(emptyList<Coupon>())
     val couponss = _couponss.asStateFlow()
 
-    var paperssListSize = mutableStateOf(0)
-
     // var takenPapers = MutableList<Pair<Int, Int>>(paperssListSize.value) { Pair(0, 0) }
     lateinit var takenPapers: MutableList<Pair<Int, Int>>
+    lateinit var returnPapers: MutableList<Pair<Int, Int>>
+
+
     var takenPaperTotal = mutableStateOf(0)
     var eachPaperTotal = mutableStateOf(0)
     var eachReturnPaperTotal = mutableStateOf(0)
@@ -72,7 +73,7 @@ class BillingScreenViewModel @Inject constructor(
 
     init {
         currentDue.value = previousDue.value
-        getPapersByVendorId(" ")
+       // getPapersByVendorId(" ")
     }
 
     fun calculateCurrentDue() {
@@ -96,7 +97,7 @@ class BillingScreenViewModel @Inject constructor(
 
     fun calculateReturnPapersPrice() {
         returnPaperTotal.value = 0
-        takenPapers.forEach {
+        returnPapers.forEach {
             eachReturnPaperTotal.value = it.first * it.second
             returnPaperTotal.value +=eachReturnPaperTotal.value
 //            takenPaperTotal.value =takenPaperTotal.value - eachReturnPaperTotal.value
@@ -148,6 +149,7 @@ class BillingScreenViewModel @Inject constructor(
                         it.value?.castListToRequiredTypes<Paper>()?.let { papers ->
                             _paperss.update { papers }
                             takenPapers = MutableList(papers.size) { 0 to 0 }
+                            returnPapers = MutableList(papers.size) { 0 to 0 }
                         }
                     }
                     EmitType.COUPONS -> {
@@ -177,7 +179,9 @@ class BillingScreenViewModel @Inject constructor(
 ////////////////////////////////////////////////////////////////////////////
 
     fun clearVendorsQuery() {
-        getPapersByVendorId(" ")
+       // getPapersByVendorId(" ")
+        _paperss.update { emptyList() }
+        _couponss.update { emptyList() }
         searchVendorQuery = ""
         suggestionListVisibility = false
         viewModelScope.launch {

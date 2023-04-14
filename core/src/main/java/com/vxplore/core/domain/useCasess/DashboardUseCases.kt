@@ -35,7 +35,7 @@ class DashboardUseCases @Inject constructor(
                         true -> {
                             emit(Data(EmitType.PaperSold, value = paperSold))
                             emit(Data(EmitType.PaperReturn, value = paperReturn))
-                           // emit(Data(EmitType.PaperSold, value = districts))
+                            //emit(Data(EmitType.EachPaperSold, value = districts))
                             emit(Data(type = EmitType.INFORM, value = message))
                         }
                         else -> {

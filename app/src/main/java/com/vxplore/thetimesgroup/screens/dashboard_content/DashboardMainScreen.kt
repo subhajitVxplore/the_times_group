@@ -62,14 +62,14 @@ fun DashboardMainScreen(openDrawer: () -> Unit, viewModel: DashboardViewModel) {
                                 Text(text = "Today's Total",color = Color.White,fontSize = 12.sp,modifier = Modifier.padding(10.dp, 5.dp, 0.dp, 0.dp))
 
                                 Text(
-                                    text = "3500",
+                                    text = viewModel.todayPaperSold.value,
                                     style = MaterialTheme.typography.h5,
                                     color = Color.White,
                                     fontWeight = FontWeight.Bold,
                                     modifier = Modifier.padding(horizontal = 10.dp)
                                 )
                                 Text(
-                                    text = "ES - 2000 , TOI - 1000 , E.T - 500",
+                                    text = viewModel.todayEachPaperSold.value,
                                     color = Color.White,
                                     fontSize = 10.sp,
                                     modifier = Modifier.padding(10.dp, 0.dp, 0.dp, 5.dp)
@@ -85,7 +85,7 @@ fun DashboardMainScreen(openDrawer: () -> Unit, viewModel: DashboardViewModel) {
                                     contentAlignment = Alignment.CenterStart,
                                 ) {
                                     Text(
-                                        text = "This Month 450000",
+                                        text = "This Month ${viewModel.thisMonthPaperSold.value}",
                                         color = Color.White,
                                         fontSize = 12.sp,
                                         modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
@@ -109,14 +109,14 @@ fun DashboardMainScreen(openDrawer: () -> Unit, viewModel: DashboardViewModel) {
                                     modifier = Modifier.padding(10.dp, 5.dp, 0.dp, 0.dp)
                                 )
                                 Text(
-                                    text = "450",
+                                    text = viewModel.todayPaperReturn.value,
                                     style = MaterialTheme.typography.h5,
                                     color = Color.White,
                                     fontWeight = FontWeight.Bold,
                                     modifier = Modifier.padding(horizontal = 10.dp)
                                 )
                                 Text(
-                                    text = "ES - 100 , TOI - 100 , E.T - 50",
+                                    text = viewModel.todayEachPaperReturn.value,
                                     color = Color.White,
                                     fontSize = 10.sp,
                                     modifier = Modifier.padding(10.dp, 0.dp, 0.dp, 5.dp)
@@ -132,7 +132,7 @@ fun DashboardMainScreen(openDrawer: () -> Unit, viewModel: DashboardViewModel) {
                                     contentAlignment = Alignment.CenterStart,
                                 ) {
                                     Text(
-                                        text = "This Month 450",
+                                        text = "This Month ${viewModel.thisMonthPaperReturn.value}",
                                         color = Color.White,
                                         fontSize = 12.sp,
                                         modifier = Modifier.padding(

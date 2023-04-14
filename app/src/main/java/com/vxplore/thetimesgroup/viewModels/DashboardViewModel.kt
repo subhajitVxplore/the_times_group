@@ -36,12 +36,13 @@ class DashboardViewModel @Inject constructor(
     val paperCodes = _paperCodes.asStateFlow()
     var totalPapersSold = mutableStateOf("")
 
-    private val _todayPaperSold = MutableStateFlow(emptyList<com.vxplore.core.domain.model.PaperSold>())
-    val todayPaperSold = _todayPaperSold.asStateFlow()
+    var todayPaperSold = mutableStateOf("")
+    var todayEachPaperSold = mutableStateOf("")
+    var thisMonthPaperSold = mutableStateOf("")
 
-  private val _todayPaperReturn = MutableStateFlow(emptyList<PaperReturn>())
-    val todayPaperReturn = _todayPaperReturn.asStateFlow()
-
+    var todayPaperReturn = mutableStateOf("")
+    var todayEachPaperReturn = mutableStateOf("")
+    var thisMonthPaperReturn = mutableStateOf("")
 
 
     val dashboardBack = mutableStateOf<MyDialog?>(null)
@@ -105,14 +106,19 @@ class DashboardViewModel @Inject constructor(
                     }
 
                     EmitType.PaperSold -> {
-                        it.value?.castListToRequiredTypes<com.vxplore.core.domain.model.PaperSold>()?.let {
-                            _todayPaperSold.update { it }
-                        }
+                        it.value?.castValueToRequiredTypes<com.vxplore.core.domain.model.PaperSold>()
+                            ?.let {
+                                todayPaperSold.value = it.todays_total.toString()
+                                todayEachPaperSold.value=it.each_paper_sold
+                                thisMonthPaperSold.value=it.this_month.toString()
+                            }
                     }
 
                     EmitType.PaperReturn -> {
-                        it.value?.castListToRequiredTypes<PaperReturn>()?.let {
-                            _todayPaperReturn.update { it }
+                        it.value?.castValueToRequiredTypes<PaperReturn>()?.let {
+                            todayPaperReturn.value = it.todays_total.toString()
+                            todayEachPaperReturn.value = it.each_paper_sold
+                            thisMonthPaperReturn.value = it.this_month.toString()
                         }
                     }
 
@@ -180,7 +186,7 @@ class DashboardViewModel @Inject constructor(
 
                     EmitType.TOTAL_SOLD_PAPER -> {
                         it.value?.castValueToRequiredTypes<String>()?.let {
-                            totalPapersSold.value=it
+                            totalPapersSold.value = it
                         }
                     }
 

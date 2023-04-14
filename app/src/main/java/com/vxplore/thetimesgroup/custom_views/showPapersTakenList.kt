@@ -66,7 +66,7 @@ fun showPapersTakenList(
                             Column(modifier = Modifier.align(Alignment.CenterVertically)) {
                                 Text(text = paperr.value, color = Color.Gray)
                                 Text(
-                                    text = "₹${paperr.price}",
+                                    text = "₹${paperr.todays_price}",
                                     color = Color.Gray,
                                     fontSize = 12.sp,
                                     fontWeight = FontWeight.Bold,
@@ -85,7 +85,7 @@ fun showPapersTakenList(
                                 value = value,
                                 onValueChange = {
                                     value = it
-                                    onPriceChange(value, index, paperr.price)
+                                    onPriceChange(value, index, paperr.todays_price)
                                     viewModel.calculateTakenPapersPrice()
                                 },
                                 keyboardOptions = KeyboardOptions(

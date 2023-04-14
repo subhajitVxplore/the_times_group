@@ -25,6 +25,7 @@ enum class EmitType {
     PAPERS_LIST_SIZE,
     PaperSold,
     PaperReturn,
+    TodayEachPaperSold,
 
 
 }

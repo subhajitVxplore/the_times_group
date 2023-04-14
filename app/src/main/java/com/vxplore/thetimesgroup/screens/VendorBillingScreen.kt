@@ -131,7 +131,7 @@ fun VendorBillingScreen(
                     Spacer(modifier = Modifier.height(7.dp))
                     ExpandableCard( viewModel.circleLoading.value,"Returns",viewModel.paperss.collectAsState().value,viewModel){ value2, index, value1 ->
                         try {
-                            viewModel.takenPapers.add(index, Pair(first = value1, second = value2.toInt()))
+                            viewModel.returnPapers.add(index, Pair(first = value1, second = value2.toInt()))
                         } catch (e: Exception) {
                             println(e)
                         }
@@ -192,7 +192,8 @@ fun VendorBillingScreen(
                                          //text = "₹${viewModel.takenMinusreturnPaperTotal.value}",
                                         // text = "₹${viewModel.currentTakenPaperTotal.value}",
                                         // text = "₹${viewModel.takenPaperTotal.value}",
-                                         text = "₹${viewModel.takenPaperTotal.value - viewModel.returnPaperTotal.value}",
+                                        // text = "₹${viewModel.takenPaperTotal.value - viewModel.returnPaperTotal.value}",
+                                         text = "₹${viewModel.takenMinusreturnPaperTotal.value}",
                                         style = MaterialTheme.typography.h5,
                                         color = Color.Black,
                                         fontWeight = FontWeight.Bold,
@@ -357,7 +358,11 @@ fun VendorBillingScreen(
                                 ) {
 
 
-                                    Box(modifier = Modifier.fillMaxWidth().weight(1f, true).align(Alignment.CenterVertically).padding(start = 15.dp)){
+                                    Box(modifier = Modifier
+                                        .fillMaxWidth()
+                                        .weight(1f, true)
+                                        .align(Alignment.CenterVertically)
+                                        .padding(start = 15.dp)){
                                         Column(
                                             modifier = Modifier
                                                 .wrapContentSize()
@@ -431,6 +436,13 @@ fun VendorBillingScreen(
         if (viewModel.toastError.value.isNotEmpty()) {
             Toast.makeText(mContext, viewModel.toastError.value, Toast.LENGTH_SHORT).show()
             viewModel.toastError.value = ""
+        }
+    }
+
+    LaunchedEffect(viewModel.takenPaperTotal.value,viewModel.returnPaperTotal.value,viewModel.takenMinusreturnPaperTotal.value){
+        if (viewModel.takenPaperTotal.value > 0) {
+            viewModel.takenMinusreturnPaperTotal.value =
+                viewModel.takenPaperTotal.value - viewModel.returnPaperTotal.value
         }
     }
 
