@@ -111,15 +111,6 @@ fun VendorBillingScreen(
                         .verticalScroll(rememberScrollState())
                         .weight(1f)
                 ) {
-//                    showPapersTakenList( paperList = getPaperPrice() as MutableList<Paper>, viewModel) { value, index, multi ->
-//                        try {
-//                            viewModel.takenPapers[index] =
-//                                Pair(first = multi, second = value.toInt())
-//                        } catch (e: Exception) {
-//                            println(e)
-//                        }
-//
-//                    }
                     showPapersTakenList( viewModel.circleLoading.value,viewModel.paperss.collectAsState().value, viewModel) { value2, index, value1 ->
                         try {
                            // viewModel.takenPapers[index] =Pair(first = value1, second = value2.toInt())
@@ -129,6 +120,7 @@ fun VendorBillingScreen(
                         }
                     }
                     Spacer(modifier = Modifier.height(7.dp))
+
                     ExpandableCard( viewModel.circleLoading.value,"Returns",viewModel.paperss.collectAsState().value,viewModel){ value2, index, value1 ->
                         try {
                             viewModel.returnPapers.add(index, Pair(first = value1, second = value2.toInt()))
@@ -158,30 +150,6 @@ fun VendorBillingScreen(
                                     .fillMaxWidth()
                                     .wrapContentHeight()
                             ) {
-
-
- /////////////////////////////////Calculate Price Button/////////////////////////////////////////
-//                                Button(
-//                                    enabled = viewModel.takenPaperTotal.value <= 0,
-//                                    onClick = {
-//                                        viewModel.calculatePapersPrice()
-//                                        viewModel.calculateCurrentDue()
-//                                    },
-//                                    shape = RoundedCornerShape(25.dp),
-//                                    modifier = Modifier
-//                                        .wrapContentSize()
-//                                        .align(Alignment.CenterVertically)
-//                                        .padding(start = 10.dp),
-//                                    colors = ButtonDefaults.buttonColors(backgroundColor = DonutGreenLight)
-//                                ) {
-//                                    Text(
-//                                        text = "Calculate Price",
-//                                        color = Color.White,
-//                                        fontSize = 13.sp,
-//                                        modifier = Modifier.align(Alignment.CenterVertically),
-//                                        fontStyle = FontStyle.Normal
-//                                    )
-//                                }
                                 Box(
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -189,10 +157,6 @@ fun VendorBillingScreen(
                                         .align(Alignment.CenterVertically)
                                 ) {
                                     Text(
-                                         //text = "₹${viewModel.takenMinusreturnPaperTotal.value}",
-                                        // text = "₹${viewModel.currentTakenPaperTotal.value}",
-                                        // text = "₹${viewModel.takenPaperTotal.value}",
-                                        // text = "₹${viewModel.takenPaperTotal.value - viewModel.returnPaperTotal.value}",
                                          text = "₹${viewModel.takenMinusreturnPaperTotal.value}",
                                         style = MaterialTheme.typography.h5,
                                         color = Color.Black,
@@ -211,7 +175,7 @@ fun VendorBillingScreen(
                                 thickness = 0.8.dp,
                                 modifier = Modifier.padding(horizontal = 10.dp)
                             )
-                            Spacer(modifier = Modifier.height(20.dp))
+                            Spacer(modifier = Modifier.height(10.dp))
                             Row(Modifier.wrapContentHeight()) {
                                 Text(
                                     text = "Mode of Payment",
@@ -236,6 +200,7 @@ fun VendorBillingScreen(
                                             onValueChange = {
                                                 try {
                                                     viewModel.cashPayment.value = it.toInt()
+                                                  //  viewModel.calculateCurrentDue()
                                                 } catch (e: Exception) {
                                                     println(e)
                                                 }
@@ -272,8 +237,6 @@ fun VendorBillingScreen(
                                     }
                                 }
                             }
-                            Spacer(modifier = Modifier.height(10.dp))
-                            // HorizontalScrollableCoupon(getPersonAge())
                             Column(
                                 modifier = Modifier
                                     .wrapContentHeight()
@@ -287,27 +250,10 @@ fun VendorBillingScreen(
                                             .wrapContentSize()
                                             .padding(horizontal = 15.dp)
                                             .align(Alignment.CenterVertically),
-
                                         )
-                                    // val cntxt = LocalContext.current
-
-                                    TextButton(modifier = Modifier
-                                        .wrapContentSize()
-                                        .align(Alignment.CenterVertically),
-                                        enabled = viewModel.couponTotal.value <= 0,
-                                        onClick = {
-                                            viewModel.calculateCoupon()
-                                            viewModel.calculateCurrentDue()
-                                            //Toast.makeText(cntxt, "Coupon=₹${viewModel.couponTotal.value}", Toast.LENGTH_SHORT).show()
-                                        }) {
-                                        Text(
-                                            text = "Apply Coupon",
-                                            color = GreenLight,
-                                            fontWeight = FontWeight.Bold,
-                                            textDecoration = TextDecoration.Underline
-                                        )
-                                    }
                                 }
+
+                               // Spacer(modifier = Modifier.height(5.dp))
 
                                 Row(
                                     modifier = Modifier
@@ -319,28 +265,56 @@ fun VendorBillingScreen(
                                             onPriceChange = { value, index, multi ->
                                                 // viewModel.coupons[index] = value.toInt()
                                                 try {
-                                                    viewModel.coupons[index] =
-                                                        Pair(first = multi, second = value.toInt())
+                                                    //viewModel.coupons[index] =Pair(first = multi, second = value.toInt())
+                                                    viewModel.coupons.add(index, Pair(first = multi, second = value.toInt()))
                                                 } catch (e: Exception) {
                                                     println(e)
                                                 }
-
                                             }
                                         )
                                     }
+                                }
+                            }
+//---------------------------------------------------------------------------------------------------
+                            Spacer(modifier = Modifier.height(5.dp))
+                            Divider(
+                                color = Color.LightGray,
+                                thickness = 0.8.dp,
+                                modifier = Modifier.padding(horizontal = 10.dp)
+                            )
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .wrapContentHeight()
+                            ) {
 
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .wrapContentHeight()
+                                        .align(Alignment.CenterVertically)
+                                ) {
                                     Text(
-                                        text = "₹${viewModel.couponTotal.value}",
+                                       // text = "₹${viewModel.couponTotal.value}",
+                                        text = "₹${viewModel.cashMinusCouponTotal.value}",
+                                        style = MaterialTheme.typography.h5,
                                         color = Color.Black,
                                         fontWeight = FontWeight.Bold,
                                         modifier = Modifier
                                             .wrapContentSize()
                                             .padding(horizontal = 10.dp)
-                                            .align(Alignment.CenterVertically),
-                                        fontSize = 20.sp
+                                            .align(Alignment.CenterEnd)
                                     )
                                 }
+
                             }
+
+                            Divider(
+                                color = Color.LightGray,
+                                thickness = 0.8.dp,
+                                modifier = Modifier.padding(horizontal = 10.dp)
+                            )
+//---------------------------------------------------------------------------------------------------
                             Spacer(modifier = Modifier.height(5.dp))
                             Surface(
                                 shape = RoundedCornerShape(5.dp),
@@ -446,5 +420,17 @@ fun VendorBillingScreen(
         }
     }
 
+    LaunchedEffect(viewModel.cashPayment.value,viewModel.couponTotal.value,viewModel.cashMinusCouponTotal.value){
+            viewModel.cashMinusCouponTotal.value =
+                viewModel.cashPayment.value + viewModel.couponTotal.value
+    }
+
+    LaunchedEffect(viewModel.takenMinusreturnPaperTotal.value,viewModel.cashMinusCouponTotal.value,viewModel.currentDue.value){
+        if (viewModel.takenMinusreturnPaperTotal.value > 0) {
+            viewModel.currentDue.value =
+                viewModel.takenMinusreturnPaperTotal.value - viewModel.cashMinusCouponTotal.value
+        }
+    }
 }
+
 

@@ -83,8 +83,11 @@ fun HorizontalScrollableCoupon(
                                         color = Color.White
                                     ) {
 
-                                        MyBasicTextField(text = price, onValueChange = {
+                                        MyBasicTextField(text = price,
+                                            onValueChange = {
                                             onPriceChange(it, index, coupons.value)
+                                                viewModel.calculateCoupon()
+                                               // viewModel.calculateCurrentDue()
                                         })
                                     }
                                 }
@@ -94,7 +97,6 @@ fun HorizontalScrollableCoupon(
                         }
                     }
                 })
-
     }
 
 //////////////////////////////////////////////////////////////////////////////////////////

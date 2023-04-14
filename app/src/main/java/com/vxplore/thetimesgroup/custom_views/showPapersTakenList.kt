@@ -37,7 +37,7 @@ fun showPapersTakenList(
 //    LazyColumn(modifier = Modifier.height(300.dp).fillMaxWidth()) {
 //                itemsIndexed(items = paperList) { index, paperr ->
 
-    val price: String = ""
+    var price: String = ""
 
 
     AnimatedContent(
@@ -81,12 +81,14 @@ fun showPapersTakenList(
                                 mutableStateOf(price)
                             }
 
+                            price=""
                             BasicTextField(
                                 value = value,
                                 onValueChange = {
                                     value = it
                                     onPriceChange(value, index, paperr.todays_price)
                                     viewModel.calculateTakenPapersPrice()
+                                    //price=""
                                 },
                                 keyboardOptions = KeyboardOptions(
                                     imeAction = ImeAction.Done,

@@ -38,10 +38,7 @@ class BillingScreenViewModel @Inject constructor(
     var previousDue = mutableStateOf(0)
     var currentDue = mutableStateOf(0)
 
-    var toiReturn = mutableStateOf("")
-
     // var takenPapers = MutableList<Pair<Int, Int>>(getPaperPrice().size) { Pair(0, 0) }
-
 
     private val _paperss = MutableStateFlow(emptyList<Paper>())
     val paperss = _paperss.asStateFlow()
@@ -50,16 +47,19 @@ class BillingScreenViewModel @Inject constructor(
 
     // var takenPapers = MutableList<Pair<Int, Int>>(paperssListSize.value) { Pair(0, 0) }
     lateinit var takenPapers: MutableList<Pair<Int, Int>>
-    lateinit var returnPapers: MutableList<Pair<Int, Int>>
-
-
     var takenPaperTotal = mutableStateOf(0)
     var eachPaperTotal = mutableStateOf(0)
+
+    lateinit var returnPapers: MutableList<Pair<Int, Int>>
     var eachReturnPaperTotal = mutableStateOf(0)
     var returnPaperTotal = mutableStateOf(0)
+
     var takenMinusreturnPaperTotal = mutableStateOf(0)
-    var coupons = MutableList<Pair<Int, Int>>(getPersonAge().size) { Pair(0, 0) }
+    //var coupons = MutableList<Pair<Int, Int>>(getPersonAge().size) { Pair(0, 0) }
+    lateinit var coupons: MutableList<Pair<Int, Int>>
+    var eachCouponTotal = mutableStateOf(0)
     var couponTotal = mutableStateOf(0)
+    var cashMinusCouponTotal = mutableStateOf(0)
 
     private val _suggestionsss: MutableStateFlow<List<SearchVendorModel>> =
         MutableStateFlow(emptyList())
@@ -105,17 +105,16 @@ class BillingScreenViewModel @Inject constructor(
         }
     }
 
-
-    fun calculateTakenMinusReturnPaperTotal(){
-        takenMinusreturnPaperTotal.value=(takenPaperTotal.value - returnPaperTotal.value)
-    }
-
-
-
     fun calculateCoupon() {
+//        coupons.forEach {
+//            couponTotal.value += it.first * it.second
+//        }
+        couponTotal.value = 0
         coupons.forEach {
-            couponTotal.value += it.first * it.second
+            eachCouponTotal.value = it.first * it.second
+            couponTotal.value +=eachCouponTotal.value
         }
+
     }
 
     fun onBillingToAddVendor() {
@@ -155,6 +154,7 @@ class BillingScreenViewModel @Inject constructor(
                     EmitType.COUPONS -> {
                         it.value?.castListToRequiredTypes<Coupon>()?.let { coupon ->
                             _couponss.update { coupon }
+                            coupons = MutableList(coupon.size) { 0 to 0 }
                         }
                     }
 
