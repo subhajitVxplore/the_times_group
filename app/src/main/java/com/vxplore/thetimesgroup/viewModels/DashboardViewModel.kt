@@ -43,6 +43,7 @@ class DashboardViewModel @Inject constructor(
     val todayPaperReturn = _todayPaperReturn.asStateFlow()
 
 
+
     val dashboardBack = mutableStateOf<MyDialog?>(null)
     var values = listOf<PaperSold>()
     var sumOfValues = mutableStateOf(0f)
