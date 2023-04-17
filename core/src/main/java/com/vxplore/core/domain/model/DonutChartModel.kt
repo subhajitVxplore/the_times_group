@@ -11,5 +11,7 @@ data class PaperCode(
     val colorCode: String,
     val name: String,
     val paper_count: Int,
-    val paper_percent: String
+    val paper_percent: String,
+    val paper_percent_float: String
+
 )

@@ -60,7 +60,7 @@ class DashboardUseCases @Inject constructor(
 
     fun getVendors() = flow {
         emit(Data(EmitType.Loading, true))
-        when (val response = vendorDetailsRepository.vendorDetailsRepo()) {
+        when (val response = vendorDetailsRepository.vendorDetailsRepo(appStore.userId())) {
             is Resource.Success -> {
                 emit(Data(EmitType.Loading, false))
                 response.data?.apply {
@@ -91,7 +91,7 @@ class DashboardUseCases @Inject constructor(
 
     fun getDonutChartData() = flow {
         emit(Data(EmitType.Loading, true))
-        when (val response = donutChartDetailsRepository.donutChartDetailsRepository()) {
+        when (val response = donutChartDetailsRepository.donutChartDetailsRepository(appStore.userId())) {
             is Resource.Success -> {
                 emit(Data(EmitType.Loading, false))
                 response.data?.apply {

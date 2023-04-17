@@ -34,7 +34,7 @@ fun MyDoughnutChart(
     //val values: List<Float> = listOf(10f,15f,20f,15f,10f,10f,10f,10f)
 //    val values: List<Float> = getPaperSoldDetails().map { it.floatValue }.toList()
     //val values: List<Float> = paperSoldList.map {it.floatValue}
-    val values: List<Float> = paperSoldList.map { it.paper_percent.toFloat() }
+    val values: List<Float> = paperSoldList.map { it.paper_percent_float.toFloat() }
     val sumOfValues = values.sum()
     val proportions = values.map { it * 100 / sumOfValues }
     val sweepAngles = proportions.map { 360 * it / 100 }
@@ -58,7 +58,7 @@ fun MyDoughnutChart(
                     //  DisplayLegend(color = Color(paperSoldList[i].colorCode.toInt()), legend = paperSoldList[i].name+" - ${paperSoldList[i].paper_count}"+"(${paperSoldList[i].?paper_percent}%)")
                     DisplayLegend(
                         color =Color(android.graphics.Color.parseColor(paperSoldList[i].colorCode)),
-                        legend = paperSoldList[i].name + " - ${paperSoldList[i].paper_count}" + "(${paperSoldList[i].paper_percent}%)"
+                        legend = paperSoldList[i].name + " - ${paperSoldList[i].paper_count}" + "(${paperSoldList[i].paper_percent})"
                     )
                 }
             }

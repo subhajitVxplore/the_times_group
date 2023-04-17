@@ -8,7 +8,7 @@ data class TodayPaperSoldModel(
 )
 
 data class PaperReturn(
-    val each_paper_sold: String,
+    val each_paper_return: String,
     val this_month: Int,
     val todays_total: Int
 )

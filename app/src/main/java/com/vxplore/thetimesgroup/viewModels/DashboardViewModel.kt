@@ -117,7 +117,7 @@ class DashboardViewModel @Inject constructor(
                     EmitType.PaperReturn -> {
                         it.value?.castValueToRequiredTypes<PaperReturn>()?.let {
                             todayPaperReturn.value = it.todays_total.toString()
-                            todayEachPaperReturn.value = it.each_paper_sold
+                            todayEachPaperReturn.value = it.each_paper_return
                             thisMonthPaperReturn.value = it.this_month.toString()
                         }
                     }

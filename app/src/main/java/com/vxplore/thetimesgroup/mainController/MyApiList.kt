@@ -67,5 +67,12 @@ interface MyApiList {
     @GET("dashboard/papers")
     suspend fun getTodaySoldPapersByVendorId(@Query("dist_id") dist_id: String): TodayPaperSoldModel
 
+    @GET("dashboard/papers/chart")
+    suspend fun getDonutChartDetails(@Query("dist_id") dist_id: String): DonutChartModel
+
+    @GET("dashboard/list/vendor")
+    suspend fun getVendorDetails(@Query("dist_id") dist_id: String): VendorDetailsResponse
+
+
 
 }
