@@ -85,14 +85,12 @@ class BillingScreenViewModel @Inject constructor(
     }
 
     fun calculateTakenPapersPrice() {
-        //currentTakenPaperTotal.value=takenPaperTotal.value
         takenPaperTotal.value = 0
         takenPapers.forEach {
-//            takenPaperTotal.value += it.first * it.second
             eachPaperTotal.value = it.first * it.second
             takenPaperTotal.value += eachPaperTotal.value
         }
-        //eachPaperTotal.value=0
+     //   takenPapers.clear()
     }
 
     fun calculateReturnPapersPrice() {
@@ -100,20 +98,17 @@ class BillingScreenViewModel @Inject constructor(
         returnPapers.forEach {
             eachReturnPaperTotal.value = it.first * it.second
             returnPaperTotal.value +=eachReturnPaperTotal.value
-//            takenPaperTotal.value =takenPaperTotal.value - eachReturnPaperTotal.value
-            //takenPaperTotal.value =takenPaperTotal.value.minus(eachReturnPaperTotal.value)
         }
+       // returnPapers.clear()
     }
 
     fun calculateCoupon() {
-//        coupons.forEach {
-//            couponTotal.value += it.first * it.second
-//        }
         couponTotal.value = 0
         coupons.forEach {
             eachCouponTotal.value = it.first * it.second
             couponTotal.value +=eachCouponTotal.value
         }
+      //  coupons.clear()
 
     }
 

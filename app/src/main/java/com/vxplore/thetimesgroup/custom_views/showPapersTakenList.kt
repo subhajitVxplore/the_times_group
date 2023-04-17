@@ -81,12 +81,13 @@ fun showPapersTakenList(
                                 mutableStateOf(price)
                             }
 
-                            price=""
+
                             BasicTextField(
                                 value = value,
                                 onValueChange = {
                                     value = it
                                     onPriceChange(value, index, paperr.todays_price)
+
                                     viewModel.calculateTakenPapersPrice()
                                     //price=""
                                 },
