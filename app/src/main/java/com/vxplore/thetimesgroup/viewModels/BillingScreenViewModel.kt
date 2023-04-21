@@ -1,8 +1,8 @@
 package com.vxplore.thetimesgroup.viewModels
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import android.util.Log
+import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,10 +16,9 @@ import com.vxplore.thetimesgroup.custom_views.UiData
 import com.vxplore.thetimesgroup.extensions.castListToRequiredTypes
 import com.vxplore.thetimesgroup.extensions.castValueToRequiredTypes
 import com.vxplore.thetimesgroup.helpers_impl.SavableMutableState
-import com.vxplore.thetimesgroup.screens.getPaperPrice
-import com.vxplore.thetimesgroup.screens.getPersonAge
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -46,17 +45,19 @@ class BillingScreenViewModel @Inject constructor(
     val couponss = _couponss.asStateFlow()
 
     // var takenPapers = MutableList<Pair<Int, Int>>(paperssListSize.value) { Pair(0, 0) }
-    lateinit var takenPapers: MutableList<Pair<Int, Int>>
+    val takenPapers = MutableStateFlow(mutableListOf<Int>())
     var takenPaperTotal = mutableStateOf(0)
     var eachPaperTotal = mutableStateOf(0)
-
-    lateinit var returnPapers: MutableList<Pair<Int, Int>>
+    val returnPapers = MutableStateFlow(mutableListOf<Int>())
+   // lateinit var returnPapers: MutableList<Int>
     var eachReturnPaperTotal = mutableStateOf(0)
     var returnPaperTotal = mutableStateOf(0)
-
     var takenMinusreturnPaperTotal = mutableStateOf(0)
     //var coupons = MutableList<Pair<Int, Int>>(getPersonAge().size) { Pair(0, 0) }
-    lateinit var coupons: MutableList<Pair<Int, Int>>
+    //lateinit var coupons: MutableList<Pair<Int, Int>>
+    val coupons = MutableStateFlow(mutableListOf<Int>())
+
+
     var eachCouponTotal = mutableStateOf(0)
     var couponTotal = mutableStateOf(0)
     var cashMinusCouponTotal = mutableStateOf(0)
@@ -73,44 +74,81 @@ class BillingScreenViewModel @Inject constructor(
 
     init {
         currentDue.value = previousDue.value
-       // getPapersByVendorId(" ")
+        // getPapersByVendorId(" ")
     }
 
-    fun calculateCurrentDue() {
-        if ((takenPaperTotal.value != 0) or (cashPayment.value != 0) or (couponTotal.value != 0)) {
-            currentDue.value += ((takenPaperTotal.value - cashPayment.value) - couponTotal.value)
-        } else {
+//    fun calculateCurrentDue() {
+//        if ((takenPaperTotal.value != 0) or (cashPayment.value != 0) or (couponTotal.value != 0)) {
+//            currentDue.value += ((takenPaperTotal.value - cashPayment.value) - couponTotal.value)
+//        } else {
+//
+//        }
+//    }
 
+
+    val takenPapersTotal = mutableStateOf(0)
+    val returnsTotal = mutableStateOf(0)
+    val couponsTotal = mutableStateOf(0)
+
+//    @OptIn(ExperimentalCoroutinesApi::class)
+//    fun onPressTakenPaperCalculate() {
+//        viewModelScope.launch {
+//            takenPapers.mapLatest {
+//                it.sum()
+//            }.collectLatest {
+//                takenPapersTotal.value = it
+//            }
+//        }
+//    }
+
+
+//    @OptIn(ExperimentalCoroutinesApi::class)
+//    fun onPressReturnsTotal() {
+//
+//        viewModelScope.launch {
+//            returnPapers.mapLatest {
+//                it.sum()
+//            }.collectLatest {
+//                returnsTotal.value=it
+//            }
+//
+//        }
+//
+//    }
+    fun calculateTakenPapersPrice(value1: Int, value2: Int, index: Int) {
+        takenPapers.update {values->
+            values[index] = value1 * value2
+            takenPapersTotal.value = values.sum()
+            values
+        }
+
+    }
+
+    fun calculateReturnPapersPrice(value1: Int, value2: Int, index: Int) {
+        returnPapers.update {values->
+            values[index] = value1 * value2
+            returnsTotal.value=values.sum()
+            values
         }
     }
 
-    fun calculateTakenPapersPrice() {
-        takenPaperTotal.value = 0
-        takenPapers.forEach {
-            eachPaperTotal.value = it.first * it.second
-            takenPaperTotal.value += eachPaperTotal.value
+    fun calculateCouponPrice(value1: Int, value2: Int, index: Int) {
+        coupons.update {values->
+            values[index] = value1 * value2
+            couponsTotal.value=values.sum()
+            values
         }
-     //   takenPapers.clear()
     }
 
-    fun calculateReturnPapersPrice() {
-        returnPaperTotal.value = 0
-        returnPapers.forEach {
-            eachReturnPaperTotal.value = it.first * it.second
-            returnPaperTotal.value +=eachReturnPaperTotal.value
-        }
-       // returnPapers.clear()
-    }
-
-    fun calculateCoupon() {
-        couponTotal.value = 0
-        coupons.forEach {
-            eachCouponTotal.value = it.first * it.second
-            couponTotal.value +=eachCouponTotal.value
-        }
-      //  coupons.clear()
-
-    }
+//    fun calculateCoupon() {
+//        couponTotal.value = 0
+//        coupons.forEach {
+//            eachCouponTotal.value = it.first * it.second
+//            couponTotal.value += eachCouponTotal.value
+//        }
+//        //  coupons.clear()
+//
+//    }
 
     fun onBillingToAddVendor() {
         appNavigator.tryNavigateTo(
@@ -142,14 +180,20 @@ class BillingScreenViewModel @Inject constructor(
                     EmitType.PAPERS -> {
                         it.value?.castListToRequiredTypes<Paper>()?.let { papers ->
                             _paperss.update { papers }
-                            takenPapers = MutableList(papers.size) { 0 to 0 }
-                            returnPapers = MutableList(papers.size) { 0 to 0 }
+                            takenPapers.update {
+                                MutableList(papers.size) { 0 }
+                            }
+                            returnPapers .update {
+                                MutableList(papers.size) { 0 }
+                            }
                         }
                     }
                     EmitType.COUPONS -> {
                         it.value?.castListToRequiredTypes<Coupon>()?.let { coupon ->
                             _couponss.update { coupon }
-                            coupons = MutableList(coupon.size) { 0 to 0 }
+                            coupons .update {
+                                MutableList(coupon.size) { 0 }
+                            }
                         }
                     }
 
@@ -174,10 +218,11 @@ class BillingScreenViewModel @Inject constructor(
 ////////////////////////////////////////////////////////////////////////////
 
     fun clearVendorsQuery() {
-       // getPapersByVendorId(" ")
+        // getPapersByVendorId(" ")
         _paperss.update { emptyList() }
         _couponss.update { emptyList() }
         searchVendorQuery = ""
+        takenMinusreturnPaperTotal.value=0
         suggestionListVisibility = false
         viewModelScope.launch {
             suggestionsBackup.apply {

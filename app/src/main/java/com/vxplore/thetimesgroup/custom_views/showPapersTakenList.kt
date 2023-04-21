@@ -1,10 +1,14 @@
 package com.vxplore.thetimesgroup.custom_views
 
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.R
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -12,11 +16,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.vxplore.core.domain.model.Paper
@@ -87,8 +93,6 @@ fun showPapersTakenList(
                                 onValueChange = {
                                     value = it
                                     onPriceChange(value, index, paperr.todays_price)
-
-                                    viewModel.calculateTakenPapersPrice()
                                     //price=""
                                 },
                                 keyboardOptions = KeyboardOptions(
@@ -118,6 +122,64 @@ fun showPapersTakenList(
                         }
                     }
                     Spacer(modifier = Modifier.height(7.dp))
+                }//for loop
+
+//                val takenValues = viewModel.takenPapers.collectAsState().value
+//
+//                if (paperList.isNotEmpty()) {
+//                    Button(
+//                        onClick = {},
+////                        onClick = viewModel::onPressTakenPaperCalculate,
+//                        shape = RoundedCornerShape(5.dp), modifier = Modifier
+//                            .fillMaxWidth()
+//                            .padding(horizontal = 15.dp)
+//                            .height(40.dp),
+//                        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Black),
+//                        enabled = takenValues.sum() != 0
+//                    ) {
+//                        Text(
+//                            text = if (takenValues.sum() != 0) takenValues.sum().toString() else "0",
+//                            color = Color.White,
+//                            fontSize = 15.sp,
+//                        )
+//                    }
+//                }
+               //--------------//
+                if (paperList.isNotEmpty()) {
+                    Card(
+                        shape = RoundedCornerShape(bottomStart = 5.dp, bottomEnd = 5.dp),
+                        backgroundColor = Color.White,
+                        border = BorderStroke(1.dp, Color.Gray),
+                        modifier = Modifier.padding(horizontal = 15.dp)
+                            .fillMaxWidth().wrapContentSize(),
+                        elevation = 15.dp
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 10.dp, vertical = 10.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween // Control the header Alignment over here.
+                        ) {
+
+                            if (paperList.isNotEmpty()) {
+                                val takenValues =
+                                    viewModel.takenPapers.collectAsState().value
+                                Text(
+                                    text = if (takenValues.sum() != 0) "Total TakenPaper Price = ₹${takenValues.sum()}"
+                                    else "Total TakenPaper Price = ₹0",
+                                    color = Color.DarkGray, // Header Color
+                                    fontSize = 15.sp,
+                                    textAlign = TextAlign.Start,
+                                    fontWeight = FontWeight.Normal,
+                                    modifier = Modifier
+                                        .weight(.9f)
+                                        .padding(start = 8.dp)
+                                )
+                            }
+                        }
+                    }
+
                 }
 
             }

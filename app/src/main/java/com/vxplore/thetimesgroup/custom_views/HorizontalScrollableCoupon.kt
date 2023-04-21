@@ -86,7 +86,7 @@ fun HorizontalScrollableCoupon(
                                         MyBasicTextField(text = price,
                                             onValueChange = {
                                             onPriceChange(it, index, coupons.value)
-                                                viewModel.calculateCoupon()
+                                                //viewModel.calculateCoupon()
                                                // viewModel.calculateCurrentDue()
                                         })
                                     }

@@ -127,82 +127,111 @@ fun ExpandableCard(
                     ) {
                         if (!it) {
                             if (viewModel.expand.value) {
-                        Spacer(modifier = Modifier.height(7.dp))
-                        LazyColumn(
-                            modifier = Modifier
-                                .height(125.dp)
-                                .fillMaxWidth()
-                        ) {
-                            itemsIndexed(items = paperList) { index, paperr ->
-                                Row(Modifier.wrapContentHeight()) {
-                                    Column(
-                                        modifier = Modifier
-                                            .wrapContentSize()
-                                            .align(Alignment.CenterVertically)
-                                            .padding(13.dp, 0.dp, 0.dp, 0.dp)
-                                    ) {
-                                        Text(text = paperr.value, color = Color.DarkGray)
-                                        Text(
-                                            text = "Yesterday Total Paper ${paperr.previous_paper_count}, @ ₹${paperr.previous_price}",
-                                            color = Color.Gray,
-                                            fontSize = 10.sp
-                                        )
-                                        // Text(text = "Yesterday Total Paper ${paperr.previous_paper_count} (Subscription 300)", color = Color.Gray, fontSize = 10.sp)
-                                    }
+                                Spacer(modifier = Modifier.height(7.dp))
 
-                                    Box(
-                                        modifier = Modifier
-                                            .wrapContentHeight()
-                                            .fillMaxWidth(), contentAlignment = Alignment.TopEnd
-                                    ) {
-                                        Surface(
-                                            modifier = Modifier.wrapContentSize()
-                                                .padding(horizontal = 15.dp), color = Color.White
-                                        ) {
-
-
-                                            var value by remember(price) {
-                                                mutableStateOf(price)
+                                Column(modifier = Modifier.padding(top = 10.dp)) {
+                                LazyColumn(
+                                    modifier = Modifier
+                                        .height(125.dp)
+                                        .fillMaxWidth()
+                                ) {
+                                    itemsIndexed(items = paperList) { index, paperr ->
+                                        Row(Modifier.wrapContentHeight()) {
+                                            Column(
+                                                modifier = Modifier
+                                                    .wrapContentSize()
+                                                    .align(Alignment.CenterVertically)
+                                                    .padding(13.dp, 0.dp, 0.dp, 0.dp)
+                                            ) {
+                                                Text(text = paperr.value, color = Color.DarkGray)
+                                                Text(
+                                                    text = "Yesterday Total Paper ${paperr.previous_paper_count}, @ ₹${paperr.previous_price}",
+                                                    color = Color.Gray,
+                                                    fontSize = 10.sp
+                                                )
+                                                // Text(text = "Yesterday Total Paper ${paperr.previous_paper_count} (Subscription 300)", color = Color.Gray, fontSize = 10.sp)
                                             }
 
-
-                                            BasicTextField(
-                                                value = value,
-                                                onValueChange = {
-                                                    value = it
-                                                    onReturnPriceChange(value, index, paperr.previous_price)
-                                                    viewModel.calculateReturnPapersPrice()
-                                                   // viewModel.calculateTakenMinusReturnPaperTotal()
-                                                                },
-                                                keyboardOptions = KeyboardOptions(
-                                                    imeAction = ImeAction.Done,
-                                                    keyboardType = KeyboardType.Number
-                                                ),
-                                                maxLines = 1,
+                                            Box(
                                                 modifier = Modifier
-                                                    .width(80.dp)
-                                                    .height(37.dp),
-                                                textStyle = TextStyle.Default.copy(fontSize = 17.sp)
+                                                    .wrapContentHeight()
+                                                    .fillMaxWidth(),
+                                                contentAlignment = Alignment.TopEnd
                                             ) {
-                                                TextFieldDefaults.OutlinedTextFieldDecorationBox(
-                                                    value = value,
-                                                    innerTextField = it,
-                                                    enabled = true,
-                                                    singleLine = true,
-                                                    visualTransformation = VisualTransformation.None,
-                                                    interactionSource = MutableInteractionSource(),
-                                                    contentPadding = PaddingValues(all = 4.dp),
-                                                    colors = textFieldColors(backgroundColor = Color.White)
-                                                )
+                                                Surface(
+                                                    modifier = Modifier
+                                                        .wrapContentSize()
+                                                        .padding(horizontal = 15.dp),
+                                                    color = Color.White
+                                                ) {
+
+                                                    var value by remember(price) {
+                                                        mutableStateOf(price)
+                                                    }
+                                                    BasicTextField(
+                                                        value = value,
+                                                        onValueChange = {
+                                                            value = it
+                                                            onReturnPriceChange(value,index,paperr.previous_price)
+                                                            //viewModel.calculateReturnPapersPrice()
+                                                            // viewModel.calculateTakenMinusReturnPaperTotal()
+                                                        },
+                                                        keyboardOptions = KeyboardOptions(
+                                                            imeAction = ImeAction.Done,
+                                                            keyboardType = KeyboardType.Number
+                                                        ),
+                                                        maxLines = 1,
+                                                        modifier = Modifier
+                                                            .width(80.dp)
+                                                            .height(37.dp),
+                                                        textStyle = TextStyle.Default.copy(fontSize = 17.sp)
+                                                    ) {
+                                                        TextFieldDefaults.OutlinedTextFieldDecorationBox(
+                                                            value = value,
+                                                            innerTextField = it,
+                                                            enabled = true,
+                                                            singleLine = true,
+                                                            visualTransformation = VisualTransformation.None,
+                                                            interactionSource = MutableInteractionSource(),
+                                                            contentPadding = PaddingValues(all = 4.dp),
+                                                            colors = textFieldColors(backgroundColor = Color.White)
+                                                        )
+                                                    }
+                                                }
                                             }
                                         }
+                                        Spacer(modifier = Modifier.height(7.dp))
                                     }
-                                }
-                                Spacer(modifier = Modifier.height(7.dp))
-                            }
 
-                        }
-                        Spacer(modifier = Modifier.height(10.dp))
+
+                                }//lazy column
+                                Spacer(modifier = Modifier.height(10.dp))
+                                    Divider(color = Color.LightGray, thickness = 0.8.dp, modifier = Modifier.padding(bottom = 5.dp))
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.SpaceBetween // Control the header Alignment over here.
+                                    ) {
+
+                                        if (paperList.isNotEmpty()) {
+                                            val returnValues =
+                                                viewModel.returnPapers.collectAsState().value
+                                            Text(
+                                                text = if (returnValues.sum() != 0) "Total Return Price = ₹${returnValues.sum()}"
+                                                    else "Total Return Price = ₹0",
+                                                color = Color.DarkGray, // Header Color
+                                                fontSize = 15.sp,
+                                                textAlign = TextAlign.Start,
+                                                fontWeight = FontWeight.Normal,
+                                                modifier = Modifier
+                                                    .weight(.9f)
+                                                    .padding(start = 8.dp)
+                                            )
+                                        }
+                                    }
+                                    Spacer(modifier = Modifier.height(10.dp))
+
+                            }//column
                     }
 
 
@@ -219,6 +248,9 @@ fun ExpandableCard(
 
         }
     }
+
+
+
 
 
                 }

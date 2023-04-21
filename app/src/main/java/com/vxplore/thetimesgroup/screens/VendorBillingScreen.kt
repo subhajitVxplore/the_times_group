@@ -3,15 +3,12 @@
 package com.vxplore.thetimesgroup.screens
 
 import android.app.Activity
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.*
-import androidx.compose.animation.core.MutableTransitionState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
@@ -28,13 +25,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.vxplore.core.domain.model.Paper
-import com.vxplore.core.domain.model.SearchVendor
 import com.vxplore.thetimesgroup.R
 import com.vxplore.thetimesgroup.custom_views.*
 import com.vxplore.thetimesgroup.ui.theme.DonutGreenLight
@@ -111,23 +104,43 @@ fun VendorBillingScreen(
                         .verticalScroll(rememberScrollState())
                         .weight(1f)
                 ) {
-                    showPapersTakenList( viewModel.circleLoading.value,viewModel.paperss.collectAsState().value, viewModel) { value2, index, value1 ->
+                    showPapersTakenList(
+                        viewModel.circleLoading.value,
+                        viewModel.paperss.collectAsState().value,
+                        viewModel
+                    ) { value2, index, value1 ->
                         try {
-                           // viewModel.takenPapers[index] =Pair(first = value1, second = value2.toInt())
-                            viewModel.takenPapers.add(index, Pair(first = value1, second = value2.toInt()))
+                            // viewModel.takenPapers[index] =Pair(first = value1, second = value2.toInt())
+                            Log.d("TESTING", "value1 $value1 value2 $value2")
+                            //viewModel.takenPapers.add(index, Pair(first = value1, second = value2.toInt()))
+                            viewModel.calculateTakenPapersPrice(value1, value2.toInt(), index)
+                        } catch (e: NumberFormatException) {
+                            viewModel.calculateTakenPapersPrice(value1, 0, index)
+                            println(e)
                         } catch (e: Exception) {
                             println(e)
                         }
                     }
                     Spacer(modifier = Modifier.height(7.dp))
 
-                    ExpandableCard( viewModel.circleLoading.value,"Returns",viewModel.paperss.collectAsState().value,viewModel){ value2, index, value1 ->
+                    val paperssListing = viewModel.paperss.collectAsState().value
+                    if (paperssListing.isNotEmpty()) {
+                    ExpandableCard(
+                        viewModel.circleLoading.value,
+                        "Returns",
+                        viewModel.paperss.collectAsState().value,
+                        viewModel
+                    ) { value2, index, value1 ->
                         try {
-                            viewModel.returnPapers.add(index, Pair(first = value1, second = value2.toInt()))
+                            viewModel.calculateReturnPapersPrice(value1, value2.toInt(), index)
+                        } catch (e: NumberFormatException) {
+                            viewModel.calculateReturnPapersPrice(value1, 0, index)
+                            println(e)
                         } catch (e: Exception) {
                             println(e)
                         }
                     }
+                }
 
 
                 }
@@ -157,7 +170,9 @@ fun VendorBillingScreen(
                                         .align(Alignment.CenterVertically)
                                 ) {
                                     Text(
-                                         text = "₹${viewModel.takenMinusreturnPaperTotal.value}",
+                                        text = "₹${viewModel.takenMinusreturnPaperTotal.value}",
+                                       //  text = "₹${viewModel.takenPapersTotal.value}",
+                                        //   text = "₹",
                                         style = MaterialTheme.typography.h5,
                                         color = Color.Black,
                                         fontWeight = FontWeight.Bold,
@@ -243,8 +258,11 @@ fun VendorBillingScreen(
                                     .fillMaxWidth()
                             ) {
                                 Row(Modifier.wrapContentSize()) {
+
                                     Text(
-                                        text = "Coupons",
+                                        text ="Coupons:",
+//                                        text = if (viewModel.couponsTotal.value != 0) "Total Coupon Price = ₹${viewModel.couponsTotal.value}"
+//                                               else "Coupons:",
                                         color = Color.DarkGray,
                                         modifier = Modifier
                                             .wrapContentSize()
@@ -263,10 +281,11 @@ fun VendorBillingScreen(
                                     Column(Modifier.weight(1f, true)) {
                                         HorizontalScrollableCoupon(viewModel.couponss.collectAsState().value, viewModel,
                                             onPriceChange = { value, index, multi ->
-                                                // viewModel.coupons[index] = value.toInt()
                                                 try {
-                                                    //viewModel.coupons[index] =Pair(first = multi, second = value.toInt())
-                                                    viewModel.coupons.add(index, Pair(first = multi, second = value.toInt()))
+                                                    viewModel.calculateCouponPrice(multi, value.toInt(), index)
+                                                } catch (e: NumberFormatException) {
+                                                    viewModel.calculateCouponPrice(multi, 0, index)
+                                                    println(e)
                                                 } catch (e: Exception) {
                                                     println(e)
                                                 }
@@ -413,24 +432,24 @@ fun VendorBillingScreen(
         }
     }
 
-    LaunchedEffect(viewModel.takenPaperTotal.value,viewModel.returnPaperTotal.value,viewModel.takenMinusreturnPaperTotal.value){
-        if (viewModel.takenPaperTotal.value > 0) {
-            viewModel.takenMinusreturnPaperTotal.value =
-                viewModel.takenPaperTotal.value - viewModel.returnPaperTotal.value
-        }
+    LaunchedEffect(viewModel.takenPapersTotal.value,viewModel.returnsTotal.value){
+        viewModel.takenMinusreturnPaperTotal.value=viewModel.takenPapersTotal.value - viewModel.returnsTotal.value
+        //viewModel.takenPapersTotal.value=0
     }
 
-    LaunchedEffect(viewModel.cashPayment.value,viewModel.couponTotal.value,viewModel.cashMinusCouponTotal.value){
-            viewModel.cashMinusCouponTotal.value =
-                viewModel.cashPayment.value + viewModel.couponTotal.value
+    LaunchedEffect(viewModel.cashPayment.value,viewModel.couponsTotal.value){
+            viewModel.cashMinusCouponTotal.value =viewModel.cashPayment.value + viewModel.couponsTotal.value
+
     }
 
-    LaunchedEffect(viewModel.takenMinusreturnPaperTotal.value,viewModel.cashMinusCouponTotal.value,viewModel.currentDue.value){
+  LaunchedEffect(viewModel.takenMinusreturnPaperTotal.value,viewModel.cashMinusCouponTotal.value,viewModel.currentDue.value){
         if (viewModel.takenMinusreturnPaperTotal.value > 0) {
             viewModel.currentDue.value =
                 viewModel.takenMinusreturnPaperTotal.value - viewModel.cashMinusCouponTotal.value
         }
     }
+
+
 }
 
 
