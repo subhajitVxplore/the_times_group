@@ -223,6 +223,10 @@ class BillingScreenViewModel @Inject constructor(
         _couponss.update { emptyList() }
         searchVendorQuery = ""
         takenMinusreturnPaperTotal.value=0
+        cashPayment.value=0
+        couponsTotal.value=0
+        cashMinusCouponTotal.value=0
+        currentDue.value=0
         suggestionListVisibility = false
         viewModelScope.launch {
             suggestionsBackup.apply {

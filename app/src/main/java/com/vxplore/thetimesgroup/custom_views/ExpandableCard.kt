@@ -15,9 +15,11 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.ExposedDropdownMenuDefaults.textFieldColors
 import androidx.compose.material.icons.Icons
@@ -130,12 +132,13 @@ fun ExpandableCard(
                                 Spacer(modifier = Modifier.height(7.dp))
 
                                 Column(modifier = Modifier.padding(top = 10.dp)) {
-                                LazyColumn(
+                                Column(
                                     modifier = Modifier
-                                        .height(125.dp)
-                                        .fillMaxWidth()
+                                        .height(120.dp)
+                                        .fillMaxWidth().verticalScroll(rememberScrollState())
                                 ) {
-                                    itemsIndexed(items = paperList) { index, paperr ->
+                                    //itemsIndexed(items = paperList) { index, paperr ->
+                                    for ((index, paperr) in paperList.withIndex()) {
                                         Row(Modifier.wrapContentHeight()) {
                                             Column(
                                                 modifier = Modifier

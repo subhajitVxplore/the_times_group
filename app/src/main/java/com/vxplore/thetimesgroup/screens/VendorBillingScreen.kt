@@ -442,10 +442,10 @@ fun VendorBillingScreen(
 
     }
 
-  LaunchedEffect(viewModel.takenMinusreturnPaperTotal.value,viewModel.cashMinusCouponTotal.value,viewModel.currentDue.value){
+  LaunchedEffect(viewModel.takenMinusreturnPaperTotal.value,viewModel.cashMinusCouponTotal.value,viewModel.previousDue.value){
         if (viewModel.takenMinusreturnPaperTotal.value > 0) {
-            viewModel.currentDue.value =
-                viewModel.takenMinusreturnPaperTotal.value - viewModel.cashMinusCouponTotal.value
+            viewModel.currentDue.value =viewModel.previousDue.value.plus(viewModel.takenMinusreturnPaperTotal.value - viewModel.cashMinusCouponTotal.value)
+
         }
     }
 

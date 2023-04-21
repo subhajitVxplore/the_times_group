@@ -124,27 +124,6 @@ fun showPapersTakenList(
                     Spacer(modifier = Modifier.height(7.dp))
                 }//for loop
 
-//                val takenValues = viewModel.takenPapers.collectAsState().value
-//
-//                if (paperList.isNotEmpty()) {
-//                    Button(
-//                        onClick = {},
-////                        onClick = viewModel::onPressTakenPaperCalculate,
-//                        shape = RoundedCornerShape(5.dp), modifier = Modifier
-//                            .fillMaxWidth()
-//                            .padding(horizontal = 15.dp)
-//                            .height(40.dp),
-//                        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Black),
-//                        enabled = takenValues.sum() != 0
-//                    ) {
-//                        Text(
-//                            text = if (takenValues.sum() != 0) takenValues.sum().toString() else "0",
-//                            color = Color.White,
-//                            fontSize = 15.sp,
-//                        )
-//                    }
-//                }
-               //--------------//
                 if (paperList.isNotEmpty()) {
                     Card(
                         shape = RoundedCornerShape(bottomStart = 5.dp, bottomEnd = 5.dp),
