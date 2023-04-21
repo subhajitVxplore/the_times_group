@@ -44,22 +44,10 @@ class BillingScreenViewModel @Inject constructor(
     private val _couponss = MutableStateFlow(emptyList<Coupon>())
     val couponss = _couponss.asStateFlow()
 
-    // var takenPapers = MutableList<Pair<Int, Int>>(paperssListSize.value) { Pair(0, 0) }
     val takenPapers = MutableStateFlow(mutableListOf<Int>())
-    var takenPaperTotal = mutableStateOf(0)
-    var eachPaperTotal = mutableStateOf(0)
     val returnPapers = MutableStateFlow(mutableListOf<Int>())
-   // lateinit var returnPapers: MutableList<Int>
-    var eachReturnPaperTotal = mutableStateOf(0)
-    var returnPaperTotal = mutableStateOf(0)
     var takenMinusreturnPaperTotal = mutableStateOf(0)
-    //var coupons = MutableList<Pair<Int, Int>>(getPersonAge().size) { Pair(0, 0) }
-    //lateinit var coupons: MutableList<Pair<Int, Int>>
     val coupons = MutableStateFlow(mutableListOf<Int>())
-
-
-    var eachCouponTotal = mutableStateOf(0)
-    var couponTotal = mutableStateOf(0)
     var cashMinusCouponTotal = mutableStateOf(0)
 
     private val _suggestionsss: MutableStateFlow<List<SearchVendorModel>> =
@@ -77,44 +65,11 @@ class BillingScreenViewModel @Inject constructor(
         // getPapersByVendorId(" ")
     }
 
-//    fun calculateCurrentDue() {
-//        if ((takenPaperTotal.value != 0) or (cashPayment.value != 0) or (couponTotal.value != 0)) {
-//            currentDue.value += ((takenPaperTotal.value - cashPayment.value) - couponTotal.value)
-//        } else {
-//
-//        }
-//    }
-
 
     val takenPapersTotal = mutableStateOf(0)
     val returnsTotal = mutableStateOf(0)
     val couponsTotal = mutableStateOf(0)
 
-//    @OptIn(ExperimentalCoroutinesApi::class)
-//    fun onPressTakenPaperCalculate() {
-//        viewModelScope.launch {
-//            takenPapers.mapLatest {
-//                it.sum()
-//            }.collectLatest {
-//                takenPapersTotal.value = it
-//            }
-//        }
-//    }
-
-
-//    @OptIn(ExperimentalCoroutinesApi::class)
-//    fun onPressReturnsTotal() {
-//
-//        viewModelScope.launch {
-//            returnPapers.mapLatest {
-//                it.sum()
-//            }.collectLatest {
-//                returnsTotal.value=it
-//            }
-//
-//        }
-//
-//    }
     fun calculateTakenPapersPrice(value1: Int, value2: Int, index: Int) {
         takenPapers.update {values->
             values[index] = value1 * value2
@@ -140,15 +95,6 @@ class BillingScreenViewModel @Inject constructor(
         }
     }
 
-//    fun calculateCoupon() {
-//        couponTotal.value = 0
-//        coupons.forEach {
-//            eachCouponTotal.value = it.first * it.second
-//            couponTotal.value += eachCouponTotal.value
-//        }
-//        //  coupons.clear()
-//
-//    }
 
     fun onBillingToAddVendor() {
         appNavigator.tryNavigateTo(
@@ -227,6 +173,7 @@ class BillingScreenViewModel @Inject constructor(
         couponsTotal.value=0
         cashMinusCouponTotal.value=0
         currentDue.value=0
+        expand.value = false
         suggestionListVisibility = false
         viewModelScope.launch {
             suggestionsBackup.apply {

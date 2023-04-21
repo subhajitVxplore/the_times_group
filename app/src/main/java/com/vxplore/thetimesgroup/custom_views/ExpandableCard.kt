@@ -68,7 +68,7 @@ fun ExpandableCard(
                             easing = LinearOutSlowInEasing
                         )
                     )
-                    .padding(8.dp),
+                    .padding(15.dp),
                 backgroundColor = Color.White,
                 shape = RoundedCornerShape(8.dp),
                 border = BorderStroke(viewModel.stroke.value.dp, Color.Gray),
@@ -104,8 +104,9 @@ fun ExpandableCard(
                                 .rotate(rotationState)
                                 .weight(.1f),
                             onClick = {
-                                viewModel.expand.value = !viewModel.expand.value
-                                viewModel.stroke.value = if (viewModel.expand.value) 2 else 1
+                                viewModel.expand.value = true
+//                                viewModel.expand.value = !viewModel.expand.value
+//                                viewModel.stroke.value = if (viewModel.expand.value) 2 else 1
                             }
                         ) {
                             Icon(
@@ -134,8 +135,9 @@ fun ExpandableCard(
                                 Column(modifier = Modifier.padding(top = 10.dp)) {
                                 Column(
                                     modifier = Modifier
-                                        .height(120.dp)
-                                        .fillMaxWidth().verticalScroll(rememberScrollState())
+                                        //.height(120.dp)
+                                        .fillMaxWidth()
+                                        //.verticalScroll(rememberScrollState())
                                 ) {
                                     //itemsIndexed(items = paperList) { index, paperr ->
                                     for ((index, paperr) in paperList.withIndex()) {

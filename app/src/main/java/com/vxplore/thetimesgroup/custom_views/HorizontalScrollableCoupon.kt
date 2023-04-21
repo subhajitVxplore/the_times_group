@@ -51,7 +51,7 @@ fun HorizontalScrollableCoupon(
                             modifier = Modifier
                                 .fillMaxHeight()
                                 .wrapContentWidth()
-                                .padding(horizontal = 10.dp)
+                                .padding(horizontal = 5.dp)
                         ) {
                             Row(
                                 modifier = Modifier
