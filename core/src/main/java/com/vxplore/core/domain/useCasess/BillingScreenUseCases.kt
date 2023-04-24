@@ -1,6 +1,7 @@
 package com.vxplore.core.domain.useCasess
 
 import android.util.Log
+import androidx.compose.ui.platform.LocalContext
 import com.vxplore.core.common.*
 import com.vxplore.core.domain.model.Command
 import com.vxplore.core.domain.model.GenerateBillDataRequestModel
@@ -93,6 +94,7 @@ class BillingScreenUseCases @Inject constructor(
 
 
     fun generateBillByJson(rawJson: GenerateBillDataRequestModel) = flow {
+
         emit(Data(EmitType.Loading, true))
         when (val response = generateBillRepository.generateBillRepository(rawJson)) {
             is Resource.Success -> {
@@ -101,7 +103,7 @@ class BillingScreenUseCases @Inject constructor(
                     when (status) {
                         true -> {
                             emit(Data(EmitType.IS_ADDED, value = isAdded))
-                            emit(Data(EmitType.PDF_URL, value = pdfUrl))
+                            emit(Data(EmitType.PDF_URL, value = pdfData))
                             emit(Data(type = EmitType.INFORM, value = message))
                         }
                         else -> {

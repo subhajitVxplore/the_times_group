@@ -3,9 +3,6 @@
 package com.vxplore.thetimesgroup.screens
 
 import android.app.Activity
-import android.content.ActivityNotFoundException
-import android.content.Context
-import android.content.Intent
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.*
@@ -30,18 +27,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
-import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.vxplore.thetimesgroup.R
 import com.vxplore.thetimesgroup.custom_views.*
 import com.vxplore.thetimesgroup.mainController.MainActivity
 import com.vxplore.thetimesgroup.ui.theme.DonutGreenLight
-import com.vxplore.thetimesgroup.ui.theme.GreenLight
 import com.vxplore.thetimesgroup.ui.theme.GreyLight
 import com.vxplore.thetimesgroup.ui.theme.PinkLight
-import com.vxplore.thetimesgroup.utility.ItemFile
-import com.vxplore.thetimesgroup.utility.MyFileModel
 import com.vxplore.thetimesgroup.viewModels.BillingScreenViewModel
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalAnimationApi::class)
@@ -397,7 +389,7 @@ fun VendorBillingScreen(
                 }
        //----------------Generate Bill Button Layout-------------------//
                 val context = LocalContext.current as MainActivity
-                context.ShowItemFileLayout(context = context)
+                context.ShowItemFileLayout(viewModel,context = context)
                 Spacer(modifier = Modifier.height(10.dp))
 
             }//column

@@ -11,6 +11,7 @@ import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -26,17 +27,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.net.toUri
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.vxplore.thetimesgroup.R
 import com.vxplore.thetimesgroup.ui.theme.GreenLight
+import com.vxplore.thetimesgroup.viewModels.BillingScreenViewModel
 import java.io.File
 import java.io.FileOutputStream
 import java.net.URL
@@ -190,27 +194,34 @@ data class MyFileModel(
 )
 @Composable
 fun ItemFile(
+    viewModel: BillingScreenViewModel,
     file: MyFileModel,
     startDownload:(MyFileModel) -> Unit,
     openFile:(MyFileModel) -> Unit
 ) {
+    val context= LocalContext.current
     Button(
         //contentAlignment = Alignment.Center,
         onClick = {
-            if (!file.isDownloading) {
-                if (file.downloadedUri.isNullOrEmpty()) {
-                    startDownload(file)
-                } else {
-                    openFile(file)
-                }
-            }
+            viewModel.generateBillByJson()
+            Toast.makeText(context, "hello:="+viewModel.pdfUrl.value, Toast.LENGTH_SHORT).show()
+
+
+//            if (!file.isDownloading) {
+//                if (file.downloadedUri.isNullOrEmpty()) {
+//                    startDownload(file)
+//                } else {
+//                    openFile(file)
+//                }
+//            }
         },
         colors = ButtonDefaults.buttonColors(backgroundColor = GreenLight),
         shape = RoundedCornerShape(5.dp),
 
        // colorFilter = ColorFilter.tint(Color.Black),
         modifier = Modifier
-            .fillMaxWidth().height(50.dp)
+            .fillMaxWidth()
+            .height(50.dp)
 
     ) {
         Row(

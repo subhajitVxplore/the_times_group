@@ -5,7 +5,7 @@ data class GenerateBillDataRequestModel(
     val calculated_price: Int,
     val payment_by_cash: Int,
     val due_amount: Int,
-    val coupons: List<SendCoupons>,
+    val coupons: List<Coupon>,
     val today_papers: List<SendTodayPapers>,
     val return_papers: List<SendReturnPapers>,
 
@@ -16,10 +16,10 @@ data class SendCoupons(
 )
 
 data class SendTodayPapers(
-    val key: String,
+    var key: String,
     val value: Int,
 )
 data class SendReturnPapers(
-    val key: String,
+    var key: String,
     val value: Int,
 )

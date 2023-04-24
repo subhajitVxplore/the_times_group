@@ -34,6 +34,7 @@ import com.vxplore.thetimesgroup.utility.FileDownloadWorker
 import com.vxplore.thetimesgroup.utility.ItemFile
 import com.vxplore.thetimesgroup.utility.MyFileModel
 import com.vxplore.thetimesgroup.viewModels.BaseViewModel
+import com.vxplore.thetimesgroup.viewModels.BillingScreenViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -148,9 +149,11 @@ fun startDownloadingFile(
 }
 //-------------------------------------------------------------------------
 @Composable
-fun ShowItemFileLayout(context: Context) {
+fun ShowItemFileLayout(viewModel: BillingScreenViewModel, context: Context) {
     Column(
-        modifier = Modifier.wrapContentSize().padding(horizontal = 15.dp),
+        modifier = Modifier
+            .wrapContentSize()
+            .padding(horizontal = 15.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -160,7 +163,8 @@ fun ShowItemFileLayout(context: Context) {
                     id = "10",
                     name = "Pdf File 10 MB",
                     type = "PDF",
-                    url = "https://www.learningcontainer.com/wp-content/uploads/2019/09/sample-pdf-download-10-mb.pdf",
+                    url = viewModel.pdfUrl.value,
+                    //url = "https://www.learningcontainer.com/wp-content/uploads/2019/09/sample-pdf-download-10-mb.pdf",
                     downloadedUri = null
                 )
             )
@@ -200,7 +204,8 @@ fun ShowItemFileLayout(context: Context) {
                 } catch (e: ActivityNotFoundException) {
                     Toast.makeText(context, "Can't open Pdf", Toast.LENGTH_SHORT).show()
                 }
-            }
+            },
+            viewModel = viewModel
         )
     }
 }

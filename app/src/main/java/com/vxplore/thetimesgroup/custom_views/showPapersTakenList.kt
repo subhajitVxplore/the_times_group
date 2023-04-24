@@ -88,7 +88,9 @@ fun showPapersTakenList(
                                 onValueChange = {
                                     value = it
                                     onPriceChange(value, index, paperr.todays_price)
-                                    //price=""
+                                    viewModel.takenPapersKey.forEach{
+                                        it.key=paperr.key
+                                    }
                                 },
                                 keyboardOptions = KeyboardOptions(
                                     imeAction = ImeAction.Done,

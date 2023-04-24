@@ -174,8 +174,9 @@ fun ExpandableCard(
                                                         onValueChange = {
                                                             value = it
                                                             onReturnPriceChange(value,index,paperr.previous_price)
-                                                            //viewModel.calculateReturnPapersPrice()
-                                                            // viewModel.calculateTakenMinusReturnPaperTotal()
+                                                            viewModel.returnPapersKey.forEach{
+                                                                it.key=paperr.key
+                                                            }
                                                         },
                                                         keyboardOptions = KeyboardOptions(
                                                             imeAction = ImeAction.Done,
@@ -240,7 +241,7 @@ fun ExpandableCard(
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator(
                     modifier = Modifier
-//                        .size(width = screenWidth * 0.15f, height = screenHeight * 0.15f)
+//                      .size(width = screenWidth * 0.15f, height = screenHeight * 0.15f)
                         .padding(40.dp),
                     color = GreenLight,
                     strokeWidth = 5.dp,

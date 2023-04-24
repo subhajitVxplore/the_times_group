@@ -31,7 +31,7 @@ class BillingScreenViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-   //val mainActivity:MainActivity = TODO()
+    //val mainActivity:MainActivity = TODO()
     //val mainActivity = mutableStateOf<MainActivity>()
     var expand = mutableStateOf(false)  // Expand State
     var stroke = mutableStateOf(1)
@@ -65,6 +65,13 @@ class BillingScreenViewModel @Inject constructor(
 
     val toastError = mutableStateOf("")
 
+    var vendorId by mutableStateOf("")
+
+    // lateinit var takenPapersKey: List<SendTodayPapers>
+    //val takenPapersKey = MutableStateFlow(mutableListOf<SendTodayPapers>())
+    var takenPapersKey: List<SendTodayPapers> = emptyList()
+    var returnPapersKey: List<SendReturnPapers> = emptyList()
+
     init {
         currentDue.value = previousDue.value
         // getPapersByVendorId(" ")
@@ -75,7 +82,7 @@ class BillingScreenViewModel @Inject constructor(
     val couponsTotal = mutableStateOf(0)
 
     fun calculateTakenPapersPrice(value1: Int, value2: Int, index: Int) {
-        takenPapers.update {values->
+        takenPapers.update { values ->
             values[index] = value1 * value2
             takenPapersTotal.value = values.sum()
             values
@@ -84,17 +91,17 @@ class BillingScreenViewModel @Inject constructor(
     }
 
     fun calculateReturnPapersPrice(value1: Int, value2: Int, index: Int) {
-        returnPapers.update {values->
+        returnPapers.update { values ->
             values[index] = value1 * value2
-            returnsTotal.value=values.sum()
+            returnsTotal.value = values.sum()
             values
         }
     }
 
     fun calculateCouponPrice(value1: Int, value2: Int, index: Int) {
-        coupons.update {values->
-            values[index] = values[index].copy(value = value1*value2)
-            couponsTotal.value=values.sumOf { it.value }
+        coupons.update { values ->
+            values[index] = values[index].copy(value = value1 * value2)
+            couponsTotal.value = values.sumOf { it.value }
             values
         }
     }
@@ -133,7 +140,8 @@ class BillingScreenViewModel @Inject constructor(
                             takenPapers.update {
                                 MutableList(papers.size) { 0 }
                             }
-                            returnPapers .update {
+
+                            returnPapers.update {
                                 MutableList(papers.size) { 0 }
                             }
                         }
@@ -142,7 +150,7 @@ class BillingScreenViewModel @Inject constructor(
                         it.value?.castListToRequiredTypes<Coupon>()?.let { coupon ->
                             _couponss.update { coupon }
                             coupons.update {
-                                MutableList(coupon.size) {idx->
+                                MutableList(coupon.size) { idx ->
                                     Coupon(key = coupon[idx].key, value = 0)
                                 }
                             }
@@ -174,11 +182,11 @@ class BillingScreenViewModel @Inject constructor(
         _paperss.update { emptyList() }
         _couponss.update { emptyList() }
         searchVendorQuery = ""
-        takenMinusreturnPaperTotal.value=0
-        cashPayment.value=0
-        couponsTotal.value=0
-        cashMinusCouponTotal.value=0
-        currentDue.value=0
+        takenMinusreturnPaperTotal.value = 0
+        cashPayment.value = 0
+        couponsTotal.value = 0
+        cashMinusCouponTotal.value = 0
+        currentDue.value = 0
         expand.value = false
         suggestionListVisibility = false
         viewModelScope.launch {
@@ -219,20 +227,35 @@ class BillingScreenViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    fun generateBillByJson(rawJson: GenerateBillDataRequestModel) {
-        billingScreenUseCases.generateBillByJson(rawJson)
+    fun generateBillByJson() {
+
+        val rawJsonData = GenerateBillDataRequestModel(
+            vendor_id = vendorId,
+            calculated_price = takenMinusreturnPaperTotal.value,
+            payment_by_cash = cashPayment.value,
+            due_amount = currentDue.value,
+            coupons = coupons.value.toList(),//as same class name in both two model classes(PapersByVendorIdModel & GenerateBillDataRequestModel)
+            today_papers = takenPapersKey,
+            return_papers = returnPapersKey
+        )
+
+
+
+
+        billingScreenUseCases.generateBillByJson(rawJsonData)
             .flowOn(Dispatchers.IO)
             .onEach {
                 when (it.type) {
 
                     EmitType.IS_ADDED -> {
-                        it.value?.castValueToRequiredTypes<Boolean>()?.let {it
-                            isAddedBillData.value=it
+                        it.value?.castValueToRequiredTypes<Boolean>()?.let {
+                            it
+                            isAddedBillData.value = it
                         }
                     }
                     EmitType.PDF_URL -> {
                         it.value?.castValueToRequiredTypes<String>()?.let {
-                            pdfUrl.value= it
+                            pdfUrl.value = it
                         }
                     }
 
