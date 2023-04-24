@@ -93,77 +93,74 @@ class MainActivity : ComponentActivity() {
         }
     }
 //------------------------------------------------------
-    fun startDownloadingFile(
-        file: MyFileModel,
-        success:(String) -> Unit,
-        failed:(String) -> Unit,
-        running:() -> Unit
-    ) {
-        val data = Data.Builder()
-        val workManager = WorkManager.getInstance(this)
+fun startDownloadingFile(
+    file: MyFileModel,
+    success:(String) -> Unit,
+    failed:(String) -> Unit,
+    running:() -> Unit
+) {
+    val data = Data.Builder()
+    val workManager = WorkManager.getInstance(this)
 
-        data.apply {
-            putString(FileDownloadWorker.FileParams.KEY_FILE_NAME, file.name)
-            putString(FileDownloadWorker.FileParams.KEY_FILE_URL, file.url)
-            putString(FileDownloadWorker.FileParams.KEY_FILE_TYPE, file.type)
-        }
+    data.apply {
+        putString(FileDownloadWorker.FileParams.KEY_FILE_NAME, file.name)
+        putString(FileDownloadWorker.FileParams.KEY_FILE_URL, file.url)
+        putString(FileDownloadWorker.FileParams.KEY_FILE_TYPE, file.type)
+    }
 
-        val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .setRequiresStorageNotLow(true)
-            .setRequiresBatteryNotLow(true)
-            .build()
+    val constraints = Constraints.Builder()
+        .setRequiredNetworkType(NetworkType.CONNECTED)
+        .setRequiresStorageNotLow(true)
+        .setRequiresBatteryNotLow(true)
+        .build()
 
-        val fileDownloadWorker = OneTimeWorkRequestBuilder<FileDownloadWorker>()
-            .setConstraints(constraints)
-            .setInputData(data.build())
-            .build()
+    val fileDownloadWorker = OneTimeWorkRequestBuilder<FileDownloadWorker>()
+        .setConstraints(constraints)
+        .setInputData(data.build())
+        .build()
 
 
-        workManager.enqueueUniqueWork(
-            "oneFileDownloadWork_${System.currentTimeMillis()}",
-            ExistingWorkPolicy.KEEP,
-            fileDownloadWorker
-        )
+    workManager.enqueueUniqueWork(
+        "oneFileDownloadWork_${System.currentTimeMillis()}",
+        ExistingWorkPolicy.KEEP,
+        fileDownloadWorker
+    )
 
-        workManager.getWorkInfoByIdLiveData(fileDownloadWorker.id)
-            .observe(this){ info->
-                info?.let {
-                    when (it.state) {
-                        WorkInfo.State.SUCCEEDED -> {
-                            success(it.outputData.getString(FileDownloadWorker.FileParams.KEY_FILE_URI) ?: "")
-                        }
-                        WorkInfo.State.FAILED -> {
-                            failed("Downloading failed!")
-                        }
-                        WorkInfo.State.RUNNING -> {
-                            running()
-                        }
-                        else -> {
-                            failed("Something went wrong")
-                        }
+    workManager.getWorkInfoByIdLiveData(fileDownloadWorker.id)
+        .observe(this){ info->
+            info?.let {
+                when (it.state) {
+                    WorkInfo.State.SUCCEEDED -> {
+                        success(it.outputData.getString(FileDownloadWorker.FileParams.KEY_FILE_URI) ?: "")
+                    }
+                    WorkInfo.State.FAILED -> {
+                        failed("Downloading failed!")
+                    }
+                    WorkInfo.State.RUNNING -> {
+                        running()
+                    }
+                    else -> {
+                        failed("Something went wrong")
                     }
                 }
             }
-    }
+        }
+}
 //-------------------------------------------------------------------------
 @Composable
 fun ShowItemFileLayout(context: Context) {
     Column(
-        modifier = Modifier
-            .wrapContentSize()
-            .padding(horizontal = 15.dp),
+        modifier = Modifier.wrapContentSize().padding(horizontal = 15.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         val data = remember {
             mutableStateOf(
                 MyFileModel(
                     id = "10",
-                    name = "Vendor Bill Pdf",
+                    name = "Pdf File 10 MB",
                     type = "PDF",
-                    url = "https://www.v-xplore.com/dev/rohan/toi-ci3/assets/uploads/pdf_bills/fcpfw267vS.pdf",
+                    url = "https://www.learningcontainer.com/wp-content/uploads/2019/09/sample-pdf-download-10-mb.pdf",
                     downloadedUri = null
                 )
             )
@@ -204,8 +201,6 @@ fun ShowItemFileLayout(context: Context) {
                     Toast.makeText(context, "Can't open Pdf", Toast.LENGTH_SHORT).show()
                 }
             }
-
-
         )
     }
 }

@@ -208,24 +208,10 @@ fun ItemFile(
         colors = ButtonDefaults.buttonColors(backgroundColor = GreenLight),
         shape = RoundedCornerShape(5.dp),
 
-
        // colorFilter = ColorFilter.tint(Color.Black),
         modifier = Modifier
             .fillMaxWidth().height(50.dp)
-            //.background(color = GreenLight)
-            //.border(width = 2.dp, color = Color.Blue, shape = RoundedCornerShape(5.dp))\
-            //.clip(RoundedCornerShape(8.dp))
-            //.border(width = 0.dp, color = GreenLight, shape = RoundedCornerShape(15.dp))
-//            .clickable {
-////                if (!file.isDownloading) {
-////                    if (file.downloadedUri.isNullOrEmpty()) {
-////                        startDownload(file)
-////                    } else {
-////                        openFile(file)
-////                    }
-////                }
-//            }
-            //.padding(16.dp)
+
     ) {
         Row(
             modifier = Modifier
@@ -245,20 +231,7 @@ fun ItemFile(
 
                 }
                 Text(text = description,fontSize = 17.sp,color = Color.White, modifier = Modifier.align(Alignment.CenterHorizontally))
-//                Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
-//                    val description = if (file.isDownloading){
-//                        "Downloading..."
-//                    }else{
-//                        if (!(file.downloadedUri.isNullOrEmpty())) openFile(file)
-//                        if (file.downloadedUri.isNullOrEmpty()) "Tap to download the file" else "Tap to open file"
-//
-//                    }
-//                    Text(
-//                        text = description,
-//                        fontSize = 10.sp,
-//                        color = Color.White
-//                    )
-//                }
+
 
             }
 
@@ -276,4 +249,70 @@ fun ItemFile(
     }
 }
 
-
+////////////////////////////////////////
+//@Composable
+//fun ItemFile(
+//    file: MyFileModel,
+//    startDownload:(MyFileModel) -> Unit,
+//    openFile:(MyFileModel) -> Unit
+//) {
+//    Box(
+//        contentAlignment = Alignment.Center,
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .background(color = Color.White)
+//            .border(width = 2.dp, color = Color.Blue, shape = RoundedCornerShape(16.dp))
+//            .clickable {
+//                if (!file.isDownloading){
+//                    if (file.downloadedUri.isNullOrEmpty()){
+//                        startDownload(file)
+//                    }else{
+//                        openFile(file)
+//                    }
+//                }
+//            }
+//            .padding(16.dp)
+//    ) {
+//        Row(
+//            modifier = Modifier
+//                .fillMaxWidth(),
+//            verticalAlignment = Alignment.CenterVertically
+//        ) {
+//            Column(
+//                modifier = Modifier
+//                    .fillMaxWidth(0.8f)
+//            ) {
+//                Text(
+//                    text = file.name,
+//                    //style = Typography.body1,
+//                    color = Color.Black
+//                )
+//
+//                Row {
+//                    val description = if (file.isDownloading){
+//                        "Downloading..."
+//                    }else{
+//                        if (file.downloadedUri.isNullOrEmpty()) "Tap to download the file" else "Tap to open file"
+//                    }
+//                    Text(
+//                        text = description,
+//                        // style = Typography.body2,
+//                        color = Color.DarkGray
+//                    )
+//                }
+//
+//            }
+//
+//            if (file.isDownloading){
+//                CircularProgressIndicator(
+//                    color = Color.Blue,
+//                    modifier = Modifier
+//                        .size(32.dp)
+//                        .align(Alignment.CenterVertically)
+//                )
+//            }
+//
+//        }
+//
+//    }
+//}

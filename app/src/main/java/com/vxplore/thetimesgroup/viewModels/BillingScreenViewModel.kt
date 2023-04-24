@@ -224,13 +224,7 @@ class BillingScreenViewModel @Inject constructor(
             .flowOn(Dispatchers.IO)
             .onEach {
                 when (it.type) {
-//                    EmitType.Loading -> {
-//                        it.value?.apply {
-//                            castValueToRequiredTypes<Boolean>()?.let {
-//                                circleLoading.setValue(it)
-//                            }
-//                        }
-//                    }
+
                     EmitType.IS_ADDED -> {
                         it.value?.castValueToRequiredTypes<Boolean>()?.let {it
                             isAddedBillData.value=it
@@ -239,12 +233,6 @@ class BillingScreenViewModel @Inject constructor(
                     EmitType.PDF_URL -> {
                         it.value?.castValueToRequiredTypes<String>()?.let {
                             pdfUrl.value= it
-                        }
-                    }
-
-                    EmitType.DUE -> {
-                        it.value?.castValueToRequiredTypes<Int>()?.let {
-                            previousDue.value = it
                         }
                     }
 

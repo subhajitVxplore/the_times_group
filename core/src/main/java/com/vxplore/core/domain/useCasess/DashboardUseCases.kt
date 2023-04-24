@@ -98,7 +98,7 @@ class DashboardUseCases @Inject constructor(
                     when (status) {
                         true -> {
                             emit(Data(type = EmitType.PAPER_CODE, value = papers))
-                            emit(Data(type = EmitType.TOTAL_SOLD_PAPER, value = total_sold_papers))
+                            emit(Data(type = EmitType.TOTAL_SOLD_PAPER, value = total_sold_papers.toString()))
                         }
                         else -> {
                             emit(Data(type = EmitType.BackendError, value = message))
