@@ -26,6 +26,8 @@ enum class EmitType {
     PaperSold,
     PaperReturn,
     TodayEachPaperSold,
+    IS_ADDED,
+    PDF_URL,
 
 
 }

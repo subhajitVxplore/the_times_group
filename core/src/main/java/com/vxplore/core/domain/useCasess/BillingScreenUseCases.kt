@@ -3,6 +3,8 @@ package com.vxplore.core.domain.useCasess
 import android.util.Log
 import com.vxplore.core.common.*
 import com.vxplore.core.domain.model.Command
+import com.vxplore.core.domain.model.GenerateBillDataRequestModel
+import com.vxplore.core.domain.repositoriess.GenerateBillRepository
 import com.vxplore.core.domain.repositoriess.PapersByVendorIdRepository
 import com.vxplore.core.domain.repositoriess.SearchVendorRepository
 import com.vxplore.core.helpers.AppStore
@@ -13,6 +15,7 @@ import javax.inject.Inject
 class BillingScreenUseCases @Inject constructor(
     private val searchVendorRepository: SearchVendorRepository,
     private val papersByVendorIdRepository: PapersByVendorIdRepository,
+    private val generateBillRepository: GenerateBillRepository,
     private val pref: AppStore
 ) {
 
@@ -65,6 +68,40 @@ class BillingScreenUseCases @Inject constructor(
                             emit(Data(EmitType.PAPERS, value = papers))
                             emit(Data(EmitType.COUPONS, value = coupons))
                             emit(Data(EmitType.DUE, value = dueAmount))
+                            emit(Data(type = EmitType.INFORM, value = message))
+                        }
+                        else -> {
+                            emit(Data(type = EmitType.BackendError, value = message))
+                        }
+                    }
+                }
+            }
+            is Resource.Error -> {
+                handleFailedResponse(
+                    response = response,
+                    message = response.message,
+                    emitType = EmitType.NetworkError
+                )
+            }
+            else -> {
+
+            }
+
+        }
+    }
+
+
+
+    fun generateBillByJson(rawJson: GenerateBillDataRequestModel) = flow {
+        emit(Data(EmitType.Loading, true))
+        when (val response = generateBillRepository.generateBillRepository(rawJson)) {
+            is Resource.Success -> {
+                emit(Data(EmitType.Loading, false))
+                response.data?.apply {
+                    when (status) {
+                        true -> {
+                            emit(Data(EmitType.IS_ADDED, value = isAdded))
+                            emit(Data(EmitType.PDF_URL, value = pdfUrl))
                             emit(Data(type = EmitType.INFORM, value = message))
                         }
                         else -> {

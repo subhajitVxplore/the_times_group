@@ -38,6 +38,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
 
     private lateinit var requestMultiplePermission: ActivityResultLauncher<Array<String>>
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,6 +74,9 @@ class MainActivity : ComponentActivity() {
                         paddingValues = paddingValues,
                     )
                 }
+
+
+
             }
 //            val context= LocalContext.current
 //            ShowItemFileLayout(context)
@@ -148,7 +152,7 @@ fun ShowItemFileLayout(context: Context) {
     Column(
         modifier = Modifier
             .wrapContentSize()
-            .padding(32.dp),
+            .padding(horizontal = 15.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -157,9 +161,9 @@ fun ShowItemFileLayout(context: Context) {
             mutableStateOf(
                 MyFileModel(
                     id = "10",
-                    name = "Pdf File 10 MB",
+                    name = "Vendor Bill Pdf",
                     type = "PDF",
-                    url = "https://www.learningcontainer.com/wp-content/uploads/2019/09/sample-pdf-download-10-mb.pdf",
+                    url = "https://www.v-xplore.com/dev/rohan/toi-ci3/assets/uploads/pdf_bills/fcpfw267vS.pdf",
                     downloadedUri = null
                 )
             )

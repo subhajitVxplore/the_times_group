@@ -1,7 +1,11 @@
 package com.vxplore.thetimesgroup.mainController
 
 import com.vxplore.core.domain.model.*
+import okhttp3.RequestBody
+import okhttp3.ResponseBody
+import retrofit2.Call
 import retrofit2.http.*
+
 
 interface MyApiList {
 
@@ -72,6 +76,12 @@ interface MyApiList {
 
     @GET("dashboard/list/vendor")
     suspend fun getVendorDetails(@Query("dist_id") dist_id: String): VendorDetailsResponse
+
+    @POST("Api/Billings/genarateBill")
+    suspend fun generateBill(@Body rawJson: GenerateBillDataRequestModel):GeneratedBillDataResponseModel
+
+//    @POST("prefix/user/{login}")
+//    fun login(@Path("login") postfix: String?, @Body params: RequestBody?): Call<ResponseBody?>?
 
 
 

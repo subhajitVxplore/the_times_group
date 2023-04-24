@@ -123,6 +123,9 @@ interface AppModule {
     @Binds
     fun bindTodayPaperSoldByUserIdRepo(impl: TodayPaperSoldByUserIdRepositoryImpl): TodayPaperSoldByUserIdRepository
 
+    @Binds
+    fun bindGenerateBillRepo(impl: GenerateBillRepositoryImpl): GenerateBillRepository
+
 
 
 

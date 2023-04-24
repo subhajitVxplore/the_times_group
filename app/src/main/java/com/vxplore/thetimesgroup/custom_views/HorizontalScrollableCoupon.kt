@@ -2,10 +2,12 @@ package com.vxplore.thetimesgroup.custom_views
 
 import android.annotation.SuppressLint
 import android.provider.ContactsContract.Data
+import android.widget.Toast
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -18,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -66,13 +69,17 @@ fun HorizontalScrollableCoupon(
 
                                 } else {
 
+                                    val context= LocalContext.current
                                     Text(
                                         "₹" + coupons.value.toString(),
                                         modifier = Modifier
                                             .wrapContentHeight()
                                             .width(50.dp)
                                             .align(Alignment.CenterVertically)
-                                            .padding(start = 10.dp),
+                                            .padding(start = 10.dp)
+                                            .clickable{
+                                                Toast.makeText(context,coupons.key,Toast.LENGTH_SHORT).show()
+                                            } ,
                                         style = TextStyle(color = Color.Black, fontSize = 15.sp)
                                     )
                                     Surface(

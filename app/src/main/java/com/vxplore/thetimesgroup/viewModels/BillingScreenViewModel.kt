@@ -16,6 +16,7 @@ import com.vxplore.thetimesgroup.custom_views.UiData
 import com.vxplore.thetimesgroup.extensions.castListToRequiredTypes
 import com.vxplore.thetimesgroup.extensions.castValueToRequiredTypes
 import com.vxplore.thetimesgroup.helpers_impl.SavableMutableState
+import com.vxplore.thetimesgroup.mainController.MainActivity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -30,12 +31,16 @@ class BillingScreenViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
+   //val mainActivity:MainActivity = TODO()
+    //val mainActivity = mutableStateOf<MainActivity>()
     var expand = mutableStateOf(false)  // Expand State
     var stroke = mutableStateOf(1)
 
     var cashPayment = mutableStateOf(0)
     var previousDue = mutableStateOf(0)
     var currentDue = mutableStateOf(0)
+    var isAddedBillData = mutableStateOf(false)
+    var pdfUrl = mutableStateOf("")
 
     // var takenPapers = MutableList<Pair<Int, Int>>(getPaperPrice().size) { Pair(0, 0) }
 
@@ -47,7 +52,7 @@ class BillingScreenViewModel @Inject constructor(
     val takenPapers = MutableStateFlow(mutableListOf<Int>())
     val returnPapers = MutableStateFlow(mutableListOf<Int>())
     var takenMinusreturnPaperTotal = mutableStateOf(0)
-    val coupons = MutableStateFlow(mutableListOf<Int>())
+    val coupons = MutableStateFlow(mutableListOf<Coupon>())
     var cashMinusCouponTotal = mutableStateOf(0)
 
     private val _suggestionsss: MutableStateFlow<List<SearchVendorModel>> =
@@ -64,7 +69,6 @@ class BillingScreenViewModel @Inject constructor(
         currentDue.value = previousDue.value
         // getPapersByVendorId(" ")
     }
-
 
     val takenPapersTotal = mutableStateOf(0)
     val returnsTotal = mutableStateOf(0)
@@ -89,8 +93,8 @@ class BillingScreenViewModel @Inject constructor(
 
     fun calculateCouponPrice(value1: Int, value2: Int, index: Int) {
         coupons.update {values->
-            values[index] = value1 * value2
-            couponsTotal.value=values.sum()
+            values[index] = values[index].copy(value = value1*value2)
+            couponsTotal.value=values.sumOf { it.value }
             values
         }
     }
@@ -137,8 +141,10 @@ class BillingScreenViewModel @Inject constructor(
                     EmitType.COUPONS -> {
                         it.value?.castListToRequiredTypes<Coupon>()?.let { coupon ->
                             _couponss.update { coupon }
-                            coupons .update {
-                                MutableList(coupon.size) { 0 }
+                            coupons.update {
+                                MutableList(coupon.size) {idx->
+                                    Coupon(key = coupon[idx].key, value = 0)
+                                }
                             }
                         }
                     }
@@ -213,5 +219,46 @@ class BillingScreenViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
+    fun generateBillByJson(rawJson: GenerateBillDataRequestModel) {
+        billingScreenUseCases.generateBillByJson(rawJson)
+            .flowOn(Dispatchers.IO)
+            .onEach {
+                when (it.type) {
+//                    EmitType.Loading -> {
+//                        it.value?.apply {
+//                            castValueToRequiredTypes<Boolean>()?.let {
+//                                circleLoading.setValue(it)
+//                            }
+//                        }
+//                    }
+                    EmitType.IS_ADDED -> {
+                        it.value?.castValueToRequiredTypes<Boolean>()?.let {it
+                            isAddedBillData.value=it
+                        }
+                    }
+                    EmitType.PDF_URL -> {
+                        it.value?.castValueToRequiredTypes<String>()?.let {
+                            pdfUrl.value= it
+                        }
+                    }
+
+                    EmitType.DUE -> {
+                        it.value?.castValueToRequiredTypes<Int>()?.let {
+                            previousDue.value = it
+                        }
+                    }
+
+                    EmitType.NetworkError -> {
+                        it.value?.apply {
+                            castValueToRequiredTypes<String>()?.let {
+
+                            }
+                        }
+                    }
+                    else -> {}
+                }
+            }
+            .launchIn(viewModelScope)
+    }
 
 }
