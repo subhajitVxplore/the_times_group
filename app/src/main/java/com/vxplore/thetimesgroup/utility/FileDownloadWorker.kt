@@ -203,17 +203,17 @@ fun ItemFile(
     Button(
         //contentAlignment = Alignment.Center,
         onClick = {
-            viewModel.generateBillByJson()
-            Toast.makeText(context, "hello:="+viewModel.pdfUrl.value, Toast.LENGTH_SHORT).show()
+//            viewModel.generateBillByJson()
+//            Toast.makeText(context, "hello:="+viewModel.pdfUrl.value, Toast.LENGTH_SHORT).show()
 
 
-//            if (!file.isDownloading) {
-//                if (file.downloadedUri.isNullOrEmpty()) {
-//                    startDownload(file)
-//                } else {
-//                    openFile(file)
-//                }
-//            }
+            if (!file.isDownloading) {
+                if (file.downloadedUri.isNullOrEmpty()) {
+                    startDownload(file)
+                } else {
+                    openFile(file)
+                }
+            }
         },
         colors = ButtonDefaults.buttonColors(backgroundColor = GreenLight),
         shape = RoundedCornerShape(5.dp),

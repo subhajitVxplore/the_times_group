@@ -239,9 +239,6 @@ class BillingScreenViewModel @Inject constructor(
             return_papers = returnPapersKey
         )
 
-
-
-
         billingScreenUseCases.generateBillByJson(rawJsonData)
             .flowOn(Dispatchers.IO)
             .onEach {

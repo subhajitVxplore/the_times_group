@@ -335,12 +335,16 @@ fun VendorBillingScreen(
                             )
 //---------------------------------------------------------------------------------------------------
                             Spacer(modifier = Modifier.height(5.dp))
+                            val context= LocalContext.current
                             Surface(
                                 shape = RoundedCornerShape(5.dp),
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(50.dp)
-                                    .padding(horizontal = 15.dp),
+                                    .padding(horizontal = 15.dp).clickable {
+                                        viewModel.generateBillByJson()
+                                        Toast.makeText(context, "hello:="+viewModel.pdfUrl.value, Toast.LENGTH_SHORT).show()
+                                    },
                                 color = PinkLight,
                                 contentColor = Color.White
                             ) {
