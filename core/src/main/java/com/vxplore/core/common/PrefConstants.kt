@@ -7,4 +7,5 @@ object PrefConstants {
     const val USER_ID = "user_id"
     const val INTRO_STATUS = "intro_status"
     const val OTP = "otp"
+    const val PDF_URL = "pdf_url"
 }

@@ -17,9 +17,9 @@ data class SendCoupons(
 
 data class SendTodayPapers(
     var key: String,
-    val value: Int,
+    var value: Int,
 )
 data class SendReturnPapers(
     var key: String,
-    val value: Int,
+    var value: Int,
 )

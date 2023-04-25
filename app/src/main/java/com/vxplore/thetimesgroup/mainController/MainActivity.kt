@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -14,16 +15,14 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import androidx.work.*
 import com.vxplore.thetimesgroup.R
@@ -39,7 +38,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
 
     private lateinit var requestMultiplePermission: ActivityResultLauncher<Array<String>>
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -157,38 +155,51 @@ fun ShowItemFileLayout(viewModel: BillingScreenViewModel, context: Context) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val data = remember {
+val pdfString= remember {
+    mutableStateOf("${viewModel.pdfData.value}")
+}
+        Log.d("ShowItemFileLayout", "ShowItemFileLayout:= ${viewModel.pdfData.value}")
+
+
+
+        val pdfData = remember {
             mutableStateOf(
                 MyFileModel(
                     id = "10",
-                    name = "Pdf File 10 MB",
+                    name = "Pdf File Testt",
                     type = "PDF",
-                    url = viewModel.pdfUrl.value,
                     //url = "https://www.learningcontainer.com/wp-content/uploads/2019/09/sample-pdf-download-10-mb.pdf",
+                    // url = viewModel.pdfUrl.value,
+                   // url ="${viewModel.pdfUrl.value}",
+                    // url =pdfString.value,
+                     url = "https://www.v-xplore.com/dev/rohan/toi-ci3/assets/uploads/pdf_bills/WA4RzbMoti.pdf",
                     downloadedUri = null
                 )
+
             )
         }
 
+
         ItemFile(
-            file = data.value,
+            file = pdfData.value,
             startDownload = {
                 startDownloadingFile(
-                    file = data.value,
+                    file = pdfData.value,
                     success = {
-                        data.value = data.value.copy().apply {
+                        pdfData.value = pdfData.value.copy().apply {
                             isDownloading = false
                             downloadedUri = it
                         }
+
                     },
                     failed = {
-                        data.value = data.value.copy().apply {
+                        pdfData.value = pdfData.value.copy().apply {
                             isDownloading = false
                             downloadedUri = null
                         }
                     },
                     running = {
-                        data.value = data.value.copy().apply {
+                        pdfData.value = pdfData.value.copy().apply {
                             isDownloading = true
                         }
                     }
@@ -207,6 +218,14 @@ fun ShowItemFileLayout(viewModel: BillingScreenViewModel, context: Context) {
             },
             viewModel = viewModel
         )
+
+        LaunchedEffect(key1 = viewModel.pdfData.value) {
+            viewModel.pdfData.value.let {
+                if(it.isNotEmpty()) {
+                    pdfData.value = pdfData.value.copy(downloadedUri = it)
+                }
+            }
+        }
     }
 }
 

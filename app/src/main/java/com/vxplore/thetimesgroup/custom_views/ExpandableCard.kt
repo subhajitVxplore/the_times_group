@@ -217,9 +217,9 @@ fun ExpandableCard(
 
                                         if (paperList.isNotEmpty()) {
                                             val returnValues =
-                                                viewModel.returnPapers.collectAsState().value
+                                                viewModel.returnsTotal.value
                                             Text(
-                                                text = if (returnValues.sum() != 0) "Total Return Price = ₹${returnValues.sum()}"
+                                                text = if (returnValues != 0) "Total Return Price = ₹${returnValues}"
                                                     else "Total Return Price = ₹0",
                                                 color = Color.DarkGray, // Header Color
                                                 fontSize = 15.sp,

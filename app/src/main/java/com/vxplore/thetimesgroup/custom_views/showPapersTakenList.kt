@@ -88,9 +88,7 @@ fun showPapersTakenList(
                                 onValueChange = {
                                     value = it
                                     onPriceChange(value, index, paperr.todays_price)
-                                    viewModel.takenPapersKey.forEach{
-                                        it.key=paperr.key
-                                    }
+
                                 },
                                 keyboardOptions = KeyboardOptions(
                                     imeAction = ImeAction.Done,
@@ -140,9 +138,9 @@ fun showPapersTakenList(
 
                             if (paperList.isNotEmpty()) {
                                 val takenValues =
-                                    viewModel.takenPapers.collectAsState().value
+                                    viewModel.takenPapersTotal.value
                                 Text(
-                                    text = if (takenValues.sum() != 0) "Total TakenPaper Price = ₹${takenValues.sum()}"
+                                    text = if (takenValues != 0) "Total TakenPaper Price = ₹${takenValues}"
                                     else "Total TakenPaper Price = ₹0",
                                     color = Color.DarkGray, // Header Color
                                     fontSize = 15.sp,

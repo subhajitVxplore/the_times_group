@@ -1,8 +1,6 @@
 package com.vxplore.thetimesgroup.viewModels
 
-import android.util.Log
 import androidx.compose.runtime.*
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,14 +10,13 @@ import com.vxplore.core.common.Destination
 import com.vxplore.core.common.EmitType
 import com.vxplore.core.domain.model.*
 import com.vxplore.core.domain.useCasess.BillingScreenUseCases
+import com.vxplore.core.helpers.AppStore
 import com.vxplore.thetimesgroup.custom_views.UiData
 import com.vxplore.thetimesgroup.extensions.castListToRequiredTypes
 import com.vxplore.thetimesgroup.extensions.castValueToRequiredTypes
 import com.vxplore.thetimesgroup.helpers_impl.SavableMutableState
-import com.vxplore.thetimesgroup.mainController.MainActivity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,6 +25,7 @@ import javax.inject.Inject
 class BillingScreenViewModel @Inject constructor(
     private val appNavigator: AppNavigator,
     private val billingScreenUseCases: BillingScreenUseCases,
+    private val pref: AppStore,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -40,7 +38,7 @@ class BillingScreenViewModel @Inject constructor(
     var previousDue = mutableStateOf(0)
     var currentDue = mutableStateOf(0)
     var isAddedBillData = mutableStateOf(false)
-    var pdfUrl = mutableStateOf("")
+    var pdfData = mutableStateOf("")
 
     // var takenPapers = MutableList<Pair<Int, Int>>(getPaperPrice().size) { Pair(0, 0) }
 
@@ -49,8 +47,8 @@ class BillingScreenViewModel @Inject constructor(
     private val _couponss = MutableStateFlow(emptyList<Coupon>())
     val couponss = _couponss.asStateFlow()
 
-    val takenPapers = MutableStateFlow(mutableListOf<Int>())
-    val returnPapers = MutableStateFlow(mutableListOf<Int>())
+    val takenPapers = MutableStateFlow(mutableListOf<SendTodayPapers>())
+    val returnPapers = MutableStateFlow(mutableListOf<SendReturnPapers>())
     var takenMinusreturnPaperTotal = mutableStateOf(0)
     val coupons = MutableStateFlow(mutableListOf<Coupon>())
     var cashMinusCouponTotal = mutableStateOf(0)
@@ -83,17 +81,20 @@ class BillingScreenViewModel @Inject constructor(
 
     fun calculateTakenPapersPrice(value1: Int, value2: Int, index: Int) {
         takenPapers.update { values ->
-            values[index] = value1 * value2
-            takenPapersTotal.value = values.sum()
+            values[index].value = value1 * value2
+            takenPapersTotal.value = values.sumOf { it.value }
             values
         }
+
 
     }
 
     fun calculateReturnPapersPrice(value1: Int, value2: Int, index: Int) {
         returnPapers.update { values ->
-            values[index] = value1 * value2
-            returnsTotal.value = values.sum()
+//            values[index] = value1 * value2
+//            returnsTotal.value = values.sum()
+            values[index].value = value1 * value2
+            returnsTotal.value = values.sumOf { it.value }
             values
         }
     }
@@ -138,11 +139,16 @@ class BillingScreenViewModel @Inject constructor(
                         it.value?.castListToRequiredTypes<Paper>()?.let { papers ->
                             _paperss.update { papers }
                             takenPapers.update {
-                                MutableList(papers.size) { 0 }
+                                MutableList(papers.size) {
+                                    SendTodayPapers(key = papers[it].key, value = 0)
+                                }
                             }
 
                             returnPapers.update {
-                                MutableList(papers.size) { 0 }
+                                //MutableList(papers.size) { 0 }
+                                MutableList(papers.size) {
+                                    SendReturnPapers(key = papers[it].key, value = 0)
+                                }
                             }
                         }
                     }
@@ -235,9 +241,11 @@ class BillingScreenViewModel @Inject constructor(
             payment_by_cash = cashPayment.value,
             due_amount = currentDue.value,
             coupons = coupons.value.toList(),//as same class name in both two model classes(PapersByVendorIdModel & GenerateBillDataRequestModel)
-            today_papers = takenPapersKey,
-            return_papers = returnPapersKey
+            today_papers = takenPapers.value.toList(),
+            return_papers = returnPapers.value.toList()
         )
+
+
 
         billingScreenUseCases.generateBillByJson(rawJsonData)
             .flowOn(Dispatchers.IO)
@@ -252,8 +260,11 @@ class BillingScreenViewModel @Inject constructor(
                     }
                     EmitType.PDF_URL -> {
                         it.value?.castValueToRequiredTypes<String>()?.let {
-                            pdfUrl.value = it
+                            pdfData.value = it
+//                            pref.storePdfUrl(it)
+//                            pdfUrl.value=pref.fetchPdfUrl()
                         }
+
                     }
 
                     EmitType.NetworkError -> {
@@ -267,6 +278,8 @@ class BillingScreenViewModel @Inject constructor(
                 }
             }
             .launchIn(viewModelScope)
+
+
     }
 
 }
