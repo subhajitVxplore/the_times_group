@@ -3,6 +3,7 @@
 package com.vxplore.thetimesgroup.screens
 
 import android.app.Activity
+import android.text.TextUtils
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -26,16 +27,21 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import com.vxplore.core.common.AppRoutes
 import com.vxplore.thetimesgroup.R
 import com.vxplore.thetimesgroup.viewModels.MobileNoScreenViewModel
+import io.ktor.util.reflect.*
+import java.util.regex.Pattern
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun MobileNoScreen(
-    viewModel: MobileNoScreenViewModel = hiltViewModel()
+    viewModel: MobileNoScreenViewModel = hiltViewModel(),navController :NavController
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val mContext = LocalContext.current
+    //val navController :NavController
 
     Column(
         modifier = Modifier
@@ -97,11 +103,17 @@ fun MobileNoScreen(
                 )
 
                 val maxLength = 9
+              //  val pattern = remember { Regex("^\\d+\$") }
+
+                //var digitsOnly= listOf(0,1,2,3,4,5,6,7,8,9)
+                val digitsOnly: Boolean = TextUtils.isDigitsOnly(viewModel.MobileNoText.value)
                 TextField(
                     value = viewModel.MobileNoText.value ?: "",
                     singleLine = true,
                     onValueChange = {
-                        if (it.length <= 10) {
+                        val digitsOnly: Boolean = TextUtils.isDigitsOnly(viewModel.MobileNoText.value)
+
+                        if ((it.length <= 10)) {
                             viewModel.MobileNoText.value = it
                         } else if (it.length > maxLength) {
                             keyboardController?.hide()
@@ -126,7 +138,9 @@ fun MobileNoScreen(
                         .background(Color.White),
 
                     keyboardOptions = KeyboardOptions(
-                        imeAction = ImeAction.Done, keyboardType = KeyboardType.Number
+                        imeAction = ImeAction.Done,
+                        //keyboardType = KeyboardType.instanceOf(DigitsKeyListener.getInstance("0,1,2,3,4,5,6,7,8,9"))
+                        keyboardType = KeyboardType.Number
                     ),
 
                     colors = TextFieldDefaults.textFieldColors(
@@ -182,7 +196,7 @@ fun MobileNoScreen(
                         if (viewModel.MobileNoText.value != null && viewModel.MobileNoText.value!!.length < 10) {
                             Toast.makeText(context, "10 digits required", Toast.LENGTH_SHORT).show()
                         } else {
-                            // navController.navigate(AppRoutes.OTP+ "/${MobileNoText.text}",)
+                             //navController.navigate(AppRoutes.OTP+ "/${viewModel.MobileNoText.value}",)
                             //viewModel.onMobToOtp("${viewModel.MobileNoText.value}")
                             viewModel.sendOtp("${viewModel.MobileNoText.value}")
                         }
@@ -219,4 +233,21 @@ fun MobileNoScreen(
             viewModel.notifier.value = ""
         }
     }
+}
+////////////////////////////////////////////////////////////////////////////
+
+
+val MOBILE_NO_PATTERN: Pattern = Pattern.compile("[0-9]{10}")
+
+//    "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
+//            "\\@" +
+//            "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+//            "(" +
+//            "\\." +
+//            "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
+//            ")+"
+//)
+
+fun checkMobile(mobile_no: String): Boolean {
+    return MOBILE_NO_PATTERN.matcher(mobile_no).matches()
 }

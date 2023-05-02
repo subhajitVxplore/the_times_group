@@ -84,7 +84,6 @@ fun OtpScreen( viewModel: OtpViewModel  = hiltViewModel()) {
                         .padding(10.dp)
                         .align(Alignment.CenterVertically)
                 )
-
                 Image(painter = painterResource(id = R.drawable.ic_edit_icon),
                     contentDescription = "Edit",
                     modifier = Modifier
@@ -93,10 +92,12 @@ fun OtpScreen( viewModel: OtpViewModel  = hiltViewModel()) {
                         .padding(0.dp, 10.dp, 10.dp, 10.dp)
                         .align(Alignment.CenterVertically)
                         .clickable {
+
                             // navController.navigateUp()
                             //navController.navigate(AppRoutes.MOBILE_NO +"$mobileNoText")
                             //navController.navigate(AppRoutes.MOBILE_NO)
-                            viewModel.onOtpToMob("${viewModel.number}")
+                            //viewModel.onOtpToMob("${viewModel.number}")
+                            viewModel.onOtpToMob()
                         },
 
                 )

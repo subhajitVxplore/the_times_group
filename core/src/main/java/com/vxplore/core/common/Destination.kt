@@ -44,6 +44,7 @@ sealed class Destination(protected val route: String, vararg arguments: Any) {
     }
 
     object Billing : NoArgumentsDestination(AppRoutes.BILLING)
+    object BillPreview : NoArgumentsDestination(AppRoutes.BILL_PREVIEW)
     object AddVendor : NoArgumentsDestination(AppRoutes.ADD_VENDOR)
     object AddVendorSuccess : NoArgumentsDestination(AppRoutes.ADD_VENDOR_SUCCESS)
 }

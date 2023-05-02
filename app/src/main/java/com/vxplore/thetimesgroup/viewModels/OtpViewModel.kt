@@ -26,14 +26,17 @@ class OtpViewModel @Inject constructor(
 
 
     val number = savedStateHandle.get<String>(Destination.MobileNo.MOBILE_N)
-    fun onOtpToMob(mobileNumber: String) {
+   // fun onOtpToMob(mobileNumber: String) {
+    fun onOtpToMob() {
+
         Log.d("MOBILE", number.toString())
         appNavigator.tryNavigateTo(
-            route = Destination.MobileNo(mobileNumber),
-            popUpToRoute = Destination.Otp(mobileNumber),
+            route = Destination.MobileNo(number.toString()),
+            popUpToRoute = Destination.Otp(number.toString()),
             isSingleTop = true,
             inclusive = true
         )
+      //  number=""
     }
 
     fun verifyOtp(otpp: String) {

@@ -221,8 +221,6 @@ fun showVendorsList(vendorList: List<Vendor>,loading: Boolean,) {
     ) {
         if (!it) {
 
-
-
             LazyColumn() {
                 itemsIndexed(items = vendorList) { index, vendorr ->
                     Row(modifier = Modifier

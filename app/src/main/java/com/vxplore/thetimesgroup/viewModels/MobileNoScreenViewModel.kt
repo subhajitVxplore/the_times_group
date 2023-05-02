@@ -50,7 +50,7 @@ class MobileNoScreenViewModel @Inject constructor(
                             castValueToRequiredTypes<String>()?.let { destination->
                                 appNavigator.tryNavigateTo(
                                     destination,
-                                    popUpToRoute = Destination.MobileNo.fullRoute,
+                                    popUpToRoute = Destination.MobileNo.MOBILE_N,
                                     isSingleTop = true,
                                     inclusive = true
                                 )

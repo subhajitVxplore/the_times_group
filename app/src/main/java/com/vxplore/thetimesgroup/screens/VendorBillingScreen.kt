@@ -32,6 +32,7 @@ import com.vxplore.thetimesgroup.R
 import com.vxplore.thetimesgroup.custom_views.*
 import com.vxplore.thetimesgroup.mainController.MainActivity
 import com.vxplore.thetimesgroup.ui.theme.DonutGreenLight
+import com.vxplore.thetimesgroup.ui.theme.GreenLight
 import com.vxplore.thetimesgroup.ui.theme.GreyLight
 import com.vxplore.thetimesgroup.ui.theme.PinkLight
 import com.vxplore.thetimesgroup.viewModels.BillingScreenViewModel
@@ -144,6 +145,7 @@ fun VendorBillingScreen(
 
 
                 }
+    //----------------Bottom Layout-------------------//
                 Column(modifier = Modifier.weight(1f, true)) {
                     Box(
                         modifier = Modifier.fillMaxSize(),
@@ -335,7 +337,7 @@ fun VendorBillingScreen(
                             )
 //---------------------------------------------------------------------------------------------------
                             Spacer(modifier = Modifier.height(5.dp))
-                            val context= LocalContext.current
+                           // val context= LocalContext.current
                             Surface(
                                 shape = RoundedCornerShape(5.dp),
                                 modifier = Modifier
@@ -385,13 +387,13 @@ fun VendorBillingScreen(
                                 }
                             }//surface\
                             Spacer(modifier = Modifier.height(7.dp))
+                 //----------------Generate Bill Button Layout-------------------//
+                            val context = LocalContext.current as MainActivity
+                            context.ShowItemFileLayout(viewModel,context = context)
+                            Spacer(modifier = Modifier.height(10.dp))
                         }
                     }
                 }
-       //----------------Generate Bill Button Layout-------------------//
-                val context = LocalContext.current as MainActivity
-                context.ShowItemFileLayout(viewModel,context = context)
-                Spacer(modifier = Modifier.height(10.dp))
 
             }//column
 

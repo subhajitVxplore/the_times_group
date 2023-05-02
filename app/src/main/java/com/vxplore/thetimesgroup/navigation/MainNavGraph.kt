@@ -33,7 +33,7 @@ fun MainNavGraph(
         }
         composable(destination = Destination.MobileNo) {
             // MobileNoScreen(onContinueClick = {navHostController.navigate(AppRoutes.OTP)})
-            MobileNoScreen()//
+            MobileNoScreen(navController = navHostController)//
         }
         composable(destination=Destination.Otp){
             OtpScreen()
@@ -47,6 +47,10 @@ fun MainNavGraph(
         composable(destination = Destination.Billing) {
             VendorBillingScreen()
         }
+        composable(destination = Destination.BillPreview) {
+            VendorBillPreviewScreen()
+        }
+
         composable(destination = Destination.AddVendor) {
             AddVendorScreen()
         }

@@ -116,6 +116,14 @@ class BillingScreenViewModel @Inject constructor(
             //inclusive = true
         )
     }
+    fun onBillingToBillPreview() {
+        appNavigator.tryNavigateTo(
+            route = Destination.BillPreview(),
+            // popUpToRoute = Destination.Dashboard(),
+            //isSingleTop = true,
+            //inclusive = true
+        )
+    }
 
     val circleLoading = SavableMutableState(
         key = UiData.PaperApiLoading,
@@ -143,7 +151,6 @@ class BillingScreenViewModel @Inject constructor(
                                     SendTodayPapers(key = papers[it].key, value = 0)
                                 }
                             }
-
                             returnPapers.update {
                                 //MutableList(papers.size) { 0 }
                                 MutableList(papers.size) {

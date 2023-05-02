@@ -236,7 +236,8 @@ class DashboardViewModel @Inject constructor(
                             castValueToRequiredTypes<Destination>()?.let {
                                 //  scaffoldState.drawerState.close()
                                 appNavigator.navigateTo(
-                                    it.fullRoute,
+                                     it.fullRoute,
+                                    // route = Destination.MobileNo("number.toString()"),
                                     popUpToRoute = Destination.Dashboard(),
                                     inclusive = true,
                                     isSingleTop = true

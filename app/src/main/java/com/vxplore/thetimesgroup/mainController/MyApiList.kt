@@ -77,7 +77,7 @@ interface MyApiList {
     @GET("dashboard/list/vendor")
     suspend fun getVendorDetails(@Query("dist_id") dist_id: String): VendorDetailsResponse
 
-    @POST("Api/Billings/genarateBill")
+    @POST("Api/Billings/genarate_Bill")
     suspend fun generateBill(@Body rawJson: GenerateBillDataRequestModel):GeneratedBillDataResponseModel
 
 //    @POST("prefix/user/{login}")

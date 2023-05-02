@@ -103,7 +103,7 @@ class BillingScreenUseCases @Inject constructor(
                     when (status) {
                         true -> {
                             emit(Data(EmitType.IS_ADDED, value = isAdded))
-                            emit(Data(EmitType.PDF_URL, value = pdfData))
+                            emit(Data(EmitType.PDF_URL, value = pdfUrl))
                             emit(Data(type = EmitType.INFORM, value = message))
                         }
                         else -> {

@@ -68,8 +68,8 @@ fun MyDoughnutChart(
 
         Box(
             modifier = Modifier
-                .weight(1f, true)
-                .padding(0.dp, 0.dp, 7.dp, 0.dp),
+               // .weight(1f, true)
+                .padding(end = 7.dp),
             contentAlignment = Alignment.Center
         ) {
             Canvas(
@@ -103,8 +103,8 @@ fun MyDoughnutChart(
                 )
             }
         }//box
-    }
-}
+    }//parent Row
+}//MyDoughnutChart
 
 @Composable
 fun DisplayLegend(color: Color, legend: String) {

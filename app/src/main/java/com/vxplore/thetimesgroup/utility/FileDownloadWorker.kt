@@ -184,22 +184,25 @@ fun ItemFile(
     file: MyFileModel,
     startDownload: (MyFileModel) -> Unit,
     openFile: (MyFileModel) -> Unit
-){
+) {
     val context = LocalContext.current
     Button(
         onClick = {
             viewModel.generateBillByJson()
-            Toast.makeText(context, "hello:=" + viewModel.pdfData.value, Toast.LENGTH_SHORT).show()
+
 
             if (viewModel.pdfData.value != "") {
-                if (!file.isDownloading) {
-                    if (file.downloadedUri.isNullOrEmpty()) {
+                if (!file.isDownloading){
+                    if (file.downloadedUri.isNullOrEmpty()){
                         startDownload(file)
-                    } else {
+                    }else{
                         openFile(file)
                     }
                 }
             }
+
+
+
         },
         colors = ButtonDefaults.buttonColors(backgroundColor = GreenLight),
         shape = RoundedCornerShape(5.dp),
@@ -216,14 +219,13 @@ fun ItemFile(
             Column(
                 modifier = Modifier.fillMaxWidth()
             ) {
-                //Text(text = file.name,color = Color.White)
-                val description = if (file.isDownloading) {
-                    "Bill Downloading..."
-                } else {
-                    if (!(file.downloadedUri.isNullOrEmpty())) openFile(file)
-                    if (file.downloadedUri.isNullOrEmpty()) "Generate Bill" else "Tap to View Bill"
 
+                val description = if (file.isDownloading){
+                    "Downloading..."
+                }else{
+                    if (file.downloadedUri.isNullOrEmpty()) "Tap to download the file" else "Tap to open file"
                 }
+
                 Text(
                     text = description,
                     fontSize = 17.sp,
