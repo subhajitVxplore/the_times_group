@@ -241,12 +241,12 @@ class MainActivity : ComponentActivity(), AutoReplyPrint.CP_OnPortOpenedEvent_Ca
 //------------------------------------------------------------------------------------------------
 
                         if ((viewModel.pdfData!=null)) {
+                            AutoReplyPrint.INSTANCE.CP_Port_Close(h)
                             openPrinterPort()
                             convertPdfToBitmap(target = viewModel.pdfData.value,coroutineScope = lifecycleScope) {
                                 tryToPrint(it)
                             }
                         }
-
 
 //------------------------------------------------------------------------------------------------
                         val intent = Intent(Intent.ACTION_VIEW)
@@ -254,10 +254,8 @@ class MainActivity : ComponentActivity(), AutoReplyPrint.CP_OnPortOpenedEvent_Ca
                         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                         ContextCompat.startActivity(context, intent, null)
 
-
-
                     } catch (e: ActivityNotFoundException) {
-                        Toast.makeText(context, "Can't open Pdf", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context,"Can't open Pdf",Toast.LENGTH_SHORT).show()
                     }
                 },
                 viewModel = viewModel
@@ -319,6 +317,7 @@ class MainActivity : ComponentActivity(), AutoReplyPrint.CP_OnPortOpenedEvent_Ca
                 }.start()
             }
         }
+
     }
 
     private fun Context.convertPdfToBitmap(

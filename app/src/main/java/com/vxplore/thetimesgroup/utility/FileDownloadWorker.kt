@@ -11,7 +11,6 @@ import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -186,24 +185,27 @@ fun ItemFile(
     openFile: (MyFileModel) -> Unit
 ) {
     val context = LocalContext.current
+    var btnStatus:Boolean=true
     Button(
         onClick = {
             viewModel.generateBillByJson()
 
 
             if (viewModel.pdfData.value != "") {
-                if (!file.isDownloading){
-                    if (file.downloadedUri.isNullOrEmpty()){
+                if (!file.isDownloading) {
+                    if (file.downloadedUri.isNullOrEmpty()) {
                         startDownload(file)
-                    }else{
+                        file.isDownloading = true
+                       // btnStatus=false
+                    } else {
                         openFile(file)
                     }
                 }
             }
 
 
-
         },
+       // enabled =btnStatus ,
         colors = ButtonDefaults.buttonColors(backgroundColor = GreenLight),
         shape = RoundedCornerShape(5.dp),
 
@@ -220,14 +222,22 @@ fun ItemFile(
                 modifier = Modifier.fillMaxWidth()
             ) {
 
-                val description = if (file.isDownloading){
-                    "Downloading..."
+//                val description = if (file.isDownloading){
+//                    "Downloading..."
+//                }else{
+//                    if (file.downloadedUri.isNullOrEmpty()) "Generate Bill" else "Tap to open file"
+//                }
+                if (file.isDownloading) {
+                    viewModel.generateBillButtonText = "Downloading..."
+                } else if (file.downloadedUri != null) {
+                    openFile(file)
                 }else{
-                    if (file.downloadedUri.isNullOrEmpty()) "Tap to download the file" else "Tap to open file"
+                    viewModel.generateBillButtonText = "Generate Bill"
                 }
 
+
                 Text(
-                    text = description,
+                    text = viewModel.generateBillButtonText,
                     fontSize = 17.sp,
                     color = Color.White,
                     modifier = Modifier.align(Alignment.CenterHorizontally)

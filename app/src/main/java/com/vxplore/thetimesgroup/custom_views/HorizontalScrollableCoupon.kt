@@ -44,6 +44,7 @@ fun HorizontalScrollableCoupon(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                   // .padding(vertical = 10.dp)
                     .height(40.dp)
                     .horizontalScroll(state = scrollState),
                 content = {

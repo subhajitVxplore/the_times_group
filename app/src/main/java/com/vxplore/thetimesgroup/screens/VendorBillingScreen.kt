@@ -112,7 +112,6 @@ fun VendorBillingScreen(
                     ) { value2, index, value1 ->
                         try {
                             // viewModel.takenPapers[index] =Pair(first = value1, second = value2.toInt())
-                            Log.d("TESTING", "value1 $value1 value2 $value2")
                             //viewModel.takenPapers.add(index, Pair(first = value1, second = value2.toInt()))
                             viewModel.calculateTakenPapersPrice(value1, value2.toInt(), index)
                         } catch (e: NumberFormatException) {
@@ -147,252 +146,10 @@ fun VendorBillingScreen(
                 }
     //----------------Bottom Layout-------------------//
                 Column(modifier = Modifier.weight(1f, true)) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .wrapContentSize()
-                                .align(Alignment.BottomEnd)
-                        ) {
-                            Divider(
-                                color = Color.LightGray,
-                                thickness = 0.8.dp,
-                                modifier = Modifier.padding(horizontal = 10.dp)
-                            )
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .wrapContentHeight()
-                            ) {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .wrapContentHeight()
-                                        .align(Alignment.CenterVertically)
-                                ) {
-                                    Text(
-                                        text = "₹${viewModel.takenMinusreturnPaperTotal.value}",
-                                       //  text = "₹${viewModel.takenPapersTotal.value}",
-                                        //   text = "₹",
-                                        style = MaterialTheme.typography.h5,
-                                        color = Color.Black,
-                                        fontWeight = FontWeight.Bold,
-                                        modifier = Modifier
-                                            .wrapContentSize()
-                                            .padding(horizontal = 10.dp)
-                                            .align(Alignment.CenterEnd)
-                                    )
-                                }
-
-                            }
-
-                            Divider(
-                                color = Color.LightGray,
-                                thickness = 0.8.dp,
-                                modifier = Modifier.padding(horizontal = 10.dp)
-                            )
-                            Spacer(modifier = Modifier.height(10.dp))
-                            Row(Modifier.wrapContentHeight()) {
-                                Text(
-                                    text = "Mode of Payment",
-                                    color = Color.DarkGray,
-                                    modifier = Modifier
-                                        .padding(horizontal = 15.dp)
-                                        .align(Alignment.CenterVertically)
-                                )
-                                Box(
-                                    modifier = Modifier
-                                        .wrapContentHeight()
-                                        .fillMaxWidth(), contentAlignment = Alignment.TopEnd
-                                ) {
-                                    Row(modifier = Modifier.wrapContentSize()) {
-                                        Text(
-                                            text = "Cash ₹",
-                                            color = Color.DarkGray,
-                                            modifier = Modifier.align(Alignment.CenterVertically)
-                                        )
-                                        BasicTextField(
-                                            value = viewModel.cashPayment.value.toString(),
-                                            onValueChange = {
-                                                try {
-                                                    viewModel.cashPayment.value = it.toInt()
-                                                  //  viewModel.calculateCurrentDue()
-                                                } catch (e: Exception) {
-                                                    println(e)
-                                                }
-                                            },
-                                            keyboardOptions = KeyboardOptions(
-                                                imeAction = ImeAction.Done,
-                                                keyboardType = KeyboardType.Number
-                                            ),
-                                            maxLines = 1,
-                                            modifier = Modifier
-                                                .width(100.dp)
-                                                .height(37.dp)
-                                                .padding(start = 5.dp, end = 15.dp),
-                                            // textStyle = TextStyle.Default.copy(fontSize = 20.sp),
-                                            textStyle = TextStyle(
-                                                fontSize = 20.sp,
-                                                fontWeight = FontWeight.Bold
-                                            ),
-
-                                            ) {
-                                            TextFieldDefaults.OutlinedTextFieldDecorationBox(
-                                                value = viewModel.cashPayment.value.toString(),
-                                                innerTextField = it,
-                                                enabled = true,
-                                                singleLine = true,
-                                                visualTransformation = VisualTransformation.None,
-                                                interactionSource = MutableInteractionSource(),
-                                                contentPadding = PaddingValues(all = 4.dp),
-                                                colors = ExposedDropdownMenuDefaults.textFieldColors(
-                                                    backgroundColor = Color.White
-                                                )
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-                            Column(
-                                modifier = Modifier
-                                    .wrapContentHeight()
-                                    .fillMaxWidth()
-                            ) {
-                                Row(Modifier.wrapContentSize()) {
-
-                                    Text(
-                                        text ="Coupons:",
-//                                        text = if (viewModel.couponsTotal.value != 0) "Total Coupon Price = ₹${viewModel.couponsTotal.value}"
-//                                               else "Coupons:",
-                                        color = Color.DarkGray,
-                                        modifier = Modifier
-                                            .wrapContentSize()
-                                            .padding(horizontal = 15.dp)
-                                            .align(Alignment.CenterVertically),
-                                        )
-                                }
-
-                               // Spacer(modifier = Modifier.height(5.dp))
-
-                                Row(
-                                    modifier = Modifier
-                                        .wrapContentHeight()
-                                        .fillMaxWidth()) {
-
-                                    Column(Modifier.weight(1f, true)) {
-                                        HorizontalScrollableCoupon(viewModel.couponss.collectAsState().value, viewModel,
-                                            onPriceChange = { value, index, multi ->
-                                                try {
-                                                    viewModel.calculateCouponPrice(multi, value.toInt(), index)
-                                                } catch (e: NumberFormatException) {
-                                                    viewModel.calculateCouponPrice(multi, 0, index)
-                                                    println(e)
-                                                } catch (e: Exception) {
-                                                    println(e)
-                                                }
-                                            }
-                                        )
-                                    }
-                                }
-                            }
-//---------------------------------------------------------------------------------------------------
-                            Spacer(modifier = Modifier.height(5.dp))
-                            Divider(
-                                color = Color.LightGray,
-                                thickness = 0.8.dp,
-                                modifier = Modifier.padding(horizontal = 10.dp)
-                            )
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .wrapContentHeight()
-                            ) {
-
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .wrapContentHeight()
-                                        .align(Alignment.CenterVertically)
-                                ) {
-                                    Text(
-                                       // text = "₹${viewModel.couponTotal.value}",
-                                        text = "₹${viewModel.cashMinusCouponTotal.value}",
-                                        style = MaterialTheme.typography.h5,
-                                        color = Color.Black,
-                                        fontWeight = FontWeight.Bold,
-                                        modifier = Modifier
-                                            .wrapContentSize()
-                                            .padding(horizontal = 10.dp)
-                                            .align(Alignment.CenterEnd)
-                                    )
-                                }
-
-                            }
-
-                            Divider(
-                                color = Color.LightGray,
-                                thickness = 0.8.dp,
-                                modifier = Modifier.padding(horizontal = 10.dp)
-                            )
-//---------------------------------------------------------------------------------------------------
-                            Spacer(modifier = Modifier.height(5.dp))
-                           // val context= LocalContext.current
-                            Surface(
-                                shape = RoundedCornerShape(5.dp),
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(50.dp)
-                                    .padding(horizontal = 15.dp),
-                                color = PinkLight,
-                                contentColor = Color.White
-                            ) {
-                                Row(
-                                    Modifier
-                                        .wrapContentHeight()
-                                        .fillMaxWidth()
-                                ) {
-
-
-                                    Box(modifier = Modifier
-                                        .fillMaxWidth()
-                                        .weight(1f, true)
-                                        .align(Alignment.CenterVertically)
-                                        .padding(start = 15.dp)){
-                                        Column(
-                                            modifier = Modifier
-                                                .wrapContentSize()
-                                                //.align(Alignment.CenterVertically)
-                                        ) {
-                                            Text(text = "Due Payment", color = Color.White, modifier = Modifier.align(Alignment.Start))
-                                            Text(
-                                                text = "With previous ₹ ${viewModel.previousDue.value} Due",
-                                                color = Color.White,
-                                                fontSize = 10.sp,
-                                                modifier = Modifier.align(Alignment.Start)
-                                            )
-                                        }
-                                    }
-
-                                    Text(
-                                        text = "₹${viewModel.currentDue.value}",
-                                        color = Color.White,
-                                        fontWeight = FontWeight.Bold,
-                                        modifier = Modifier
-                                            .wrapContentSize()
-                                            .padding(horizontal = 10.dp)
-                                            .align(Alignment.CenterVertically),
-                                        fontSize = 20.sp
-                                    )
-                                }
-                            }//surface\
-                            Spacer(modifier = Modifier.height(7.dp))
-                 //----------------Generate Bill Button Layout-------------------//
-                            val context = LocalContext.current as MainActivity
-                            context.ShowItemFileLayout(viewModel,context = context)
-                            Spacer(modifier = Modifier.height(10.dp))
-                        }
+                    if (viewModel.searchVendorQuery != ""){
+                        BillingScreenBottomLayout(viewModel)
                     }
+
                 }
 
             }//column
@@ -430,14 +187,15 @@ fun VendorBillingScreen(
     }
 
   LaunchedEffect(viewModel.takenMinusreturnPaperTotal.value,viewModel.cashMinusCouponTotal.value,viewModel.previousDue.value){
-        if (viewModel.takenMinusreturnPaperTotal.value > 0) {
+        //if (viewModel.takenMinusreturnPaperTotal.value > 0) {
             viewModel.currentDue.value =viewModel.previousDue.value.plus(viewModel.takenMinusreturnPaperTotal.value - viewModel.cashMinusCouponTotal.value)
 
-        }
+       // }
     }
 
 
 }
+
 
 
 
