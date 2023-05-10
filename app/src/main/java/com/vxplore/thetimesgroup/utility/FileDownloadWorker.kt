@@ -8,9 +8,11 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
+import android.os.CountDownTimer
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -58,24 +60,25 @@ class FileDownloadWorker(
             Result.failure()
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
-            val name = NotificationConstants.CHANNEL_NAME
-            val description = NotificationConstants.CHANNEL_DESCRIPTION
-            val importance = NotificationManager.IMPORTANCE_HIGH
-            val channel = NotificationChannel(NotificationConstants.CHANNEL_ID, name, importance)
-            channel.description = description
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//
+//            val name = NotificationConstants.CHANNEL_NAME
+//            val description = NotificationConstants.CHANNEL_DESCRIPTION
+//            val importance = NotificationManager.IMPORTANCE_HIGH
+////            val channel = NotificationChannel(NotificationConstants.CHANNEL_ID, name, importance)
+////            channel.description = description
+//
+////            val notificationManager =
+////                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?
+////
+////            notificationManager?.createNotificationChannel(channel)
+//
+//        }
 
-            val notificationManager =
-                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?
-
-            notificationManager?.createNotificationChannel(channel)
-
-        }
-
-        val builder = NotificationCompat.Builder(context, NotificationConstants.CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentTitle("Downloading your file...").setOngoing(true).setProgress(0, 0, true)
+//        val builder = NotificationCompat.Builder(context, NotificationConstants.CHANNEL_ID)
+//            .setSmallIcon(R.drawable.ic_launcher_foreground)
+//            .setContentTitle("Downloading your file...").setOngoing(true).setProgress(0, 0, true)
 
 
         if (ActivityCompat.checkSelfPermission(
@@ -85,8 +88,8 @@ class FileDownloadWorker(
 
             return Result.failure()
         }
-        NotificationManagerCompat.from(context)
-            .notify(NotificationConstants.NOTIFICATION_ID, builder.build())
+//        NotificationManagerCompat.from(context)
+//            .notify(NotificationConstants.NOTIFICATION_ID, builder.build())
 
         val uri = getSavedFileUri(
             fileName = fileName, fileType = fileType, fileUrl = fileUrl, context = context
@@ -185,30 +188,37 @@ fun ItemFile(
     openFile: (MyFileModel) -> Unit
 ) {
     val context = LocalContext.current
-    var btnStatus:Boolean=true
     Button(
         onClick = {
             viewModel.generateBillByJson()
-
-
-            if (viewModel.pdfData.value != "") {
-                if (!file.isDownloading) {
+            //  Toast.makeText(context, ""+file.isDownloading, Toast.LENGTH_SHORT).show()
+//            if (viewModel.pdfData.value != "") {
+//                if (!file.isDownloading) {
                     if (file.downloadedUri.isNullOrEmpty()) {
                         startDownload(file)
-                        file.isDownloading = true
-                       // btnStatus=false
+                       // viewModel.loadingBill.value = true
+
+                        object: CountDownTimer(2000, 1000){
+                            override fun onTick(p0: Long) {}
+                            override fun onFinish() {
+                                openFile(file)
+                            }
+                        }.start()
+
+
+                        //Toast.makeText(context, ""+file.isDownloading, Toast.LENGTH_SHORT).show()
                     } else {
-                        openFile(file)
+                      //   openFile(file)
+                        // viewModel.onBillingToBillPreview()
                     }
-                }
-            }
+//                }
+//            }
 
-
+            //  viewModel.onBillingToBillPreview()
         },
-       // enabled =btnStatus ,
         colors = ButtonDefaults.buttonColors(backgroundColor = GreenLight),
         shape = RoundedCornerShape(5.dp),
-
+        enabled = viewModel.loadingBill.value,
         // colorFilter = ColorFilter.tint(Color.Black),
         modifier = Modifier
             .fillMaxWidth()
@@ -221,32 +231,25 @@ fun ItemFile(
             Column(
                 modifier = Modifier.fillMaxWidth()
             ) {
-
 //                val description = if (file.isDownloading){
 //                    "Downloading..."
 //                }else{
-//                    if (file.downloadedUri.isNullOrEmpty()) "Generate Bill" else "Tap to open file"
+//                   // if (file.downloadedUri.isNullOrEmpty()) "Generate Bill" else "Tap to View/Print Bill"
+//                    if (file.downloadedUri.isNullOrEmpty()) "Generate Bill" else "Tap to View/Print Bill"
 //                }
-                if (file.isDownloading) {
-                    viewModel.generateBillButtonText = "Downloading..."
-                } else if (file.downloadedUri != null) {
-                    openFile(file)
-                }else{
-                    viewModel.generateBillButtonText = "Generate Bill"
-                }
-
 
                 Text(
                     text = viewModel.generateBillButtonText,
+                    // text = description,
                     fontSize = 17.sp,
                     color = Color.White,
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
-
-
             }
 
-            if (file.isDownloading) {
+            // if (file.isDownloading) {
+            if (viewModel.loadingBill.value) {
+
                 CircularProgressIndicator(
                     color = Color.White,
                     modifier = Modifier
@@ -259,3 +262,6 @@ fun ItemFile(
 
     }
 }
+
+
+

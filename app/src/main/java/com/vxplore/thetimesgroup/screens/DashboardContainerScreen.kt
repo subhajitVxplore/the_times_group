@@ -73,7 +73,7 @@ fun DashboardContainerScreen(viewModel: DashboardViewModel = hiltViewModel()) {
                     //modifier = Modifier.align(CenterStart),
                     onClick = {
                         coroutineScope.launch { scaffoldState.drawerState.open() }
-                       // Toast.makeText(ctx, "Menu", Toast.LENGTH_SHORT).show()
+                       // Toast.makeText(ctx, "drawer contents", Toast.LENGTH_SHORT).show()
                     }
                 ) {
                     Icon(Icons.Filled.Menu, "")

@@ -1,407 +1,142 @@
+@file:Suppress("DEPRECATION")
+
 package com.vxplore.thetimesgroup.screens
 
 import android.app.Activity
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.BorderStroke
+import android.graphics.Bitmap
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.vxplore.core.domain.model.Vendor
+import coil.compose.rememberAsyncImagePainter
 import com.vxplore.thetimesgroup.R
-import com.vxplore.thetimesgroup.custom_views.PincodeSearchField
-import com.vxplore.thetimesgroup.custom_views.PincodesSuggestionsSection
-import com.vxplore.thetimesgroup.extensions.bottomToUp
-import com.vxplore.thetimesgroup.extensions.screenHeight
-import com.vxplore.thetimesgroup.extensions.screenWidth
-import com.vxplore.thetimesgroup.extensions.upToBottom
-import com.vxplore.thetimesgroup.ui.theme.GreenLight
-import com.vxplore.thetimesgroup.ui.theme.GreyDark
+import com.vxplore.thetimesgroup.mainController.MainActivity
+import com.vxplore.thetimesgroup.ui.theme.DonutGreenLight
 import com.vxplore.thetimesgroup.ui.theme.GreyLight
+import com.vxplore.thetimesgroup.viewModels.BaseViewModel
 import com.vxplore.thetimesgroup.viewModels.BillPreviewScreenViewModel
-import com.vxplore.thetimesgroup.viewModels.BillingScreenViewModel
 
 @Composable
 fun VendorBillPreviewScreen(
     viewModel: BillPreviewScreenViewModel = hiltViewModel(),
+    baseViewModel: BaseViewModel
 ) {
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(horizontal = 10.dp)) {
-
-        Text(
-            text = "CASH RECEIPT",
-            color = Color.Black,
-            fontSize = 10.sp,
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(top = 10.dp),
-            fontWeight = FontWeight.Bold,
-        )
-
-        Text(
-            text = "# B67089D8D20230427",
-            color = Color.Black,
-            fontSize = 8.sp,
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally),
-            // .padding(top = 3.dp),
-            fontWeight = FontWeight.Bold,
-        )
-        Text(
-            text = "27/04/2023",
-            color = Color.Black,
-            fontSize = 8.sp,
-            modifier = Modifier
-                .align(Alignment.Start)
-                .padding(top = 5.dp),
-            fontWeight = FontWeight.Bold,
-        )
-        Text(
-            text = "komal",
-            color = Color.Black,
-            fontSize = 8.sp,
-            modifier = Modifier
-                .align(Alignment.Start),
-            //.padding(top = 2.dp),
-            fontWeight = FontWeight.Bold,
-        )
-//-------------------------------------------------------------
-        Card(
-            shape = RectangleShape,
-            // backgroundColor = Color.White,
-            border = BorderStroke(1.dp, Color.Black),
+    Column(modifier = Modifier.fillMaxSize()) {
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .wrapContentHeight()
-                .padding(top = 5.dp)
+                // .wrapContentHeight()
+                .height(50.dp)
+                .background(GreyLight)
+                .padding(5.dp)
         ) {
-
-            Text(
-                text = "Order Details",
-                color = Color.Black,
-                fontSize = 8.sp,
+            val activity = LocalContext.current as Activity
+            Image(painter = painterResource(id = R.drawable.ic_baseline_keyboard_backspace_24),
+                contentDescription = "back button",
                 modifier = Modifier
-                    .align(Alignment.Start)
-                    .padding(horizontal = 10.dp, vertical = 4.dp),
-                fontWeight = FontWeight.Bold,
+                    .clickable {
+                        activity.onBackPressed()
+                    }
+                    .align(Alignment.CenterVertically)
+                    .padding(horizontal = 10.dp)
             )
-        }//card
-
-
-        Row(
-            modifier = Modifier
-                .wrapContentSize()
-                .padding(80.dp, 5.dp, 0.dp, 5.dp)
-        ) {
 
             Text(
-                text = "Paper(s)",
-                fontWeight = FontWeight.Bold,
-                fontSize = 8.sp,
-                modifier = Modifier.weight(1f, true)
+                text = "Bill Preview",
+                color = Color.DarkGray,
+                fontSize = 17.sp,
+                modifier = Modifier.align(Alignment.CenterVertically)
             )
-            Text(
-                text = "Price",
-                fontSize = 8.sp,
-                fontWeight = FontWeight.Bold,
+
+            Box(
                 modifier = Modifier
-                    .weight(1f, true)
-                // .padding(start = 10.dp)
-            )
-            Text(
-                text = "Qty",
-                fontSize = 8.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.weight(1f, true)
-            )
-            Text(
-                text = "Total",
-                fontSize = 8.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.weight(1f, true)
-            )
-        }//row
-
-
-//-----------------------------------------------------------------------
-
-        Card(
-            shape = RectangleShape,
-            // backgroundColor = Color.White,
-            border = BorderStroke(1.dp, Color.Black),
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .padding(top = 5.dp)
-        ) {
-
-            Text(
-                text = "Return Details",
-                color = Color.Black,
-                fontSize = 8.sp,
-                modifier = Modifier
-                    .align(Alignment.Start)
-                    .padding(horizontal = 10.dp, vertical = 4.dp),
-                fontWeight = FontWeight.Bold,
-            )
-        }//card
-
-
-        Row(
-            modifier = Modifier
-                .wrapContentSize()
-                .padding(80.dp, 5.dp, 0.dp, 5.dp)
-        ) {
-
-            Text(
-                text = "Paper(s)",
-                fontWeight = FontWeight.Bold,
-                fontSize = 8.sp,
-                modifier = Modifier.weight(1f, true)
-            )
-            Text(
-                text = "Price",
-                fontSize = 8.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .weight(1f, true)
-                // .padding(start = 10.dp)
-            )
-            Text(
-                text = "Qty",
-                fontSize = 8.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.weight(1f, true)
-            )
-            Text(
-                text = "Total",
-                fontSize = 8.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.weight(1f, true)
-            )
-        }//row
-
-
-//-----------------------------------------------------------------------
-
-
-        Card(
-            shape = RectangleShape,
-            // backgroundColor = Color.White,
-            border = BorderStroke(1.dp, Color.Black),
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .padding(top = 5.dp)
-        ) {
-
-            Text(
-                text = "Coupons",
-                color = Color.Black,
-                fontSize = 8.sp,
-                modifier = Modifier
-                    .align(Alignment.Start)
-                    .padding(horizontal = 10.dp, vertical = 4.dp),
-                fontWeight = FontWeight.Bold,
-            )
-        }//card
-
-
-        Row(
-            modifier = Modifier
-                .wrapContentSize()
-                .padding(80.dp, 5.dp, 0.dp, 5.dp)
-        ) {
-
-            Text(
-                text = "Coupon Name",
-                fontWeight = FontWeight.Bold,
-                fontSize = 8.sp,
-                modifier = Modifier.weight(1f, true)
-            )
-            Text(
-                text = "Price",
-                fontSize = 8.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .weight(1f, true)
-                // .padding(start = 10.dp)
-            )
-            Text(
-                text = "Qty",
-                fontSize = 8.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.weight(1f, true)
-            )
-            Text(
-                text = "Total",
-                fontSize = 8.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.weight(1f, true)
-            )
-        }//row
-
-
-
-//-----------------------------------------------------------------------
-        Divider(
-            color = Color.Gray,
-            thickness = 0.8.dp,
-            modifier = Modifier.padding(vertical = 10.dp)
-        )
-//-----------------------------------------------------------------------
-        Row(
-            modifier = Modifier
-                .wrapContentSize().align(Alignment.End)
-                //.padding(200.dp, 5.dp, 0.dp, 5.dp)
-        ) {
-
-            Text(
-                text = "Sub Total :",
-                fontWeight = FontWeight.Bold,
-                fontSize = 8.sp,
-               // modifier = Modifier.weight(1f, true)
-            )
-            Text(
-                text = "₹2000",
-                fontSize = 8.sp,
-                //fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                // .width(500.dp)
-                   // .weight(1f, true)
-                 .padding(end = 20.dp)
-            )
-
-        }//row
-        Row(
-            modifier = Modifier
-                .wrapContentSize()
-                .padding(200.dp, 5.dp, 0.dp, 5.dp)
-        ) {
-
-            Text(
-                text = "Old Due :",
-                fontWeight = FontWeight.Bold,
-                fontSize = 8.sp,
-                modifier = Modifier.weight(1f, true)
-            )
-            Text(
-                text = "+ 0",
-                fontSize = 8.sp,
-                //fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    // .width(200.dp)
-                    // .weight(1f, true)
-                    .padding(end = 20.dp)
-            )
-
-        }//row
-
-//-----------------------------------------------------------------------
-
-
-    }
-
-
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-@OptIn(ExperimentalAnimationApi::class)
-@Composable
-fun showOrderedPaperList(vendorList: List<Vendor>, loading: Boolean) {
-
-    AnimatedContent(
-        targetState = loading,
-        transitionSpec = {
-            if (targetState && !initialState) {
-                upToBottom()
-            } else {
-                bottomToUp()
-            }
-        }
-    ) {
-        if (!it) {
-
-            LazyColumn() {
-                itemsIndexed(items = vendorList) { index, vendorr ->
-                    Row(
-                        modifier = Modifier
-                            .wrapContentSize()
-                            .padding(100.dp, 5.dp, 0.dp, 5.dp)
-                    ) {
-
-                        Text(
-                            text = "Paper(s)",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 8.sp,
-                            modifier = Modifier.weight(1f, true)
-                        )
-                        Text(
-                            text = "Price",
-                            fontSize = 8.sp,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier
-                                .weight(1f, true)
-                            // .padding(start = 10.dp)
-                        )
-                        Text(
-                            text = "Qty",
-                            fontSize = 8.sp,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.weight(1f, true)
-                        )
-                        Text(
-                            text = "Total",
-                            fontSize = 8.sp,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.weight(1f, true)
-                        )
-                    }//row
-                    Divider(
-                        color = GreyLight,
-                        thickness = 0.8.dp,
-                        modifier = Modifier.padding(10.dp, 0.dp, 10.dp, 0.dp)
+                    .wrapContentHeight()
+                    .fillMaxWidth()
+                    .align(Alignment.CenterVertically),
+                contentAlignment = Alignment.TopEnd
+            ) {
+                Button(
+                    onClick = {
+                        //viewModel.onBillingToAddVendor()
+                    },
+                    shape = RoundedCornerShape(25.dp),
+                    modifier = Modifier.wrapContentSize(),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = DonutGreenLight)
+                ) {
+                    Text(
+                        text = "Share",
+                        color = Color.White,
+                        fontSize = 13.sp,
+                        modifier = Modifier.align(Alignment.CenterVertically),
+                        fontStyle = FontStyle.Normal
                     )
                 }
             }
+        }
 
 
-        } else {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(width = screenWidth * 0.15f, height = screenHeight * 0.15f)
-                        .padding(bottom = screenHeight * 0.05f),
-                    color = GreenLight,
-                    strokeWidth = 5.dp,
-                )
+        //----------------------------------------------------------------------------------
+
+        val activity = LocalContext.current as MainActivity
+
+        Column(modifier = Modifier.fillMaxSize()) {
+
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                itemsIndexed(baseViewModel.bitmapImg) { index,imgs->
+                    Image(
+                        bitmap = imgs.asImageBitmap(),
+                        // painter =rememberAsyncImagePainter(viewModel.bitmapImg),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .border(
+                                width = 2.dp,
+                                color = Color.White,
+                                shape = RoundedCornerShape(12.dp)
+                            )
+                    )
+
+                }
             }
 
+//        LazyColumn(modifier = Modifier.fillMaxSize()) {
+//            items(images.size) {
+
+//            }
+//        }
         }
+//        Image(
+//            // bitmap = viewModel.bitmapImg!!.asImageBitmap(),
+//            painter = coil.compose.rememberAsyncImagePainter(viewModel.bitmapImg),
+//            //  painter = painterResource(id = R.drawable.ic_launcher_background),
+//            contentDescription = "back button",
+//            modifier = Modifier.padding(10.dp).fillMaxSize()
+//        )
+
+
     }
-
-    ///////////////////////////////////////////////////////////////////
-
-
 }
+
+
+
+

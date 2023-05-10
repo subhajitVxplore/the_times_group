@@ -100,8 +100,8 @@ fun ExpandableCard(
                                 .rotate(rotationState)
                                 .weight(.1f),
                             onClick = {
-                                viewModel.expand.value = true
-//                                viewModel.expand.value = !viewModel.expand.value
+                              //  viewModel.expand.value = true
+                                viewModel.expand.value = !viewModel.expand.value
 //                                viewModel.stroke.value = if (viewModel.expand.value) 2 else 1
                             }
                         ) {

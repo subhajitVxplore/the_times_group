@@ -190,7 +190,6 @@ class BillingScreenViewModel @Inject constructor(
                                     SendReturnPapers(key = papers[it].key, value = 0)
                                 }
                             }
-
                         }
                     }
                     EmitType.COUPONS -> {
@@ -206,7 +205,6 @@ class BillingScreenViewModel @Inject constructor(
                                     Coupon(key = coupon[idx].key, value = 0)
                                 }
                             }
-
 
                         }
                     }
@@ -236,6 +234,7 @@ class BillingScreenViewModel @Inject constructor(
         _paperss.update { emptyList() }
         _couponss.update { emptyList() }
         searchVendorQuery = ""
+        loadingBill.value=true
         takenMinusreturnPaperTotal.value = 0
         cashPayment.value = 0
         couponsTotal.value = 0
@@ -283,7 +282,7 @@ class BillingScreenViewModel @Inject constructor(
     }
 
 
-
+    var loadingBill = mutableStateOf(true)
     fun generateBillByJson() {
 
 //        val rawJsonData = GenerateBillDataRequestModel(
@@ -301,7 +300,7 @@ class BillingScreenViewModel @Inject constructor(
             vendor_id = vendorId,
             calculated_price = takenMinusreturnPaperTotal.value,
             payment_by_cash = cashPayment.value,
-            due_amount = currentDue.value,
+            due_amount = previousDue.value,
             coupons = couponsJason.value.filter { it.value != 0 },//as same class name in both two model classes(PapersByVendorIdModel & GenerateBillDataRequestModel)
             today_papers = takenPapersJason.value.filter { it.value != 0 },
             return_papers = returnPapersJason.value.filter { it.value != 0 }
@@ -313,7 +312,11 @@ class BillingScreenViewModel @Inject constructor(
             .flowOn(Dispatchers.IO)
             .onEach {
                 when (it.type) {
-
+                    EmitType.Loading -> {
+                        it.value?.castValueToRequiredTypes<Boolean>()?.let {
+                            loadingBill.value = it
+                        }
+                    }
                     EmitType.IS_ADDED -> {
                         it.value?.castValueToRequiredTypes<Boolean>()?.let {
                             it

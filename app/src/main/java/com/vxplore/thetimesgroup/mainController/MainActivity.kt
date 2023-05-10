@@ -1,6 +1,7 @@
 package com.vxplore.thetimesgroup.mainController
 
 import android.Manifest
+import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.*
@@ -19,19 +20,24 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import androidx.work.*
@@ -40,12 +46,15 @@ import com.sun.jna.Pointer
 import com.sun.jna.ptr.IntByReference
 import com.vxplore.thetimesgroup.R
 import com.vxplore.thetimesgroup.navigation.MainNavGraph
+import com.vxplore.thetimesgroup.ui.theme.DonutGreenLight
+import com.vxplore.thetimesgroup.ui.theme.GreyLight
 import com.vxplore.thetimesgroup.ui.theme.TheTimesGroupTheme
 import com.vxplore.thetimesgroup.utility.FileDownloadWorker
 import com.vxplore.thetimesgroup.utility.ItemFile
 import com.vxplore.thetimesgroup.utility.MyFileModel
 import com.vxplore.thetimesgroup.utility.printerService.TestUtils
 import com.vxplore.thetimesgroup.viewModels.BaseViewModel
+import com.vxplore.thetimesgroup.viewModels.BillPreviewScreenViewModel
 import com.vxplore.thetimesgroup.viewModels.BillingScreenViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import io.ktor.client.*
@@ -73,18 +82,23 @@ val client = HttpClient(Android) {
 class MainActivity : ComponentActivity(), AutoReplyPrint.CP_OnPortOpenedEvent_Callback {
     var mBluetoothAdapter: BluetoothAdapter? = null
     var mmDevice: BluetoothDevice? = null
+    var isDeviceConnected: Boolean = false
+    private val billingScreenViewModel: BillingScreenViewModel by viewModels()
+    private val billPreviewScreenViewModel: BillPreviewScreenViewModel by viewModels()
+    private val baseViewModel by viewModels<BaseViewModel>()
 
+    // var bitmapImg:Bitmap?=null
     //end of class
     private var h: Pointer? = null
     private lateinit var requestMultiplePermission: ActivityResultLauncher<Array<String>>
 
-//////////////////////onCreate/////////////////////////////////////////////////////////////////
+    //////////////////////onCreate/////////////////////////////////////////////////////////////////
     override fun onCreate(savedInstanceState: Bundle?) {
+        window.statusBarColor = ContextCompat.getColor(this, R.color.black)
 
-        val baseViewModel by viewModels<BaseViewModel>()
         super.onCreate(savedInstanceState)
-    //findBTaddress()
-  //  Toast.makeText(this,"BtAddress::::${mmDevice?.address}",Toast.LENGTH_SHORT).show()
+        //findBTaddress()
+        //  Toast.makeText(this,"BtAddress::::${mmDevice?.address}",Toast.LENGTH_SHORT).show()
 
         requestMultiplePermission = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
@@ -100,7 +114,7 @@ class MainActivity : ComponentActivity(), AutoReplyPrint.CP_OnPortOpenedEvent_Ca
         }
 
 
-        window.statusBarColor = ContextCompat.getColor(this, R.color.black)
+
         setContent {
             TheTimesGroupTheme {
                 Scaffold(
@@ -111,6 +125,7 @@ class MainActivity : ComponentActivity(), AutoReplyPrint.CP_OnPortOpenedEvent_Ca
                         navHostController = rememberNavController(),
                         navigationChannel = baseViewModel.appNavigator.navigationChannel,
                         paddingValues = paddingValues,
+                        baseViewModel = baseViewModel
                     )
                 }
 
@@ -166,11 +181,14 @@ class MainActivity : ComponentActivity(), AutoReplyPrint.CP_OnPortOpenedEvent_Ca
         )
 
         workManager.getWorkInfoByIdLiveData(fileDownloadWorker.id)
-            .observe(this){ info->
+            .observe(this) { info ->
                 info?.let {
                     when (it.state) {
                         WorkInfo.State.SUCCEEDED -> {
-                            success(it.outputData.getString(FileDownloadWorker.FileParams.KEY_FILE_URI) ?: "")
+                            success(
+                                it.outputData.getString(FileDownloadWorker.FileParams.KEY_FILE_URI)
+                                    ?: ""
+                            )
                         }
                         WorkInfo.State.FAILED -> {
                             failed("Downloading failed!")
@@ -218,44 +236,51 @@ class MainActivity : ComponentActivity(), AutoReplyPrint.CP_OnPortOpenedEvent_Ca
                         file = pdfData.value,
                         success = {
                             pdfData.value = pdfData.value.copy().apply {
-                                isDownloading = false
+                                // isDownloading = false
+                                viewModel.loadingBill.value = false
                                 downloadedUri = it
+
                             }
+
                         },
                         failed = {
                             pdfData.value = pdfData.value.copy().apply {
-                                isDownloading = false
+                                viewModel.loadingBill.value = false
                                 downloadedUri = null
                             }
                         },
                         running = {
                             pdfData.value = pdfData.value.copy().apply {
-                                isDownloading = true
+                                viewModel.loadingBill.value = true
                             }
                         }
                     )
-                },
 
+                },
                 openFile = {
                     try {
 //------------------------------------------------------------------------------------------------
-
-                        if ((viewModel.pdfData!=null)) {
-                            AutoReplyPrint.INSTANCE.CP_Port_Close(h)
-                            openPrinterPort()
-                            convertPdfToBitmap(target = viewModel.pdfData.value,coroutineScope = lifecycleScope) {
-                                tryToPrint(it)
-                            }
+//                        val intent = Intent(Intent.ACTION_VIEW)
+//                        intent.setDataAndType(it.downloadedUri?.toUri(), "application/pdf")
+//                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+//                        ContextCompat.startActivity(context, intent, null)
+                        //---------------------------------------------------------------//
+                        //  openPrinterPort()
+                        convertPdfToBitmap(
+                            target = viewModel.pdfData.value,
+                            coroutineScope = lifecycleScope
+                        ) {
+                            // tryToPrint(it)
+                            // Log.d("ShowItemFileLayout", "ShowItemFileLayout: $it")
+                            //Toast.makeText(this@MainActivity, "hello+++$it", Toast.LENGTH_SHORT).show()
+                            baseViewModel.bitmapImg.clear()
+                            baseViewModel.bitmapImg.addAll(it)
+                            //  baseViewModel.bitmapImg=it.toMutableStateList()
                         }
-
-//------------------------------------------------------------------------------------------------
-                        val intent = Intent(Intent.ACTION_VIEW)
-                        intent.setDataAndType(it.downloadedUri?.toUri(), "application/pdf")
-                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                        ContextCompat.startActivity(context, intent, null)
+                        billingScreenViewModel.onBillingToBillPreview()
 
                     } catch (e: ActivityNotFoundException) {
-                        Toast.makeText(context,"Can't open Pdf",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Can't open Pdf", Toast.LENGTH_SHORT).show()
                     }
                 },
                 viewModel = viewModel
@@ -270,7 +295,6 @@ class MainActivity : ComponentActivity(), AutoReplyPrint.CP_OnPortOpenedEvent_Ca
             }
         }
     }
-
     /////////////////////////print service////////////////////////
 
     private fun tryToPrint(bitmaps: List<Bitmap>) {
@@ -298,7 +322,6 @@ class MainActivity : ComponentActivity(), AutoReplyPrint.CP_OnPortOpenedEvent_Ca
                         printwidth
                     ) //Bitmap.createScaledBitmap(this@apply, 500, height_mm.value, true)
 
-
                     val result =
                         AutoReplyPrint.CP_Pos_PrintRasterImageFromData_Helper.PrintRasterImageFromBitmap(
                             h,
@@ -308,12 +331,15 @@ class MainActivity : ComponentActivity(), AutoReplyPrint.CP_OnPortOpenedEvent_Ca
                             AutoReplyPrint.CP_ImageBinarizationMethod_ErrorDiffusion,
                             AutoReplyPrint.CP_ImageCompressionMethod_None
                         )
+                    //  billPreviewScreenViewModel.bitmapImg=scaled
+
                     if (!result) TestUtils.showMessageOnUiThread(
                         this@MainActivity,
                         "Write failed"
                     )
+                    //Toast.makeText(this@MainActivity, "$result", Toast.LENGTH_SHORT).show()
                     AutoReplyPrint.INSTANCE.CP_Pos_Beep(h, 1, 500)
-                    //AutoReplyPrint.INSTANCE.CP_Port_Close(h)
+                    AutoReplyPrint.INSTANCE.CP_Port_Close(h)
                 }.start()
             }
         }
@@ -321,7 +347,7 @@ class MainActivity : ComponentActivity(), AutoReplyPrint.CP_OnPortOpenedEvent_Ca
     }
 
     private fun Context.convertPdfToBitmap(
-        target: String ="",
+        target: String = "",
         coroutineScope: CoroutineScope,
         onBitmapCreated: (List<Bitmap>) -> Unit
     ) {
@@ -358,6 +384,8 @@ class MainActivity : ComponentActivity(), AutoReplyPrint.CP_OnPortOpenedEvent_Ca
                     canvas.drawBitmap(bitmap, 0f, 0f, Paint())
                     newBitmap?.let {
                         bitmaps.add(it)
+
+                        //   billPreviewScreenViewModel.bitmapImg=it
                     }
                     page.close()
                 }
@@ -391,12 +419,13 @@ class MainActivity : ComponentActivity(), AutoReplyPrint.CP_OnPortOpenedEvent_Ca
             val pairedDevices: Set<BluetoothDevice> = mBluetoothAdapter!!.getBondedDevices()
             if (pairedDevices.size > 0) {
                 for (device in pairedDevices) {
-                   mmDevice = device
+                    mmDevice = device
                 }
-
+                isDeviceConnected = true
             }
+
             AutoReplyPrint.INSTANCE.CP_Port_AddOnPortOpenedEvent(this@MainActivity, Pointer.NULL)
-            h = AutoReplyPrint.INSTANCE.CP_Port_OpenBtSpp("${mmDevice?.address}",0)
+            h = AutoReplyPrint.INSTANCE.CP_Port_OpenBtSpp("${mmDevice?.address}", 0)
             //h = AutoReplyPrint.INSTANCE.CP_Port_OpenBtSpp("86:67:7A:11:E4:93",0)
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
@@ -415,7 +444,25 @@ class MainActivity : ComponentActivity(), AutoReplyPrint.CP_OnPortOpenedEvent_Ca
     }
 
 
+    @Composable
+    fun VendorBillPreviewScreen(
+        viewModel: BillPreviewScreenViewModel = hiltViewModel(),
+    ) {
+        Column(modifier = Modifier.fillMaxSize()) {
 
+            Image(
+                painter = painterResource(id = R.drawable.ic_launcher_background),
+                contentDescription = "back button",
+                modifier = Modifier
+                    .padding(10.dp)
+                    .fillMaxSize()
+            )
+
+
+        }
+
+
+    }
 
 
 }

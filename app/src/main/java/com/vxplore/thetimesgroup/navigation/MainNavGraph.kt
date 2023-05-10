@@ -8,6 +8,7 @@ import androidx.navigation.NavHostController
 import com.example.core.utils.NavigationIntent
 import com.vxplore.core.common.Destination
 import com.vxplore.thetimesgroup.screens.*
+import com.vxplore.thetimesgroup.viewModels.BaseViewModel
 import kotlinx.coroutines.channels.Channel
 
 @Composable
@@ -15,6 +16,7 @@ fun MainNavGraph(
     navHostController: NavHostController,
     navigationChannel: Channel<NavigationIntent>,
     paddingValues: PaddingValues,
+    baseViewModel: BaseViewModel
 ) {
     navHostController.NavEffects(navigationChannel)
 
@@ -48,7 +50,7 @@ fun MainNavGraph(
             VendorBillingScreen()
         }
         composable(destination = Destination.BillPreview) {
-            VendorBillPreviewScreen()
+            VendorBillPreviewScreen(baseViewModel = baseViewModel)
         }
 
         composable(destination = Destination.AddVendor) {
