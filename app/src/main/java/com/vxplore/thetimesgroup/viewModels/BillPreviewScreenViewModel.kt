@@ -18,19 +18,21 @@ class BillPreviewScreenViewModel @Inject constructor(private val appNavigator: A
 
 
    // var bitmapImg :List<Bitmap>?=null
-
+   var phoneNumber = mutableStateOf("6290353314")
+   var message = mutableStateOf("Helloworld")
 
     // var bitmapImg: MutableState<Bitmap?> = mutableStateOf(null)
 //    val images = remember {
 //        mutableStateListOf<Bitmap>()
 //    }
-//    fun onBillingToAddVendor() {
-//        appNavigator.tryNavigateTo(
-//            route = Destination.AddVendor(),
-//            popUpToRoute = Destination.Dashboard(),
-//            isSingleTop = true,
-//            inclusive = true
-//        )
-//    }
+    fun onBillViewToBilling() {
+        appNavigator.tryNavigateTo(
+            route = Destination.Billing(),
+            popUpToRoute = Destination.BillPreview(),
+            isSingleTop = true,
+            inclusive = true
+        )
+    }
+
 
 }

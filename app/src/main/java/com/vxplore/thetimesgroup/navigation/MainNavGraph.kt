@@ -47,10 +47,10 @@ fun MainNavGraph(
             RegistrationScreen()
         }
         composable(destination = Destination.Billing) {
-            VendorBillingScreen()
+            VendorBillingScreen(baseViewModel = baseViewModel)
         }
         composable(destination = Destination.BillPreview) {
-            VendorBillPreviewScreen(baseViewModel = baseViewModel)
+            VendorBillPreViewScreen(baseViewModel = baseViewModel)
         }
 
         composable(destination = Destination.AddVendor) {

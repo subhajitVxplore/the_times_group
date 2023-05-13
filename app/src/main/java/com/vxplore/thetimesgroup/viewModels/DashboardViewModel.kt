@@ -16,6 +16,7 @@ import com.vxplore.thetimesgroup.extensions.castListToRequiredTypes
 import com.vxplore.thetimesgroup.extensions.castValueToRequiredTypes
 import com.vxplore.thetimesgroup.helpers_impl.SavableMutableState
 import com.vxplore.thetimesgroup.screens.PaperSold
+import com.vxplore.thetimesgroup.utility.bluetoothService.BluetoothController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -67,6 +68,8 @@ class DashboardViewModel @Inject constructor(
     }
 
     fun onDashboardToBilling() {
+
+
         appNavigator.tryNavigateTo(
             route = Destination.Billing(),
             // popUpToRoute = Destination.Dashboard(),

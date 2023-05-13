@@ -1,6 +1,7 @@
 package com.vxplore.core.common
 
 object PrefConstants {
+    const val PRINTER_ID = "printer_id"
     const val BASE_URL = "fcm_token"
     const val REGISTRATION_STATUS = "registration_status"
     const val FCM_TOKEN = "fcm_token"

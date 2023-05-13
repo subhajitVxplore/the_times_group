@@ -43,7 +43,7 @@ import com.vxplore.thetimesgroup.viewModels.BillingScreenViewModel
 @SuppressLint("SuspiciousIndentation")
 @OptIn(ExperimentalMaterialApi::class, ExperimentalAnimationApi::class)
 @Composable
-fun ExpandableCard(
+fun ExpandableCardReturnPapers(
     loading: Boolean,
     header: String, // Header
     //description: String, // Description
@@ -52,7 +52,7 @@ fun ExpandableCard(
     viewModel: BillingScreenViewModel,
     onReturnPriceChange: (String, Int, Int) -> Unit
 ) {
-    val rotationState by animateFloatAsState(if (viewModel.expand.value) 180f else 0f) // Rotation State
+    val rotationState by animateFloatAsState(if (viewModel.expandReturn.value) 180f else 0f) // Rotation State
     val price: String = ""
 
 
@@ -64,13 +64,15 @@ fun ExpandableCard(
                             easing = LinearOutSlowInEasing
                         )
                     )
-                    .padding(15.dp),
+                    .padding(start = 15.dp, end = 15.dp, top = 10.dp, bottom = 15.dp),
+                elevation = 10.dp,
                 backgroundColor = Color.White,
                 shape = RoundedCornerShape(8.dp),
                 border = BorderStroke(viewModel.stroke.value.dp, Color.Gray),
                 onClick = {
-                    viewModel.expand.value = !viewModel.expand.value
-                    viewModel.stroke.value = if (viewModel.expand.value) 2 else 1
+                    viewModel.expandReturn.value = !viewModel.expandReturn.value
+                    viewModel.expandCoupon.value=false
+                    //viewModel.stroke.value = if (viewModel.expandReturn.value) 2 else 1
                 }
             ) {
                 Column(
@@ -80,7 +82,7 @@ fun ExpandableCard(
                 ) {
                     Row(
                         modifier = Modifier
-                            .fillMaxWidth()
+                            .fillMaxWidth().height(42.dp)
                             .padding(horizontal = 10.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween // Control the header Alignment over here.
@@ -92,26 +94,44 @@ fun ExpandableCard(
                             textAlign = TextAlign.Start,
                             fontWeight = FontWeight.Normal,
                             modifier = Modifier
-                                .weight(.9f)
+                                .weight(1f)
                                 .padding(start = 8.dp)
                         )
-                        IconButton(
-                            modifier = Modifier
-                                .rotate(rotationState)
-                                .weight(.1f),
-                            onClick = {
-                              //  viewModel.expand.value = true
-                                viewModel.expand.value = !viewModel.expand.value
-//                                viewModel.stroke.value = if (viewModel.expand.value) 2 else 1
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.KeyboardArrowDown,
-                                tint = Color.Gray, // Icon Color
-                                contentDescription = "Drop Down Arrow",
+
+
+                        if (paperList.isNotEmpty()) {
+                            val returnValues =
+                                viewModel.returnsTotal.value
+                            Text(
+                                text = if (returnValues != 0) "₹${returnValues}"
+                                else "₹0",
+                                color = Color.DarkGray, // Header Color
+                                fontSize = 15.sp,
+                                textAlign = TextAlign.Start,
+                                fontWeight = FontWeight.Normal,
+                                modifier = Modifier
+                                    //.weight(.9f)
+                                    .padding(end = 7.dp)
                             )
                         }
-                    }
+//                        IconButton(
+//                            modifier = Modifier
+//                                .rotate(rotationState)
+//                                .weight(.1f),
+//                            onClick = {
+//                              //  viewModel.expandReturn.value = true
+//                                viewModel.expandReturn.value = !viewModel.expandReturn.value
+//                               // viewModel.expandCoupon.value = !viewModel.expandCoupon.value
+////                                viewModel.stroke.value = if (viewModel.expandReturn.value) 2 else 1
+//                            }
+//                        ) {
+//                            Icon(
+//                                imageVector = Icons.Default.KeyboardArrowDown,
+//                                tint = Color.Gray, // Icon Color
+//                                contentDescription = "Drop Down Arrow",
+//                            )
+//                        }
+                    }//Row
                     Divider(color = Color.LightGray, thickness = 0.8.dp)
 
                     AnimatedContent(
@@ -125,7 +145,7 @@ fun ExpandableCard(
                         }
                     ) {
                         if (!it) {
-                            if (viewModel.expand.value) {
+                            if (viewModel.expandReturn.value) {
                                 Spacer(modifier = Modifier.height(7.dp))
 
                                 Column(modifier = Modifier.padding(top = 10.dp)) {
@@ -208,35 +228,33 @@ fun ExpandableCard(
 
                                 }//lazy column
                                 Spacer(modifier = Modifier.height(10.dp))
-                                    Divider(color = Color.LightGray, thickness = 0.8.dp, modifier = Modifier.padding(bottom = 5.dp))
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
-                                        verticalAlignment = Alignment.CenterVertically,
-                                        horizontalArrangement = Arrangement.SpaceBetween // Control the header Alignment over here.
-                                    ) {
-
-                                        if (paperList.isNotEmpty()) {
-                                            val returnValues =
-                                                viewModel.returnsTotal.value
-                                            Text(
-                                                text = if (returnValues != 0) "Total Return Price = ₹${returnValues}"
-                                                    else "Total Return Price = ₹0",
-                                                color = Color.DarkGray, // Header Color
-                                                fontSize = 15.sp,
-                                                textAlign = TextAlign.Start,
-                                                fontWeight = FontWeight.Normal,
-                                                modifier = Modifier
-                                                    .weight(.9f)
-                                                    .padding(start = 8.dp)
-                                            )
-                                        }
-                                    }
-                                    Spacer(modifier = Modifier.height(10.dp))
+//                                    Divider(color = Color.LightGray, thickness = 0.8.dp, modifier = Modifier.padding(bottom = 5.dp))
+//                                    Row(
+//                                        modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
+//                                        verticalAlignment = Alignment.CenterVertically,
+//                                        horizontalArrangement = Arrangement.SpaceBetween // Control the header Alignment over here.
+//                                    ) {
+//
+//                                        if (paperList.isNotEmpty()) {
+//                                            val returnValues =
+//                                                viewModel.returnsTotal.value
+//                                            Text(
+//                                                text = if (returnValues != 0) "Total Return Price = ₹${returnValues}"
+//                                                    else "Total Return Price = ₹0",
+//                                                color = Color.DarkGray, // Header Color
+//                                                fontSize = 15.sp,
+//                                                textAlign = TextAlign.Start,
+//                                                fontWeight = FontWeight.Normal,
+//                                                modifier = Modifier
+//                                                    .weight(.9f)
+//                                                    .padding(start = 8.dp)
+//                                            )
+//                                        }
+//                                    }
+//                                    Spacer(modifier = Modifier.height(10.dp))
 
                             }//column
                     }
-
-
                                     } else {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator(

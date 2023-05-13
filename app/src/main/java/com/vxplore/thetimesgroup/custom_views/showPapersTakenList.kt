@@ -144,10 +144,10 @@ fun showPapersTakenList(
                                     else "Total TakenPaper Price = ₹0",
                                     color = Color.DarkGray, // Header Color
                                     fontSize = 15.sp,
-                                    textAlign = TextAlign.Start,
+                                    textAlign = TextAlign.Center,
                                     fontWeight = FontWeight.Normal,
                                     modifier = Modifier
-                                        .weight(.9f)
+                                        //.weight(.9f)
                                         .padding(start = 8.dp)
                                 )
                             }

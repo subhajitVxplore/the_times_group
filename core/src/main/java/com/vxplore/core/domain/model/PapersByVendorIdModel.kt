@@ -3,6 +3,7 @@ package com.vxplore.core.domain.model
 data class PapersByVendorIdModel(
     val coupons: List<Coupon>,
     val message: String,
+    val phoneNumber: String,
     val papers: List<Paper>,
     val status: Boolean,
     val dueAmount: Int
@@ -19,5 +20,7 @@ data class Paper(
 
 data class Coupon(
     val key: String,
-    val value: Int
+    val value: Int,
+    val name: String
+
 )

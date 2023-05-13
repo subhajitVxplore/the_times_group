@@ -14,27 +14,32 @@ import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.net.toUri
+import androidx.lifecycle.lifecycleScope
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.vxplore.thetimesgroup.R
+import com.vxplore.thetimesgroup.custom_views.CustomDialog
 import com.vxplore.thetimesgroup.ui.theme.GreenLight
 import com.vxplore.thetimesgroup.viewModels.BillingScreenViewModel
 import java.io.File
@@ -183,84 +188,51 @@ data class MyFileModel(
 @Composable
 fun ItemFile(
     viewModel: BillingScreenViewModel,
-    file: MyFileModel,
     startDownload: (MyFileModel) -> Unit,
-    openFile: (MyFileModel) -> Unit
 ) {
-    val context = LocalContext.current
-    Button(
-        onClick = {
-            viewModel.generateBillByJson()
-            //  Toast.makeText(context, ""+file.isDownloading, Toast.LENGTH_SHORT).show()
-//            if (viewModel.pdfData.value != "") {
-//                if (!file.isDownloading) {
-                    if (file.downloadedUri.isNullOrEmpty()) {
-                        startDownload(file)
-                       // viewModel.loadingBill.value = true
 
-                        object: CountDownTimer(2000, 1000){
-                            override fun onTick(p0: Long) {}
-                            override fun onFinish() {
-                                openFile(file)
-                            }
-                        }.start()
-
-
-                        //Toast.makeText(context, ""+file.isDownloading, Toast.LENGTH_SHORT).show()
-                    } else {
-                      //   openFile(file)
-                        // viewModel.onBillingToBillPreview()
-                    }
-//                }
+//    val showDialog = remember { mutableStateOf(false) }
+//
+//    if (showDialog.value)
+//        CustomDialog(value = "", setShowDialog = {
+//            showDialog.value = it
+//        },
+//            onClickPrintBill = {
+//                viewModel.checkIfDeviceFound()
+//            },
+//            onClickViewBill = {
+//                viewModel.onBillingToBillPreview()
 //            }
+//        ,viewModel)
+//    val context = LocalContext.current
+//    Button(
+//        onClick = {
+//           //viewModel.generateBillByJson()
+//            showDialog.value = true
+//        },
+//        colors = ButtonDefaults.buttonColors(backgroundColor = GreenLight),
+//        shape = RoundedCornerShape(topStart = 5.dp, bottomStart = 5.dp),
+//        enabled = viewModel.loadingBill.value,
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .height(50.dp)
+//
+//    ) {
+//        Row(
+//            modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
+//        ) {
+//            Text(
+//                text = viewModel.generateBillButtonText,
+//                fontSize = 17.sp,
+//                color = Color.White,
+//            )
+//
+//
+//        }
+//
+//    }//Button
 
-            //  viewModel.onBillingToBillPreview()
-        },
-        colors = ButtonDefaults.buttonColors(backgroundColor = GreenLight),
-        shape = RoundedCornerShape(5.dp),
-        enabled = viewModel.loadingBill.value,
-        // colorFilter = ColorFilter.tint(Color.Black),
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(50.dp)
 
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-//                val description = if (file.isDownloading){
-//                    "Downloading..."
-//                }else{
-//                   // if (file.downloadedUri.isNullOrEmpty()) "Generate Bill" else "Tap to View/Print Bill"
-//                    if (file.downloadedUri.isNullOrEmpty()) "Generate Bill" else "Tap to View/Print Bill"
-//                }
-
-                Text(
-                    text = viewModel.generateBillButtonText,
-                    // text = description,
-                    fontSize = 17.sp,
-                    color = Color.White,
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                )
-            }
-
-            // if (file.isDownloading) {
-            if (viewModel.loadingBill.value) {
-
-                CircularProgressIndicator(
-                    color = Color.White,
-                    modifier = Modifier
-                        .size(32.dp)
-                        .align(Alignment.CenterVertically)
-                )
-            }
-
-        }
-
-    }
 }
 
 

@@ -1,22 +1,25 @@
 package com.vxplore.thetimesgroup.viewModels
 
-import android.content.Context
-import android.widget.Toast
+import android.util.Log
 import androidx.compose.runtime.*
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.caysn.autoreplyprint.AutoReplyPrint
 import com.example.core.utils.AppNavigator
+import com.sun.jna.Pointer
 import com.vxplore.core.common.Action
 import com.vxplore.core.common.Destination
 import com.vxplore.core.common.EmitType
 import com.vxplore.core.domain.model.*
+import com.vxplore.thetimesgroup.utility.bluetoothService.BluetoothController
 import com.vxplore.core.domain.useCasess.BillingScreenUseCases
 import com.vxplore.core.helpers.AppStore
 import com.vxplore.thetimesgroup.custom_views.UiData
 import com.vxplore.thetimesgroup.extensions.castListToRequiredTypes
 import com.vxplore.thetimesgroup.extensions.castValueToRequiredTypes
 import com.vxplore.thetimesgroup.helpers_impl.SavableMutableState
+import com.vxplore.thetimesgroup.utility.bluetoothService.BluetoothUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -27,22 +30,36 @@ import javax.inject.Inject
 class BillingScreenViewModel @Inject constructor(
     private val appNavigator: AppNavigator,
     private val billingScreenUseCases: BillingScreenUseCases,
+    private val bluetoothController: BluetoothController,
     private val pref: AppStore,
     savedStateHandle: SavedStateHandle
-) : ViewModel() {
+) : ViewModel(), AutoReplyPrint.CP_OnPortOpenedEvent_Callback {//BillingScreenViewModel
+
+    private var _printerPointer: Pointer? = null
+    var pPointer = _printerPointer
+
+
+    var pairedDevicess = listOf<BluetoothDevice>()
+    var scannedDevicess = mutableListOf<BluetoothDevice>()
+    private val _state = MutableStateFlow(BluetoothUiState())
+    var btState = mutableStateOf(1)
 
     //val mainActivity:MainActivity = TODO()
     //val mainActivity = mutableStateOf<MainActivity>()
-    var expand = mutableStateOf(false)  // Expand State
+    //var expand = mutableStateOf(false)  // Expand State
+    var expandReturn = mutableStateOf(false)  // Expand State
+    var expandCoupon = mutableStateOf(false)  // Expand State
     var stroke = mutableStateOf(1)
 
+    var vendorPhone = mutableStateOf("")
     var cashPayment = mutableStateOf(0)
     var previousDue = mutableStateOf(0)
     var currentDue = mutableStateOf(0)
+    var balanceAmount = mutableStateOf(0)
     var isAddedBillData = mutableStateOf(false)
     var pdfData = mutableStateOf("")
 
-    var generateBillButtonText:String="Generate Bill"
+    var generateBillButtonText: String = "Generate Bill"
     // var takenPapers = MutableList<Pair<Int, Int>>(getPaperPrice().size) { Pair(0, 0) }
 
     private val _paperss = MutableStateFlow(emptyList<Paper>())
@@ -55,8 +72,8 @@ class BillingScreenViewModel @Inject constructor(
     val returnPapers = MutableStateFlow(mutableListOf<SendReturnPapers>())
     val returnPapersJason = MutableStateFlow(mutableListOf<SendReturnPapers>())
     var takenMinusreturnPaperTotal = mutableStateOf(0)
-    val coupons = MutableStateFlow(mutableListOf<Coupon>())
-    val couponsJason = MutableStateFlow(mutableListOf<Coupon>())
+    val coupons = MutableStateFlow(mutableListOf<SendCoupons>())
+    val couponsJason = MutableStateFlow(mutableListOf<SendCoupons>())
     var cashMinusCouponTotal = mutableStateOf(0)
 
     private val _suggestionsss: MutableStateFlow<List<SearchVendorModel>> =
@@ -78,12 +95,19 @@ class BillingScreenViewModel @Inject constructor(
 
     init {
         currentDue.value = previousDue.value
-        // getPapersByVendorId(" ")
+        Log.d("pairedDevicess", "pairedDevicess: ${bluetoothController.pairedDevices.value}")
     }
+
 
     val takenPapersTotal = mutableStateOf(0)
     val returnsTotal = mutableStateOf(0)
     val couponsTotal = mutableStateOf(0)
+
+
+    fun setPrinterPointer(p: Pointer) {
+        _printerPointer = p
+        pPointer = p
+    }
 
     fun calculateTakenPapersPrice(value1: Int, value2: Int, index: Int) {
         takenPapers.update { values ->
@@ -92,11 +116,9 @@ class BillingScreenViewModel @Inject constructor(
             values
         }
         takenPapersJason.update { values ->
-            values[index].value =value2
+            values[index].value = value2
             values
         }
-
-
     }
 
     fun calculateReturnPapersPrice(value1: Int, value2: Int, index: Int) {
@@ -123,9 +145,11 @@ class BillingScreenViewModel @Inject constructor(
             values
         }
         couponsJason.update { values ->
-            values[index] = values[index].copy(value =value2)
+            values[index] = values[index].copy(value = value2)
             values
         }
+
+
     }
 
 
@@ -137,12 +161,13 @@ class BillingScreenViewModel @Inject constructor(
             //inclusive = true
         )
     }
+
     fun onBillingToBillPreview() {
         appNavigator.tryNavigateTo(
             route = Destination.BillPreview(),
-            // popUpToRoute = Destination.Dashboard(),
-            //isSingleTop = true,
-            //inclusive = true
+             popUpToRoute = Destination.Billing(),
+            isSingleTop = true,
+            inclusive = true
         )
     }
 
@@ -195,14 +220,27 @@ class BillingScreenViewModel @Inject constructor(
                     EmitType.COUPONS -> {
                         it.value?.castListToRequiredTypes<Coupon>()?.let { coupon ->
                             _couponss.update { coupon }
+//                            coupons.update {
+//                                MutableList(coupon.size) { idx ->
+//                                    Coupon(key = coupon[idx].key, value = 0)
+//                                }
+//                            }
+//                            couponsJason.update {
+//                                MutableList(coupon.size) { idx ->
+//                                    Coupon(key = coupon[idx].key, value = 0)
+//                                }
+//                            }
+
+
                             coupons.update {
-                                MutableList(coupon.size) { idx ->
-                                    Coupon(key = coupon[idx].key, value = 0)
+                                //MutableList(papers.size) { 0 }
+                                MutableList(coupon.size) {
+                                    SendCoupons(key = coupon[it].key, value = 0)
                                 }
                             }
                             couponsJason.update {
-                                MutableList(coupon.size) { idx ->
-                                    Coupon(key = coupon[idx].key, value = 0)
+                                MutableList(coupon.size) {
+                                    SendCoupons(key = coupon[it].key, value = 0)
                                 }
                             }
 
@@ -212,6 +250,11 @@ class BillingScreenViewModel @Inject constructor(
                     EmitType.DUE -> {
                         it.value?.castValueToRequiredTypes<Int>()?.let {
                             previousDue.value = it
+                        }
+                    }
+                    EmitType.PHONE -> {
+                        it.value?.castValueToRequiredTypes<String>()?.let {
+                            vendorPhone.value = it
                         }
                     }
 
@@ -234,14 +277,18 @@ class BillingScreenViewModel @Inject constructor(
         _paperss.update { emptyList() }
         _couponss.update { emptyList() }
         searchVendorQuery = ""
-        loadingBill.value=true
+        loadingBill.value = true
+        takenPapersTotal.value=0
+        returnsTotal.value=0
         takenMinusreturnPaperTotal.value = 0
         cashPayment.value = 0
         couponsTotal.value = 0
         cashMinusCouponTotal.value = 0
         currentDue.value = 0
-        pdfData.value=""
-        expand.value = false
+        balanceAmount.value=0
+        pdfData.value = ""
+        expandReturn.value = false
+        expandCoupon.value = false
         suggestionListVisibility = false
         viewModelScope.launch {
             suggestionsBackup.apply {
@@ -281,20 +328,9 @@ class BillingScreenViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-
     var loadingBill = mutableStateOf(true)
-    fun generateBillByJson() {
 
-//        val rawJsonData = GenerateBillDataRequestModel(
-//            vendor_id = vendorId,
-//            calculated_price = takenMinusreturnPaperTotal.value,
-//            payment_by_cash = cashPayment.value,
-//            due_amount = currentDue.value,
-//            coupons = coupons.value.toList(),//as same class name in both two model classes(PapersByVendorIdModel & GenerateBillDataRequestModel)
-//            today_papers = takenPapers.value.toList(),
-//            return_papers = returnPapers.value.toList()
-//        )
-      //  Toast.makeText(context, "${takenMinusreturnPaperTotal.value} \n ${cashPayment.value} \n ${currentDue.value}\n ${couponsJason.value.toList()}",Toast.LENGTH_SHORT).show()
+    fun generateBillByJson() {
 
         val rawJsonData = GenerateBillDataRequestModel(
             vendor_id = vendorId,
@@ -319,7 +355,6 @@ class BillingScreenViewModel @Inject constructor(
                     }
                     EmitType.IS_ADDED -> {
                         it.value?.castValueToRequiredTypes<Boolean>()?.let {
-                            it
                             isAddedBillData.value = it
                         }
                     }
@@ -345,4 +380,46 @@ class BillingScreenViewModel @Inject constructor(
 
     }
 
+    val scannedBLdevices = mutableStateListOf<BluetoothDevice>()
+
+    var printerFound by mutableStateOf<Printer?>(null)
+
+    var printerConnectedNotify by mutableStateOf("")
+
+
+    fun checkIfDeviceFound() {
+        viewModelScope.launch {
+            val printerID = pref.printer()
+            if (printerID != null) {
+                printerFound = Printer(
+                    address = printerID
+                )
+            } else {
+                bluetoothController.startDiscovery()
+                bluetoothController.scannedDevices.onEach { devices ->
+                    if (!scannedBLdevices.containsAll(devices)) {
+                        scannedBLdevices.clear()
+                        scannedBLdevices.addAll(devices.distinctBy { it.name })
+                    }
+                }.launchIn(viewModelScope)
+            }
+        }
+    }
+
+    override fun CP_OnPortOpenedEvent(p0: Pointer?, p1: String?, p2: Pointer?) {
+        printerConnectedNotify = "Printer Connection ${p0.toString()} $p1 ${p2.toString()}"
+        generateBillByJson()
+    }
+
+    fun onClickDevice(bluetoothDevice: BluetoothDevice) {
+        scannedBLdevices.clear()
+        bluetoothController.stopDiscovery()
+        viewModelScope.launch { pref.savePrinter(bluetoothDevice.address) }
+        printerFound =
+            Printer(address = bluetoothDevice.address, name = bluetoothDevice.name ?: "Printer")
+        Log.d("BLE DEVICE", "onClickDevice: ${bluetoothDevice.address}")
+    }
 }
+
+
+data class Printer(val address: String, val name: String = "Billing Printer")

@@ -28,6 +28,7 @@ enum class EmitType {
     TodayEachPaperSold,
     IS_ADDED,
     PDF_URL,
+    PHONE,
 
 
 }

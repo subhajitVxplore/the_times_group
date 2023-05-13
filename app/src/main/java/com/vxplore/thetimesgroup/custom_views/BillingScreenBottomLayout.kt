@@ -8,6 +8,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -17,9 +19,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.vxplore.thetimesgroup.mainController.MainActivity
+import com.vxplore.thetimesgroup.ui.theme.GreenLight
 import com.vxplore.thetimesgroup.ui.theme.PinkLight
 import com.vxplore.thetimesgroup.viewModels.BillingScreenViewModel
 
@@ -35,44 +39,79 @@ fun BillingScreenBottomLayout(viewModel: BillingScreenViewModel) {
                     .wrapContentSize()
                     .align(Alignment.BottomEnd)
             ) {
+
+//----------------------------Due Payment Layout----------------------------------------------------
+                Spacer(modifier = Modifier.height(5.dp))
+                // val context= LocalContext.current
                 Divider(
                     color = Color.LightGray,
                     thickness = 0.8.dp,
-                    modifier = Modifier.padding(horizontal = 10.dp)
+                    // modifier = Modifier.padding(horizontal = 5.dp)
                 )
-                Row(
+                Surface(
+                    //  shape = RoundedCornerShape(5.dp),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .wrapContentHeight()
+                        .height(50.dp)
+                        .padding(horizontal = 15.dp),
+                    //  color = PinkLight,
+                    contentColor = Color.White
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
+                    Row(
+                        Modifier
                             .wrapContentHeight()
-                            .align(Alignment.CenterVertically)
+                            .fillMaxWidth()
                     ) {
+
+
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f, true)
+                                .align(Alignment.CenterVertically)
+                                .padding(start = 5.dp)
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .wrapContentSize()
+                                //.align(Alignment.CenterVertically)
+                            ) {
+                                Text(
+                                    text = "Due Payment",
+                                    color = Color.DarkGray,
+                                    modifier = Modifier.align(
+                                        Alignment.CenterVertically
+                                    )
+                                )
+                                Text(
+                                    text = "   ( With previous ₹ ${viewModel.previousDue.value} Due )",
+                                    color = Color.Gray,
+                                    fontSize = 10.sp,
+                                    modifier = Modifier.align(Alignment.CenterVertically)
+                                )
+                            }
+                        }
+
                         Text(
-                            text = "₹${viewModel.takenMinusreturnPaperTotal.value}",
-                            //  text = "₹${viewModel.takenPapersTotal.value}",
-                            //   text = "₹",
-                            style = MaterialTheme.typography.h5,
+                            text = "₹${viewModel.currentDue.value}/-",
                             color = Color.Black,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier
                                 .wrapContentSize()
                                 .padding(horizontal = 10.dp)
-                                .align(Alignment.CenterEnd)
+                                .align(Alignment.CenterVertically),
+                            fontSize = 20.sp
                         )
                     }
-
-                }
-
+                }//surface\
                 Divider(
                     color = Color.LightGray,
                     thickness = 0.8.dp,
-                    modifier = Modifier.padding(horizontal = 10.dp)
+                    // modifier = Modifier.padding(horizontal = 5.dp)
                 )
                 Spacer(modifier = Modifier.height(10.dp))
+
+                //----------------Mode of Payment Cash Layout-------------------//
                 Row(Modifier.wrapContentHeight()) {
                     Text(
                         text = "Mode of Payment",
@@ -134,146 +173,99 @@ fun BillingScreenBottomLayout(viewModel: BillingScreenViewModel) {
                         }
                     }
                 }
-                Column(
-                    modifier = Modifier
-                        .wrapContentHeight()
-                        .fillMaxWidth()
-                ) {
-                    Row(Modifier.wrapContentSize()) {
+                Spacer(modifier = Modifier.height(7.dp))
 
-                        Text(
-                            text ="Coupons:",
-//                                        text = if (viewModel.couponsTotal.value != 0) "Total Coupon Price = ₹${viewModel.couponsTotal.value}"
-//                                               else "Coupons:",
-                            color = Color.DarkGray,
-                            modifier = Modifier
-                                .wrapContentSize()
-                                .padding(horizontal = 15.dp)
-                                .align(Alignment.CenterVertically),
-                        )
-                    }
-
-                    // Spacer(modifier = Modifier.height(5.dp))
-
-                    Row(
-                        modifier = Modifier
-                            .wrapContentHeight()
-                            .fillMaxWidth()) {
-
-                        Column(Modifier.weight(1f, true)) {
-                            HorizontalScrollableCoupon(viewModel.couponss.collectAsState().value, viewModel,
-                                onPriceChange = { value, index, multi ->
-                                    try {
-                                        viewModel.calculateCouponPrice(multi, value.toInt(), index)
-                                    } catch (e: NumberFormatException) {
-                                        viewModel.calculateCouponPrice(multi, 0, index)
-                                        println(e)
-                                    } catch (e: Exception) {
-                                        println(e)
-                                    }
-                                }
-                            )
-                        }
-                    }
-                }
-//---------------------------------------------------------------------------------------------------
-                Spacer(modifier = Modifier.height(5.dp))
-                Divider(
-                    color = Color.LightGray,
-                    thickness = 0.8.dp,
-                    modifier = Modifier.padding(horizontal = 10.dp)
-                )
+                //----------------Generate Bill Button Layout-------------------//
+                val context = LocalContext.current as MainActivity
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .wrapContentHeight()
+                        .padding(end = 15.dp)
                 ) {
+                    Row(modifier = Modifier.weight(1f).padding(start = 15.dp)) {
+                      //  context.ShowItemFileLayout(viewModel, context = context)
 
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight()
-                            .align(Alignment.CenterVertically)
-                    ) {
-                        Text(
-                            // text = "₹${viewModel.couponTotal.value}",
-                            text = "₹${viewModel.cashMinusCouponTotal.value}",
-                            style = MaterialTheme.typography.h5,
-                            color = Color.Black,
-                            fontWeight = FontWeight.Bold,
+                        val showDialog = remember { mutableStateOf(false) }
+
+                        if (showDialog.value)
+                            CustomDialog(value = "", setShowDialog = {
+                                showDialog.value = it
+                            },
+                                onClickPrintBill = {
+                                    viewModel.checkIfDeviceFound()
+                                },
+                                onClickViewBill = {
+                                    viewModel.generateBillByJson()
+                                }
+                                ,viewModel)
+
+
+                        Button(
+                            onClick = {
+                                showDialog.value = true
+                            },
+                            colors = ButtonDefaults.buttonColors(backgroundColor = GreenLight),
+                            shape = RoundedCornerShape(topStart = 5.dp, bottomStart = 5.dp),
+                            enabled = viewModel.loadingBill.value,
                             modifier = Modifier
-                                .wrapContentSize()
-                                .padding(horizontal = 10.dp)
-                                .align(Alignment.CenterEnd)
-                        )
+                                .fillMaxWidth()
+                                .height(50.dp)
+
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = viewModel.generateBillButtonText,
+                                    fontSize = 17.sp,
+                                    color = Color.White,
+                                )
+
+
+                            }
+
+                        }//Button
+
+
                     }
 
-                }
 
-                Divider(
-                    color = Color.LightGray,
-                    thickness = 0.8.dp,
-                    modifier = Modifier.padding(horizontal = 10.dp)
-                )
-//---------------------------------------------------------------------------------------------------
-                Spacer(modifier = Modifier.height(5.dp))
-                // val context= LocalContext.current
-                Surface(
-                    shape = RoundedCornerShape(5.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp)
-                        .padding(horizontal = 15.dp),
-                    color = PinkLight,
-                    contentColor = Color.White
-                ) {
-                    Row(
-                        Modifier
-                            .wrapContentHeight()
-                            .fillMaxWidth()
+                    Card(
+                        shape = RoundedCornerShape(topEnd = 10f, bottomEnd = 10f),
+                        backgroundColor = Color.DarkGray,
+                        modifier = Modifier
+                            .height(50.dp)
+                            .width(100.dp)
                     ) {
 
-
-                        Box(modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f, true)
-                            .align(Alignment.CenterVertically)
-                            .padding(start = 15.dp)){
-                            Column(
+                        Row(modifier = Modifier.fillMaxSize()) {
+                            Box(
                                 modifier = Modifier
-                                    .wrapContentSize()
-                                //.align(Alignment.CenterVertically)
+                                    .fillMaxWidth()
+                                    .align(Alignment.CenterVertically),
+                                contentAlignment = Alignment.TopEnd
                             ) {
-                                Text(text = "Due Payment", color = Color.White, modifier = Modifier.align(
-                                    Alignment.Start))
                                 Text(
-                                    text = "With previous ₹ ${viewModel.previousDue.value} Due",
-                                    color = Color.White,
-                                    fontSize = 10.sp,
-                                    modifier = Modifier.align(Alignment.Start)
+                                    text = "₹${viewModel.balanceAmount.value}/-",
+                                    color = Color.White, // Header Color
+                                    fontSize = 17.sp,
+                                    textAlign = TextAlign.Start,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier
+                                        //.align(Alignment.TopEnd)
+                                        //.padding(start = 10.dp)
+                                        //.weight(.9f)
+                                        .padding(end = 10.dp)
                                 )
                             }
                         }
-
-                        Text(
-                            text = "₹${viewModel.currentDue.value}",
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier
-                                .wrapContentSize()
-                                .padding(horizontal = 10.dp)
-                                .align(Alignment.CenterVertically),
-                            fontSize = 20.sp
-                        )
                     }
-                }//surface\
-                Spacer(modifier = Modifier.height(7.dp))
-                //----------------Generate Bill Button Layout-------------------//
-                val context = LocalContext.current as MainActivity
-                context.ShowItemFileLayout(viewModel,context = context)
+                }
+
                 Spacer(modifier = Modifier.height(10.dp))
-            }
+            }//Column
         }
     }
 
 }
+

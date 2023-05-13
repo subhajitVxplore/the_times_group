@@ -19,8 +19,6 @@ class BillingScreenUseCases @Inject constructor(
     private val generateBillRepository: GenerateBillRepository,
     private val pref: AppStore
 ) {
-
-
     fun generateVendorsSuggestions(query: String): Flow<Command> = flow {
 
         val userID = pref.userId()
@@ -66,6 +64,7 @@ class BillingScreenUseCases @Inject constructor(
                 response.data?.apply {
                     when (status) {
                         true -> {
+                            emit(Data(EmitType.PHONE, value = phoneNumber))
                             emit(Data(EmitType.PAPERS, value = papers))
                             emit(Data(EmitType.COUPONS, value = coupons))
                             emit(Data(EmitType.DUE, value = dueAmount))

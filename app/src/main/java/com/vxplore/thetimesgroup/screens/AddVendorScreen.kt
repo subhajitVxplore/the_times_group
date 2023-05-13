@@ -3,6 +3,7 @@
 package com.vxplore.thetimesgroup.screens
 
 import android.app.Activity
+import android.widget.Toast
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
@@ -67,7 +68,7 @@ fun AddVendorScreen(viewModel: AddVendorViewModel = hiltViewModel()) {
 
         OutlinedTextField(
             value = viewModel.vendorNameText.value,
-            onValueChange = { viewModel.vendorNameText.value=it },
+            onValueChange = { viewModel.vendorNameText.value = it },
             label = { Text("Vendor Name") },
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = Color.Gray,
@@ -82,7 +83,7 @@ fun AddVendorScreen(viewModel: AddVendorViewModel = hiltViewModel()) {
 
         OutlinedTextField(
             value = viewModel.vendorMobileText.value,
-            onValueChange = { viewModel.vendorMobileText.value =it},
+            onValueChange = { viewModel.vendorMobileText.value = it },
             label = { Text("Vendor Phone") },
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = Color.Gray,
@@ -100,7 +101,7 @@ fun AddVendorScreen(viewModel: AddVendorViewModel = hiltViewModel()) {
 
         OutlinedTextField(
             value = viewModel.vendorEmailAddressText.value,
-            onValueChange = { viewModel.vendorEmailAddressText.value=it },
+            onValueChange = { viewModel.vendorEmailAddressText.value = it },
             label = { Text("Vendor Email") },
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = Color.Gray,
@@ -117,6 +118,7 @@ fun AddVendorScreen(viewModel: AddVendorViewModel = hiltViewModel()) {
 
         Spacer(modifier = Modifier.height(10.dp))
         PincodeSearchField(viewModel)
+        //SearchPincodesSection(viewModel)
 
         Box(
             modifier = Modifier
@@ -135,10 +137,10 @@ fun AddVendorScreen(viewModel: AddVendorViewModel = hiltViewModel()) {
 
             ///suggestion dropdown section calling
             AnimatedContent(targetState = viewModel.visible) { state ->
-                    when (state) {
-                        true -> PincodesSuggestionsSection(viewModel)
-                        false -> Surface() { state }
-                    }
+                when (state) {
+                    true -> PincodesSuggestionsSection(viewModel)
+                    false -> Surface() { state }
+                }
             }
         }
         Spacer(modifier = Modifier.height(30.dp))
@@ -146,7 +148,22 @@ fun AddVendorScreen(viewModel: AddVendorViewModel = hiltViewModel()) {
         Button(
             onClick = {
                 /// viewModel.onAddVendorToAddVendorSuccess()
-                      viewModel.addVendor()
+
+                if (viewModel.vendorNameText.value.isEmpty()) {
+                    Toast.makeText(context, "vendorName can not be empty !!", Toast.LENGTH_SHORT)
+                        .show()
+                } else if (viewModel.vendorMobileText.value.isEmpty()) {
+                    Toast.makeText(context, "vendorMobile can not be empty !!", Toast.LENGTH_SHORT)
+                        .show()
+                } else if (viewModel.vendorEmailAddressText.value.isEmpty()) {
+                    Toast.makeText(context, "vendorEmail can not be empty !!", Toast.LENGTH_SHORT)
+                        .show()
+                } else if (viewModel.currentPincode.value.isEmpty()) {
+                    Toast.makeText(context, "currentPincode can not be empty !!", Toast.LENGTH_SHORT)
+                        .show()
+                }else{
+                    viewModel.addVendor()
+                }
                 // Toast.makeText(context, "Generate Bill${viewModel.pincodes.value}", Toast.LENGTH_SHORT).show()
             },
             shape = RoundedCornerShape(5.dp),

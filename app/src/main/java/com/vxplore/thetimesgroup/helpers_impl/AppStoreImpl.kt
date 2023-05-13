@@ -106,15 +106,16 @@ class AppStoreImpl @Inject constructor(
         }.contains(stringPreferencesKey(PrefConstants.FCM_TOKEN))
     }
 
-    override suspend fun storePdfUrl(url: String) {
+    override suspend fun savePrinter(macAddress: String) {
         prefs.edit {
-            it[stringPreferencesKey(PrefConstants.PDF_URL)] = url
+            it[stringPreferencesKey(PrefConstants.PRINTER_ID)] = macAddress
         }
     }
 
-    override suspend fun fetchPdfUrl(): String {
+    override suspend fun printer(): String? {
         return prefs.data.map {
-            it[stringPreferencesKey(PrefConstants.PDF_URL)]
-        }.first() ?: ""
+            it[stringPreferencesKey(PrefConstants.PRINTER_ID)]
+        }.first()
     }
+
 }

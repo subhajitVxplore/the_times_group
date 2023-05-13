@@ -12,11 +12,24 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BaseViewModel @Inject constructor(
-   val appNavigator: AppNavigator,
+    val appNavigator: AppNavigator,
 ) : ViewModel() {
 
-   var contextt= mutableStateOf(LocalContext)
-  var bitmapImg = mutableStateListOf<Bitmap>()
-  // var bitmapImg = mutableStateListOf<Bitmap>()
-   // var bitmapImg: MutableState<Bitmap?> = mutableStateOf(null)
+    var contextt = mutableStateOf(LocalContext)
+    var bitmapImages = mutableStateListOf<Bitmap>()
+    // var bitmapImg = mutableStateListOf<Bitmap>()
+    // var bitmapImg: MutableState<Bitmap?> = mutableStateOf(null)
+
+    var phoneNumber= mutableStateOf("7003103258")
+    var message= mutableStateOf("Hello World")
+    var billUrl= mutableStateOf("")
+    var vendorWhatsappNo= mutableStateOf("")
+
+    fun addBitmaps(bitmaps: List<Bitmap>) {
+        bitmapImages.clear()
+        bitmapImages.addAll(bitmaps)
+    }
+
+
+
 }

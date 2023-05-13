@@ -17,7 +17,9 @@ interface AppStore {
     suspend fun lastFCMToken(): String
     suspend fun removeLastFCMToken(): Boolean
 
-    suspend fun storePdfUrl(url: String)
-    suspend fun fetchPdfUrl(): String
+    suspend fun savePrinter(macAddress: String)
+    suspend fun printer(): String?
+
+
 }
 

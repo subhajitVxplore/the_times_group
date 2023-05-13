@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.chuckerteam.chucker.api.ChuckerCollector
 import com.chuckerteam.chucker.api.ChuckerInterceptor
+import com.vxplore.thetimesgroup.utility.bluetoothService.AndroidBluetoothController
 import com.vxplore.core.domain.repositoriess.*
 import com.vxplore.core.helpers.AppStore
 import com.vxplore.core.helpers.Info
@@ -15,6 +16,7 @@ import com.vxplore.thetimesgroup.helpers_impl.AppStoreImpl
 import com.vxplore.thetimesgroup.repository_impls.*
 import com.vxplore.thetimesgroup.utility.Constants
 import com.vxplore.thetimesgroup.utility.Metar
+import com.vxplore.thetimesgroup.utility.bluetoothService.BluetoothController
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -29,7 +31,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 interface AppModule {
-
 
     companion object {
         private val Context.dataStore by preferencesDataStore("timesGroup")
@@ -75,7 +76,15 @@ interface AppModule {
         @Singleton
         @Provides
         fun provideAppVersion(): AppVersionApi = provideApi2(AppVersionApi::class.java)
-  //-----------------------------------------------------------------------------------------
+
+
+        @Provides
+        @Singleton
+        fun provideBluetoothController(@ApplicationContext context: Context): BluetoothController {
+            return AndroidBluetoothController(context)
+        }
+
+        //-----------------------------------------------------------------------------------------
 
 
 
