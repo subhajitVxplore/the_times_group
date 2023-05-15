@@ -132,10 +132,11 @@ fun BillingScreenBottomLayout(viewModel: BillingScreenViewModel) {
                                 modifier = Modifier.align(Alignment.CenterVertically)
                             )
                             BasicTextField(
-                                value = viewModel.cashPayment.value.toString(),
+                                value = viewModel.cashPaymentText.value,
                                 onValueChange = {
                                     try {
-                                        viewModel.cashPayment.value = it.toInt()
+                                        viewModel.cashPaymentText.value=it
+                                        viewModel.cashPayment.value = viewModel.cashPaymentText.value.toInt()
                                         //  viewModel.calculateCurrentDue()
                                     } catch (e: Exception) {
                                         println(e)
@@ -195,7 +196,10 @@ fun BillingScreenBottomLayout(viewModel: BillingScreenViewModel) {
                                     viewModel.checkIfDeviceFound()
                                 },
                                 onClickViewBill = {
+
                                     viewModel.generateBillByJson()
+                                    viewModel.searchVendorQuery=""
+                                    viewModel.clearVendorsQuery()
                                 }
                                 ,viewModel)
 
@@ -206,7 +210,7 @@ fun BillingScreenBottomLayout(viewModel: BillingScreenViewModel) {
                             },
                             colors = ButtonDefaults.buttonColors(backgroundColor = GreenLight),
                             shape = RoundedCornerShape(topStart = 5.dp, bottomStart = 5.dp),
-                            enabled = viewModel.loadingBill.value,
+                            //enabled = viewModel.loadingBill.value,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(50.dp)
@@ -220,15 +224,9 @@ fun BillingScreenBottomLayout(viewModel: BillingScreenViewModel) {
                                     fontSize = 17.sp,
                                     color = Color.White,
                                 )
-
-
                             }
-
                         }//Button
-
-
                     }
-
 
                     Card(
                         shape = RoundedCornerShape(topEnd = 10f, bottomEnd = 10f),

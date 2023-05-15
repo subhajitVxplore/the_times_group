@@ -60,9 +60,6 @@ fun VendorBillingScreen(
 //    var coupon_total = 0
 
 
-
-
-
     val suggestions = viewModel.suggestion.collectAsState().value
     Column(modifier = Modifier.fillMaxSize()) {
         Row(
@@ -118,76 +115,81 @@ fun VendorBillingScreen(
         Spacer(modifier = Modifier.height(7.dp))
         VendorSearchField(viewModel)
         Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.TopCenter) {
-            Column(modifier = Modifier.fillMaxWidth()) {
-                Spacer(modifier = Modifier.height(7.dp))
-                Column(
-                    modifier = Modifier
-                        .verticalScroll(rememberScrollState())
-                        .weight(1f)
-                ) {
-                    showPapersTakenList(
-                        viewModel.circleLoading.value,
-                        viewModel.paperss.collectAsState().value,
-                        viewModel
-                    ) { value2, index, value1 ->
-                        try {
-                            // viewModel.takenPapers[index] =Pair(first = value1, second = value2.toInt())
-                            //viewModel.takenPapers.add(index, Pair(first = value1, second = value2.toInt()))
-                            viewModel.calculateTakenPapersPrice(value1, value2.toInt(), index)
-                        } catch (e: NumberFormatException) {
-                            viewModel.calculateTakenPapersPrice(value1, 0, index)
-                            println(e)
-                        } catch (e: Exception) {
-                            println(e)
-                        }
-                    }
+            if (viewModel.searchVendorQuery != "") {
+                Column(modifier = Modifier.fillMaxWidth()) {
                     Spacer(modifier = Modifier.height(7.dp))
-
-                    val paperssListing = viewModel.paperss.collectAsState().value
-                    if (paperssListing.isNotEmpty()) {
-                        ExpandableCardReturnPapers(
+                    Column(
+                        modifier = Modifier
+                            .verticalScroll(rememberScrollState())
+                            .weight(1f)
+                    ) {
+                        showPapersTakenList(
                             viewModel.circleLoading.value,
-                            "Returns",
                             viewModel.paperss.collectAsState().value,
                             viewModel
                         ) { value2, index, value1 ->
                             try {
-                                viewModel.calculateReturnPapersPrice(value1, value2.toInt(), index)
+                                // viewModel.takenPapers[index] =Pair(first = value1, second = value2.toInt())
+                                //viewModel.takenPapers.add(index, Pair(first = value1, second = value2.toInt()))
+                                viewModel.calculateTakenPapersPrice(value1, value2.toInt(), index)
                             } catch (e: NumberFormatException) {
-                                viewModel.calculateReturnPapersPrice(value1, 0, index)
+                                viewModel.calculateTakenPapersPrice(value1, 0, index)
                                 println(e)
                             } catch (e: Exception) {
                                 println(e)
                             }
                         }
-                    }
+                        Spacer(modifier = Modifier.height(7.dp))
 
-                    if (paperssListing.isNotEmpty()) {
-                        ExpandableCardCoupons(
-                            viewModel.circleLoading.value,
-                            "Coupons",
-                            viewModel.couponss.collectAsState().value,
-                            viewModel
-                        ) { value, index, multi ->
-                            try {
-                                viewModel.calculateCouponPrice(multi, value.toInt(), index)
-                            } catch (e: NumberFormatException) {
-                                viewModel.calculateCouponPrice(multi, 0, index)
-                                println(e)
-                            } catch (e: Exception) {
-                                println(e)
+                        val paperssListing = viewModel.paperss.collectAsState().value
+                        if (paperssListing.isNotEmpty()) {
+                            ExpandableCardReturnPapers(
+                                viewModel.circleLoading.value,
+                                "Returns",
+                                viewModel.paperss.collectAsState().value,
+                                viewModel
+                            ) { value2, index, value1 ->
+                                try {
+                                    viewModel.calculateReturnPapersPrice(
+                                        value1,
+                                        value2.toInt(),
+                                        index
+                                    )
+                                } catch (e: NumberFormatException) {
+                                    viewModel.calculateReturnPapersPrice(value1, 0, index)
+                                    println(e)
+                                } catch (e: Exception) {
+                                    println(e)
+                                }
                             }
                         }
+
+                        if (paperssListing.isNotEmpty()) {
+                            ExpandableCardCoupons(
+                                viewModel.circleLoading.value,
+                                "Coupons",
+                                viewModel.couponss.collectAsState().value,
+                                viewModel
+                            ) { value, index, multi ->
+                                try {
+                                    viewModel.calculateCouponPrice(multi, value.toInt(), index)
+                                } catch (e: NumberFormatException) {
+                                    viewModel.calculateCouponPrice(multi, 0, index)
+                                    println(e)
+                                } catch (e: Exception) {
+                                    println(e)
+                                }
+                            }
+                        }
+
+
                     }
-
-
-                }
-                //----------------Bottom Layout-------------------//
-                Column(
-                    modifier = Modifier
-                        .weight(0.4f, true)
-                ) {
-                    if (viewModel.searchVendorQuery != "") {
+                    //----------------Bottom Layout-------------------//
+                    Column(
+                        modifier = Modifier
+                            .weight(0.4f, true)
+                    ) {
+                        // if (viewModel.searchVendorQuery != "") {
                         BillingScreenBottomLayout(viewModel)
                     }
 
@@ -249,7 +251,7 @@ fun VendorBillingScreen(
                 viewModel,
                 Pointer.NULL
             )
-            AutoReplyPrint.INSTANCE.CP_Port_OpenBtSpp(it.address, 0)?.let { p->
+            AutoReplyPrint.INSTANCE.CP_Port_OpenBtSpp(it.address, 0)?.let { p ->
                 viewModel.setPrinterPointer(p)
             }
 
@@ -260,15 +262,16 @@ fun VendorBillingScreen(
     LaunchedEffect(viewModel.pdfData.value) {
         viewModel.pdfData.value.let {
             if (it.isNotEmpty()) {
-                baseViewModel.billUrl.value=it
-                baseViewModel.vendorWhatsappNo.value=viewModel.vendorPhone.value
+                baseViewModel.billUrl.value = it
+                baseViewModel.vendorWhatsappNo.value = viewModel.vendorPhone.value
                 try {
                     mContext.convertPdfToBitmap(
                         target = it,
-                        coroutineScope = (mContext as MainActivity).lifecycleScope
-                    ) { bitmaps ->
+                        coroutineScope = (mContext as MainActivity).lifecycleScope,
+                    ) { bitmaps, pdf ->
                         viewModel.pPointer?.let { it1 -> mContext.tryToPrint(it1, bitmaps) }
                         baseViewModel.addBitmaps(bitmaps)
+                        baseViewModel.pdfBill = pdf
                         viewModel.onBillingToBillPreview()
                     }
                     viewModel.pdfData.value = ""
@@ -388,7 +391,7 @@ private fun Context.tryToPrint(requiredPointer: Pointer, bitmaps: List<Bitmap>) 
 private fun Context.convertPdfToBitmap(
     target: String = "",
     coroutineScope: CoroutineScope,
-    onBitmapCreated: (List<Bitmap>) -> Unit
+    onBitmapCreated: (List<Bitmap>, File) -> Unit,
 ) {
     val bitmaps = mutableListOf<Bitmap>()
     coroutineScope.launch {
@@ -428,7 +431,7 @@ private fun Context.convertPdfToBitmap(
                 }
                 page.close()
             }
-            onBitmapCreated(bitmaps)
+            onBitmapCreated(bitmaps, file)
             pdfRenderer.close()
         } catch (ex: Exception) {
             Toast.makeText(

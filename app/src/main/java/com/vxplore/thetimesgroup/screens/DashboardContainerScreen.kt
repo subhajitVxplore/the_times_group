@@ -38,7 +38,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun DashboardContainerScreen(viewModel: DashboardViewModel = hiltViewModel()) {
-    val currentScreen = remember { mutableStateOf(DrawerAppScreen.DashboardMain) }
+    val currentScreen = remember { mutableStateOf(DrawerAppScreen.Dashboard) }
     val coroutineScope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState()
     val ctx = LocalContext.current
@@ -213,15 +213,14 @@ fun DrawerContentComponent(currentScreen: MutableState<DrawerAppScreen>, closeDr
     }
 }
 
-enum class DrawerAppScreen { DashboardMain, Screen2, Screen3 ,Screen4,LogOut}
+enum class DrawerAppScreen { Dashboard, Screen2, Screen3 ,Screen4,LogOut}
 fun getScreenBasedOnIndex(index: Int) = when (index) {
-    0 -> DrawerAppScreen.DashboardMain
+    0 -> DrawerAppScreen.Dashboard
     1 -> DrawerAppScreen.Screen2
     2 -> DrawerAppScreen.Screen3
     3 -> DrawerAppScreen.Screen4
-    3 -> DrawerAppScreen.Screen4
     4 -> DrawerAppScreen.LogOut
-    else -> DrawerAppScreen.DashboardMain
+    else -> DrawerAppScreen.Dashboard
 }
 @Composable
 fun BodyContentComponent(
@@ -231,7 +230,7 @@ fun BodyContentComponent(
 ) {
 
     when (currentScreen) {
-        DrawerAppScreen.DashboardMain -> DashboardMainScreen(openDrawer,viewModel)
+        DrawerAppScreen.Dashboard -> DashboardMainScreen(openDrawer,viewModel)
         DrawerAppScreen.Screen2 -> Screen2Component(openDrawer)
         DrawerAppScreen.Screen3 -> Screen3Component(openDrawer)
         DrawerAppScreen.Screen4 -> Screen4Component(openDrawer)

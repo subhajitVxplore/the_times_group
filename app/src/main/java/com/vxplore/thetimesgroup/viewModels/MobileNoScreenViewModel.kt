@@ -31,6 +31,7 @@ class MobileNoScreenViewModel @Inject constructor(
     val notifier = mutableStateOf("")
 
     init {
+        Log.d("mobileNoTesting", "mobileNoTesting:++++")
         val number = savedStateHandle.get<String>(Destination.Otp.MOBILE_NO)
         number?.let {
             if(it != Destination.MobileNo.DUMMY_NUMBER) {
@@ -38,7 +39,6 @@ class MobileNoScreenViewModel @Inject constructor(
             }
         }
     }
-
 
     fun sendOtp(mobile_no: String) {
         mobileNoUseCase.sendOtp(mobile_no)

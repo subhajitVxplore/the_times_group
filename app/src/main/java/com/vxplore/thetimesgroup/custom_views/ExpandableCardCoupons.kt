@@ -64,7 +64,7 @@ fun ExpandableCardCoupons(
         elevation = 10.dp,
         backgroundColor = Color.White,
         shape = RoundedCornerShape(8.dp),
-        border = BorderStroke(viewModel.stroke.value.dp, Color.Gray),
+        border = BorderStroke(viewModel.stroke.value.dp, Color.LightGray),
         onClick = {
             viewModel.expandCoupon.value = !viewModel.expandCoupon.value
             //viewModel.stroke.value = if (viewModel.expandCoupon.value) 2 else 1

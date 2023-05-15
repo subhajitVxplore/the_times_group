@@ -24,6 +24,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
@@ -53,6 +54,7 @@ class BillingScreenViewModel @Inject constructor(
 
     var vendorPhone = mutableStateOf("")
     var cashPayment = mutableStateOf(0)
+    var cashPaymentText = mutableStateOf("")
     var previousDue = mutableStateOf(0)
     var currentDue = mutableStateOf(0)
     var balanceAmount = mutableStateOf(0)
@@ -95,7 +97,8 @@ class BillingScreenViewModel @Inject constructor(
 
     init {
         currentDue.value = previousDue.value
-        Log.d("pairedDevicess", "pairedDevicess: ${bluetoothController.pairedDevices.value}")
+        //Log.d("pairedDevicess", "pairedDevicess: ${bluetoothController.pairedDevices.value}")
+       cashPayment.value
     }
 
 
@@ -165,7 +168,7 @@ class BillingScreenViewModel @Inject constructor(
     fun onBillingToBillPreview() {
         appNavigator.tryNavigateTo(
             route = Destination.BillPreview(),
-             popUpToRoute = Destination.Billing(),
+            // popUpToRoute = Destination.Billing(),
             isSingleTop = true,
             inclusive = true
         )

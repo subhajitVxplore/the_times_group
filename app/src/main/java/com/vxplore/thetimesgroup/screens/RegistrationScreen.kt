@@ -219,10 +219,27 @@ fun RegistrationScreen(viewModel: RegisterViewModel = hiltViewModel()) {
 
                 Button(
                     onClick = {
-                        Toast.makeText(context, "continue:", Toast.LENGTH_SHORT).show()
-                        //onContinueClick()
-                        //  navController.navigate(Routes.Settings.route + "/$counter")
-                              viewModel.register()
+                        if (viewModel.yourNameText.value.isEmpty()) {
+                            Toast.makeText(context, "yourName can not be empty !!", Toast.LENGTH_SHORT)
+                                .show()
+                        } else if (viewModel.emailAddressText.value.isEmpty()) {
+                            Toast.makeText(context, "emailAddress can not be empty !!", Toast.LENGTH_SHORT)
+                                .show()
+                        } else if (viewModel.addressText.value.isEmpty()) {
+                            Toast.makeText(context, "address can not be empty !!", Toast.LENGTH_SHORT)
+                                .show()
+                        } else if (viewModel.selectedState.value.isEmpty()) {
+                            Toast.makeText(context, "state can not be empty !!", Toast.LENGTH_SHORT)
+                                .show()
+                        } else if (viewModel.selectedDistrict.value.isEmpty()) {
+                            Toast.makeText(context, "district can not be empty !!", Toast.LENGTH_SHORT)
+                                .show()
+                        } else if (viewModel.selectedPincode.value.isEmpty()) {
+                            Toast.makeText(context, "pincode can not be empty !!", Toast.LENGTH_SHORT)
+                                .show()
+                        }else{
+                            viewModel.register()
+                        }
 
                     },
                     shape = RoundedCornerShape(5.dp),

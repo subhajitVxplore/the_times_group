@@ -48,8 +48,6 @@ fun MobileNoScreen(
             .fillMaxWidth()
             .fillMaxHeight()
             .padding(16.dp),
-        // verticalArrangement = Arrangement.Center,
-        //horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val activity = LocalContext.current as Activity
         Image(painter = painterResource(id = R.drawable.ic_baseline_keyboard_backspace_24),

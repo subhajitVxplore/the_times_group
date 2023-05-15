@@ -236,16 +236,26 @@ class DashboardViewModel @Inject constructor(
                 when (it.type) {
                     EmitType.Navigate -> {
                         it.value?.apply {
-                            castValueToRequiredTypes<Destination>()?.let {
-                                //  scaffoldState.drawerState.close()
-                                appNavigator.navigateTo(
-                                     it.fullRoute,
-                                    // route = Destination.MobileNo("number.toString()"),
+//                            castValueToRequiredTypes<Destination>()?.let {
+//                                //  scaffoldState.drawerState.close()
+//                                appNavigator.navigateTo(
+//                                     it.fullRoute,
+//                                    //route = Destination.MobileNo(""),
+//                                    popUpToRoute = Destination.Dashboard(),
+//                                    inclusive = true,
+//                                    isSingleTop = true
+//                                )
+//                            }
+
+                            castValueToRequiredTypes<Destination.MobileNo>()?.let { destination ->
+                                appNavigator.tryNavigateTo(
+                                    destination.invoke(),
                                     popUpToRoute = Destination.Dashboard(),
-                                    inclusive = true,
-                                    isSingleTop = true
+                                    isSingleTop = true,
+                                    inclusive = true
                                 )
                             }
+
                         }
                     }
                     else -> {}
