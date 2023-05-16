@@ -29,6 +29,8 @@ enum class EmitType {
     IS_ADDED,
     PDF_URL,
     PHONE,
+    DISTRIBUTOR_NAME,
+    DISTRIBUTOR_ID,
 
 
 }

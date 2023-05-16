@@ -44,6 +44,8 @@ class DashboardViewModel @Inject constructor(
     var todayPaperReturn = mutableStateOf("")
     var todayEachPaperReturn = mutableStateOf("")
     var thisMonthPaperReturn = mutableStateOf("")
+    var distributorName = mutableStateOf("")
+    var distributorId = mutableStateOf("")
 
 
     val dashboardBack = mutableStateOf<MyDialog?>(null)
@@ -57,6 +59,7 @@ class DashboardViewModel @Inject constructor(
         getVendors()
         calculateDonutSweepAngles()
         getDonutChartData()
+        getDistributorDetails()
     }
 
     fun calculateDonutSweepAngles() {
@@ -112,8 +115,8 @@ class DashboardViewModel @Inject constructor(
                         it.value?.castValueToRequiredTypes<com.vxplore.core.domain.model.PaperSold>()
                             ?.let {
                                 todayPaperSold.value = it.todays_total.toString()
-                                todayEachPaperSold.value=it.each_paper_sold
-                                thisMonthPaperSold.value=it.this_month.toString()
+                                todayEachPaperSold.value = it.each_paper_sold
+                                thisMonthPaperSold.value = it.this_month.toString()
                             }
                     }
 
@@ -193,6 +196,42 @@ class DashboardViewModel @Inject constructor(
                         }
                     }
 
+
+                    EmitType.NetworkError -> {
+                        it.value?.apply {
+                            castValueToRequiredTypes<String>()?.let {
+
+                            }
+                        }
+                    }
+                    else -> {}
+                }
+            }.launchIn(viewModelScope)
+    }
+
+
+    fun getDistributorDetails() {
+        dashBoardUseCases.getDistributorDetails()
+            .flowOn(Dispatchers.IO)
+            .onEach {
+                when (it.type) {
+//                    EmitType.Loading -> {
+//                        it.value?.apply {
+//                            castValueToRequiredTypes<Boolean>()?.let {
+//                                vendorsLoading.setValue(it)
+//                            }
+//                        }
+//                    }
+                    EmitType.DISTRIBUTOR_NAME -> {
+                        it.value?.castValueToRequiredTypes<String>()?.let {
+                            distributorName.value = it
+                        }
+                    }
+                    EmitType.DISTRIBUTOR_ID -> {
+                        it.value?.castValueToRequiredTypes<String>()?.let {
+                            distributorId.value = it
+                        }
+                    }
 
                     EmitType.NetworkError -> {
                         it.value?.apply {

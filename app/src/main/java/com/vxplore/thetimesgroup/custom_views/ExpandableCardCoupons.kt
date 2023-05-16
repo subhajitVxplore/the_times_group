@@ -94,7 +94,6 @@ fun ExpandableCardCoupons(
                         .padding(start = 8.dp)
                 )
 
-
                 if (couponList.isNotEmpty()) {
                     val returnValues =
                         viewModel.couponsTotal.value
@@ -131,7 +130,6 @@ fun ExpandableCardCoupons(
                         Column(modifier = Modifier.padding(top = 10.dp)) {
                             Column(
                                 modifier = Modifier
-                                    //.height(120.dp)
                                     .fillMaxWidth()
                                 //.verticalScroll(rememberScrollState())
                             ) {
@@ -145,7 +143,6 @@ fun ExpandableCardCoupons(
                                                 .padding(13.dp, 0.dp, 0.dp, 0.dp)
                                         ) {
                                             Text(text = couponss.name, color = Color.DarkGray)
-
                                             // Text(text = "Yesterday Total Paper ${paperr.previous_paper_count} (Subscription 300)", color = Color.Gray, fontSize = 10.sp)
                                         }
 

@@ -1,6 +1,7 @@
 package com.vxplore.core.domain.useCasess
 
 import com.vxplore.core.common.*
+import com.vxplore.core.domain.repositoriess.DistributorDetailsRepository
 import com.vxplore.core.domain.repositoriess.DonutChartDetailsRepository
 import com.vxplore.core.domain.repositoriess.TodayPaperSoldByUserIdRepository
 import com.vxplore.core.domain.repositoriess.VendorDetailsRepository
@@ -11,6 +12,7 @@ import javax.inject.Inject
 class DashboardUseCases @Inject constructor(
     private val pref: AppStore,
     private val vendorDetailsRepository: VendorDetailsRepository,
+    private val distributorDetailsRepository: DistributorDetailsRepository,
     private val donutChartDetailsRepository: DonutChartDetailsRepository,
     private val todayPaperSoldByUserIdRepository: TodayPaperSoldByUserIdRepository,
     private val appStore: AppStore
@@ -119,6 +121,41 @@ class DashboardUseCases @Inject constructor(
             }
         }
     }
+
+
+    fun getDistributorDetails() = flow {
+        emit(Data(EmitType.Loading, true))
+        when (val response = distributorDetailsRepository.distributorDetailsRepo(appStore.userId())) {
+        //when (val response =
+            is Resource.Success -> {
+                emit(Data(EmitType.Loading, false))
+                response.data?.apply {
+                    when (status) {
+                        true -> {
+                            emit(Data(type = EmitType.DISTRIBUTOR_NAME, value = distributor_data.name))
+                            emit(Data(type = EmitType.DISTRIBUTOR_ID, value = distributor_data.distributor_id))
+                        }
+                        else -> {
+                            emit(Data(type = EmitType.BackendError, value = message))
+                        }
+                    }
+                }
+            }
+            is Resource.Error -> {
+
+                handleFailedResponse(
+                    response = response,
+                    message = response.message,
+                    emitType = EmitType.NetworkError
+                )
+            }
+            else -> {
+
+            }
+        }
+    }
+
+
 
 
 }
